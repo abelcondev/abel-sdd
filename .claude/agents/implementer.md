@@ -53,6 +53,7 @@ Al finalizar:
 - Commit final cuando `init.sh` pase.
 - Referenciar siempre la Issue `[Dev]`: `feat(auth): agregar validación — login-y-dashboard-layout/login`.
 - **NO incluir `Co-Authored-By` de asistentes de IA.** El usuario es el único autor.
+- **Si `init.sh` cambia de mensaje de éxito o de estructura, consultar al leader.** No asumir que un output nuevo equivale a "listo" sin validar contra `sdd/quality-gates.md`.
 
 ## Restricciones absolutas
 
