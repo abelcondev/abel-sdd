@@ -1,0 +1,110 @@
+#!/usr/bin/env bash
+#
+# install.sh — Instala el SDD en un proyecto destino.
+#
+# Uso:
+#   ./install.sh <ruta-al-proyecto-destino>
+#
+# Ejemplo:
+#   ./install.sh /ruta/a/tu-proyecto
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+log_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
+log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
+log_error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
+
+die() { log_error "$*"; exit 1; }
+
+show_help() {
+  cat <<EOF
+Uso: ./install.sh <ruta-al-proyecto-destino>
+
+Instala el framework SDD en un proyecto existente.
+
+Pasos:
+  1. Copia sdd/, scripts/, .claude/agents/, AGENTS.md, CLAUDE.md e init.sh.
+  2. No toca el código fuente del proyecto destino.
+  3. Si ya existe sdd/ en el destino, pregunta antes de sobrescribir.
+
+Ejemplo:
+  ./install.sh /ruta/a/tu-proyecto
+EOF
+}
+
+if [ "$#" -ne 1 ]; then
+  show_help
+  exit 1
+fi
+
+DEST_DIR="$1"
+
+if [[ ! -d "${DEST_DIR}" ]]; then
+  die "El directorio destino no existe: ${DEST_DIR}"
+fi
+
+DEST_DIR="$(cd "${DEST_DIR}" && pwd)"
+
+if [[ "${DEST_DIR}" == "${SCRIPT_DIR}" ]]; then
+  die "El directorio destino no puede ser el mismo repo de abel-sdd."
+fi
+
+log_info "Instalando SDD en ${DEST_DIR}..."
+
+# Verificar si ya existe sdd/
+if [[ -d "${DEST_DIR}/sdd" ]]; then
+  log_warn "Ya existe sdd/ en el proyecto destino."
+  read -rp "¿Sobrescribir? (s/N): " confirm
+  if [[ "${confirm}" != "s" && "${confirm}" != "S" ]]; then
+    log_info "Instalación cancelada."
+    exit 0
+  fi
+fi
+
+# Copiar estructura
+items=(
+  "AGENTS.md"
+  "CLAUDE.md"
+  "init.sh"
+  "sdd"
+  "scripts"
+  ".claude"
+)
+
+for item in "${items[@]}"; do
+  src="${SCRIPT_DIR}/${item}"
+  dst="${DEST_DIR}/${item}"
+
+  if [[ ! -e "${src}" ]]; then
+    log_warn "No existe ${src}, se omite."
+    continue
+  fi
+
+  if [[ -e "${dst}" ]]; then
+    rm -rf "${dst}"
+  fi
+
+  cp -R "${src}" "${dst}"
+  log_info "Copiado ${item}"
+done
+
+# Asegurar que init.sh y scripts sean ejecutables
+chmod +x "${DEST_DIR}/init.sh"
+chmod +x "${DEST_DIR}/scripts/"*.sh 2>/dev/null || true
+
+log_info "Instalación completada."
+echo ""
+echo "Próximos pasos en el proyecto destino:"
+echo "  1. cd ${DEST_DIR}"
+echo "  2. Completar sdd/architecture.md con el stack del proyecto."
+echo "  3. Completar sdd/conventions.md con estilo y naming del proyecto."
+echo "  4. Opcional: crear scripts/project-checks.sh para validar tests/lint/build."
+echo "  5. Correr ./init.sh para verificar el harness."
+echo "  6. Crear la primera feature: ./scripts/sdd-worktree.sh create <feature-slug>"
