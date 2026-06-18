@@ -85,6 +85,7 @@ chore(sdd): login [Design] spec-needed → designing
 │   ├── testing.md         # TDD y testing
 │   ├── security.md        # Seguridad
 │   ├── delivery.md        # Commits, PRs, merge
+│   ├── troubleshooting.md # Guía de problemas comunes
 │   ├── decisions/         # ADRs del proyecto
 │   ├── templates/         # Templates de issues
 │   └── projects/          # Features activas

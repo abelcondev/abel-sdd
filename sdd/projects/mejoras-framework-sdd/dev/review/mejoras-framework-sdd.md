@@ -1,7 +1,7 @@
 # [Dev] Mejoras del framework SDD
 
 Project: `sdd/projects/mejoras-framework-sdd/`
-Estado: "dev/implementing"
+Estado: "dev/review"
 
 ## Context
 
@@ -98,18 +98,19 @@ Implementación de las 7 mejoras del framework SDD aprobadas en `[Design] mejora
 
 No aplica.
 
-## Review: mejoras-framework-sdd/mejoras-framework-sdd
+## Review: mejoras-framework-sdd/mejoras-framework-sdd (segunda revisión)
 
-### Veredicto: ❌ Rechazado
+### Veredicto: ✅ Aprobado
 
 ### Hallazgos
-1. `sdd/README.md` no incluye `sdd/troubleshooting.md` ni `scripts/install.sh` en su mapa/índice del SDD, a pesar de que ambos archivos fueron creados/modificados en esta feature.
-2. El índice de projects activos en `sdd/README.md` y `sdd/workflow.md` aún dice `*(ninguno)*`, sin reflejar que `mejoras-framework-sdd` está en `dev/review`.
-3. `scripts/install.sh` es un wrapper que solo redirige a `install.sh` en la raíz. No está documentado en `sdd/README.md` y puede generar confusión sobre cuál instalador usar.
-4. No se encontraron tests automatizados formales; las verificaciones de R1–R7 se hacen mediante revisión manual e `init.sh`, lo cual es aceptable para un framework de documentación/scripts bash pero debe quedar documentado.
-5. `./init.sh` pasa en el worktree con el mensaje `[OK] Harness SDD listo`.
-6. Todos los commits siguen Conventional Commits y referencian `mejoras-framework-sdd/mejoras-framework-sdd`.
-7. No se detectaron secrets, logs de debug ni código muerto aparte del wrapper `scripts/install.sh`.
+1. ✅ `sdd/README.md` incluye `sdd/troubleshooting.md` en el mapa del SDD.
+2. ✅ `sdd/README.md` y `sdd/workflow.md` reflejan `mejoras-framework-sdd` en `dev/review`.
+3. ✅ El wrapper `scripts/install.sh` fue eliminado; solo existe `install.sh` en la raíz.
+4. ✅ `README.md` raíz fue actualizado para incluir `sdd/troubleshooting.md` en la estructura y ya no lista `scripts/install.sh`.
+5. ✅ `./init.sh` pasa en el worktree con el mensaje `[OK] Harness SDD listo`.
+6. ✅ No hay archivos untracked ni cambios sin commitear en el worktree.
+7. ✅ Los commits del retrabajo siguen Conventional Commits y referencian `mejoras-framework-sdd/mejoras-framework-sdd`.
+8. ⚠️ No se encontraron tests automatizados formales; las verificaciones de R1–R7 se hacen mediante revisión manual e `init.sh`, lo cual es aceptable para un framework de documentación/scripts bash.
 
 ### Trazabilidad R<n> → Test / Verificación
 | Requisito | Verificación | Estado |
@@ -136,15 +137,13 @@ No aplica.
 ### Checklist C1–C7
 - [x] C1 — Harness completo
 - [x] C2 — Coherencia de estado
-- [ ] C3 — Cumplimiento arquitectónico (wrapper `scripts/install.sh` redundante / no documentado)
+- [x] C3 — Cumplimiento arquitectónico (wrapper eliminado; estructura coherente)
 - [x] C4 — Verificación real (`init.sh` pasa; cada R<n> verificado manualmente)
-- [ ] C5 — Cierre limpio de sesión (`sdd/README.md` y `sdd/workflow.md` no reflejan el project activo en `dev/review`)
+- [x] C5 — Cierre limpio de sesión (`sdd/README.md`, `sdd/workflow.md` y `README.md` raíz actualizados)
 - [x] C6 — Cumplimiento SDD
 - [x] C7 — Seguridad (inputs validados, sin secrets, sin PII)
 
-### Accionables (si fue rechazado)
-1. Actualizar `sdd/README.md` para incluir `sdd/troubleshooting.md` y `scripts/install.sh` en el mapa del SDD, o eliminar el wrapper `scripts/install.sh` si no aporta valor.
-2. Resolver la redundancia de `scripts/install.sh`: documentar su propósito claramente o eliminarlo y dejar únicamente `install.sh` en la raíz.
-3. Actualizar el índice de projects activos en `sdd/README.md` y `sdd/workflow.md` para reflejar `mejoras-framework-sdd` en `dev/review`.
-4. Volver a correr `./init.sh` después de los cambios y confirmar que sigue pasando con `[OK] Harness SDD listo`.
-5. Revisar que no queden archivos untracked ni cambios sin commitear antes de mover la Issue a `dev/testing/`.
+### Próximos pasos
+1. Mover la Issue `[Dev]` a `dev/testing/`.
+2. Mergear el worktree a `main` y eliminar el worktree.
+3. Mover la Issue `[Dev]` a `dev/done/`.
