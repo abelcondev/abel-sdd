@@ -97,3 +97,54 @@ Implementación de las 7 mejoras del framework SDD aprobadas en `[Design] mejora
 ## UI Reference
 
 No aplica.
+
+## Review: mejoras-framework-sdd/mejoras-framework-sdd
+
+### Veredicto: ❌ Rechazado
+
+### Hallazgos
+1. `sdd/README.md` no incluye `sdd/troubleshooting.md` ni `scripts/install.sh` en su mapa/índice del SDD, a pesar de que ambos archivos fueron creados/modificados en esta feature.
+2. El índice de projects activos en `sdd/README.md` y `sdd/workflow.md` aún dice `*(ninguno)*`, sin reflejar que `mejoras-framework-sdd` está en `dev/review`.
+3. `scripts/install.sh` es un wrapper que solo redirige a `install.sh` en la raíz. No está documentado en `sdd/README.md` y puede generar confusión sobre cuál instalador usar.
+4. No se encontraron tests automatizados formales; las verificaciones de R1–R7 se hacen mediante revisión manual e `init.sh`, lo cual es aceptable para un framework de documentación/scripts bash pero debe quedar documentado.
+5. `./init.sh` pasa en el worktree con el mensaje `[OK] Harness SDD listo`.
+6. Todos los commits siguen Conventional Commits y referencian `mejoras-framework-sdd/mejoras-framework-sdd`.
+7. No se detectaron secrets, logs de debug ni código muerto aparte del wrapper `scripts/install.sh`.
+
+### Trazabilidad R<n> → Test / Verificación
+| Requisito | Verificación | Estado |
+|-----------|--------------|--------|
+| R1 | Revisión manual: `sdd/architecture.md` y `sdd/conventions.md` contienen secciones `Ejemplo` y `Cómo completar este documento`. | ✅ |
+| R2 | Revisión manual + prueba de comandos: `sdd-worktree.sh` rechaza slugs inválidos/worktrees existentes; `sdd-move.sh` rechaza estados inválidos y evita sobrescritura; `install.sh` rechaza destinos no-Git. | ✅ |
+| R3 | `./init.sh` en el worktree detecta concurrencia (`implementing/`/`review/`) y projects sin `[Design]`/`[Dev]`. | ✅ |
+| R4 | Revisión manual: `sdd/templates/issue-design.md` e `issue-dev.md` incluyen secciones `Review` y `Changelog`. | ✅ |
+| R5 | Revisión manual: `install.sh --update` crea backups timestamped de `AGENTS.md` y `CLAUDE.md`. | ✅ |
+| R6 | Revisión manual: existen `sdd/decisions/0001-uso-de-worktrees-por-feature.md`, `sdd/decisions/0002-markdown-como-fuente-de-verdad.md`, `sdd/decisions/adr-template.md` y `sdd/troubleshooting.md`. | ✅ |
+| R7 | Revisión manual: `.claude/agents/leader.md`, `.claude/agents/spec_author.md`, `.claude/agents/implementer.md` y `.claude/agents/reviewer.md` refuerzan `Co-Authored-By` y cambios en `init.sh`. | ✅ |
+
+### Trazabilidad TDD / Commits
+| Requisito | Commit(s) relevantes | Estado |
+|-----------|----------------------|--------|
+| R1 | 6593143 | ✅ |
+| R2 | a62cfa4 | ✅ |
+| R3 | a47cfac | ✅ |
+| R4 | 032a563 | ✅ |
+| R5 | a62cfa4, e9504b1 | ✅ |
+| R6 | 8f9add5 | ✅ |
+| R7 | fc5b68a | ✅ |
+
+### Checklist C1–C7
+- [x] C1 — Harness completo
+- [x] C2 — Coherencia de estado
+- [ ] C3 — Cumplimiento arquitectónico (wrapper `scripts/install.sh` redundante / no documentado)
+- [x] C4 — Verificación real (`init.sh` pasa; cada R<n> verificado manualmente)
+- [ ] C5 — Cierre limpio de sesión (`sdd/README.md` y `sdd/workflow.md` no reflejan el project activo en `dev/review`)
+- [x] C6 — Cumplimiento SDD
+- [x] C7 — Seguridad (inputs validados, sin secrets, sin PII)
+
+### Accionables (si fue rechazado)
+1. Actualizar `sdd/README.md` para incluir `sdd/troubleshooting.md` y `scripts/install.sh` en el mapa del SDD, o eliminar el wrapper `scripts/install.sh` si no aporta valor.
+2. Resolver la redundancia de `scripts/install.sh`: documentar su propósito claramente o eliminarlo y dejar únicamente `install.sh` en la raíz.
+3. Actualizar el índice de projects activos en `sdd/README.md` y `sdd/workflow.md` para reflejar `mejoras-framework-sdd` en `dev/review`.
+4. Volver a correr `./init.sh` después de los cambios y confirmar que sigue pasando con `[OK] Harness SDD listo`.
+5. Revisar que no queden archivos untracked ni cambios sin commitear antes de mover la Issue a `dev/testing/`.
