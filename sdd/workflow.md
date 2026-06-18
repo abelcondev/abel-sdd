@@ -247,6 +247,6 @@ El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, P
 
 | Feature | Design | Dev | Worktree |
 |---|---|---|---|
-| `mejoras-framework-sdd` | `design-ready` | `implementing` | `/Users/abelconde/Zed/abel-sdd-mejoras-framework-sdd` |
+| `mejoras-framework-sdd` | `design-ready` | `review` | `/Users/abelconde/Zed/abel-sdd-mejoras-framework-sdd` |
 
 > Este índice se actualiza manualmente.
