@@ -40,13 +40,15 @@ ensure_repo_root() {
 }
 
 get_main_branch() {
+  local main_branch=""
   if git show-ref --verify --quiet refs/heads/main; then
-    echo "main"
+    main_branch="main"
   elif git show-ref --verify --quiet refs/heads/master; then
-    echo "master"
+    main_branch="master"
   else
     die "No se encontró rama main ni master"
   fi
+  echo "${main_branch}"
 }
 
 validate_feature_slug() {
@@ -66,24 +68,27 @@ worktree_path_for() {
 cmd_create() {
   local feature_slug="$1"
   local branch_name="feature/${feature_slug}"
-  local worktree_path="$(worktree_path_for "${feature_slug}")"
-  local project_path="${worktree_path}/sdd/projects/${feature_slug}"
+  local worktree_path=""
+  local project_path=""
+  local main_branch=""
 
   validate_feature_slug "${feature_slug}"
   ensure_repo_root
+
+  worktree_path="$(worktree_path_for "${feature_slug}")"
+  project_path="${worktree_path}/sdd/projects/${feature_slug}"
 
   if [[ -d "${worktree_path}" ]]; then
     die "El worktree para '${feature_slug}' ya existe en ${worktree_path}"
   fi
 
   if git show-ref --verify --quiet "refs/heads/${branch_name}"; then
-    log_warn "La rama '${branch_name}' ya existe. Se reutilizará."
-  else
-    local main_branch
-    main_branch="$(get_main_branch)"
-    log_info "Creando rama '${branch_name}' desde '${main_branch}'..."
-    git branch "${branch_name}" "${main_branch}"
+    die "La rama '${branch_name}' ya existe. Eliminá el worktree anterior o usá otro slug."
   fi
+
+  main_branch="$(get_main_branch)"
+  log_info "Creando rama '${branch_name}' desde '${main_branch}'..."
+  git branch "${branch_name}" "${main_branch}"
 
   log_info "Creando worktree en ${worktree_path}..."
   git worktree add "${worktree_path}" "${branch_name}"
@@ -151,20 +156,29 @@ EOF
 cmd_remove() {
   local feature_slug="$1"
   local branch_name="feature/${feature_slug}"
-  local worktree_path="$(worktree_path_for "${feature_slug}")"
+  local worktree_path=""
 
   validate_feature_slug "${feature_slug}"
   ensure_repo_root
 
+  worktree_path="$(worktree_path_for "${feature_slug}")"
+
   if [[ -d "${worktree_path}" ]]; then
     log_info "Eliminando worktree ${worktree_path}..."
-    git worktree remove "${worktree_path}" 2>/dev/null || {
-      log_warn "Worktree con cambios no commiteados. Forzando eliminación..."
-      git worktree remove --force "${worktree_path}"
-    }
+    if git worktree remove "${worktree_path}" 2>/dev/null; then
+      log_info "Worktree eliminado limpiamente."
+    else
+      log_warn "Worktree con cambios no commiteados o bloqueado. Forzando eliminación..."
+      git worktree remove --force "${worktree_path}" || {
+        log_warn "No se pudo eliminar con git worktree remove. Limpiando manualmente..."
+      }
+    fi
   else
     log_warn "No existe worktree para '${feature_slug}'"
   fi
+
+  # Asegurar que git no retenga referencias al worktree
+  git worktree prune 2>/dev/null || true
 
   if git show-ref --verify --quiet "refs/heads/${branch_name}"; then
     log_info "Eliminando rama local '${branch_name}'..."
@@ -186,12 +200,15 @@ cmd_list() {
   echo "──────────────────────────────"
 
   local found=0
+  local path=""
+  local ref=""
+  local feature_slug=""
+
   while IFS= read -r line; do
-    local path ref
     path="$(echo "$line" | awk '{print $1}')"
     ref="$(echo "$line" | awk '{print $3}')"
 
-    local feature_slug=""
+    feature_slug=""
     if [[ "$path" == "${WORKTREE_BASE}/${REPO_NAME}-"* ]]; then
       feature_slug="${path#${WORKTREE_BASE}/${REPO_NAME}-}"
     fi
@@ -211,10 +228,13 @@ cmd_list() {
 
 cmd_status() {
   local feature_slug="$1"
-  local worktree_path="$(worktree_path_for "${feature_slug}")"
+  local worktree_path=""
+  local dirty=""
 
   validate_feature_slug "${feature_slug}"
   ensure_repo_root
+
+  worktree_path="$(worktree_path_for "${feature_slug}")"
 
   if [[ ! -d "${worktree_path}" ]]; then
     die "No existe worktree para '${feature_slug}'. Crealo con: ./scripts/sdd-worktree.sh create ${feature_slug}"
@@ -226,7 +246,6 @@ cmd_status() {
   echo "Rama:  $(cd "${worktree_path}" && git branch --show-current)"
   echo ""
 
-  local dirty=""
   if ! (cd "${worktree_path}" && git diff --quiet && git diff --cached --quiet); then
     dirty=" (con cambios no commiteados)"
   fi
@@ -287,6 +306,9 @@ main() {
     status)
       [[ -z "${feature_slug}" ]] && { show_help; exit 1; }
       cmd_status "${feature_slug}"
+      ;;
+    -h|--help|help)
+      show_help
       ;;
     *)
       show_help

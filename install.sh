@@ -4,9 +4,12 @@
 #
 # Uso:
 #   ./install.sh <ruta-al-proyecto-destino>
+#   ./install.sh --update <ruta-al-proyecto-destino>
+#   ./install.sh --help
 #
 # Ejemplo:
 #   ./install.sh /ruta/a/tu-proyecto
+#   ./install.sh --update /ruta/a/tu-proyecto
 
 set -euo pipefail
 
@@ -25,26 +28,57 @@ die() { log_error "$*"; exit 1; }
 
 show_help() {
   cat <<EOF
-Uso: ./install.sh <ruta-al-proyecto-destino>
+Uso: ./install.sh [--update] <ruta-al-proyecto-destino>
 
 Instala el framework SDD en un proyecto existente.
 
 Pasos:
   1. Copia sdd/, scripts/, .claude/agents/, AGENTS.md, CLAUDE.md e init.sh.
   2. No toca el código fuente del proyecto destino.
-  3. Si ya existe sdd/ en el destino, pregunta antes de sobrescribir.
+  3. Verifica que el destino sea un repositorio Git.
+  4. Sin --update: si ya existe sdd/ en el destino, pregunta antes de sobrescribir.
+  5. Con --update: sobrescribe sin preguntar, pero hace backup de AGENTS.md y CLAUDE.md.
 
-Ejemplo:
+Opciones:
+  --update    Sobrescribir sin interacción y respaldar archivos sensibles.
+  --help      Mostrar esta ayuda.
+
+Ejemplos:
   ./install.sh /ruta/a/tu-proyecto
+  ./install.sh --update /ruta/a/tu-proyecto
 EOF
 }
 
-if [ "$#" -ne 1 ]; then
+UPDATE_MODE=false
+DEST_ARG=""
+
+for arg in "$@"; do
+  case "${arg}" in
+    --update)
+      UPDATE_MODE=true
+      ;;
+    --help|-h)
+      show_help
+      exit 0
+      ;;
+    -*)
+      die "Opción desconocida: ${arg}. Usá ./install.sh --help"
+      ;;
+    *)
+      if [[ -n "${DEST_ARG}" ]]; then
+        die "Solo se permite un directorio destino. Usá ./install.sh --help"
+      fi
+      DEST_ARG="${arg}"
+      ;;
+  esac
+done
+
+if [[ -z "${DEST_ARG}" ]]; then
   show_help
   exit 1
 fi
 
-DEST_DIR="$1"
+DEST_DIR="${DEST_ARG}"
 
 if [[ ! -d "${DEST_DIR}" ]]; then
   die "El directorio destino no existe: ${DEST_DIR}"
@@ -56,15 +90,40 @@ if [[ "${DEST_DIR}" == "${SCRIPT_DIR}" ]]; then
   die "El directorio destino no puede ser el mismo repo de abel-sdd."
 fi
 
+if [[ ! -d "${DEST_DIR}/.git" ]]; then
+  die "El directorio destino no es un repositorio Git: ${DEST_DIR}"
+fi
+
 log_info "Instalando SDD en ${DEST_DIR}..."
 
-# Verificar si ya existe sdd/
-if [[ -d "${DEST_DIR}/sdd" ]]; then
-  log_warn "Ya existe sdd/ en el proyecto destino."
-  read -rp "¿Sobrescribir? (s/N): " confirm
-  if [[ "${confirm}" != "s" && "${confirm}" != "S" ]]; then
-    log_info "Instalación cancelada."
-    exit 0
+# Archivos que pueden tener customizaciones del proyecto destino.
+CUSTOM_FILES=(
+  "AGENTS.md"
+  "CLAUDE.md"
+)
+
+if [[ "${UPDATE_MODE}" == true ]]; then
+  for file in "${CUSTOM_FILES[@]}"; do
+    if [[ -f "${DEST_DIR}/${file}" ]]; then
+      backup="${DEST_DIR}/${file}.backup-$(date +%Y%m%d-%H%M%S)"
+      cp "${DEST_DIR}/${file}" "${backup}"
+      log_info "Backup creado: ${backup}"
+    fi
+  done
+else
+  for file in "${CUSTOM_FILES[@]}"; do
+    if [[ -f "${DEST_DIR}/${file}" ]]; then
+      log_warn "Ya existe ${file} en el proyecto destino."
+    fi
+  done
+
+  if [[ -d "${DEST_DIR}/sdd" ]]; then
+    log_warn "Ya existe sdd/ en el proyecto destino."
+    read -rp "¿Sobrescribir? (s/N): " confirm
+    if [[ "${confirm}" != "s" && "${confirm}" != "S" ]]; then
+      log_info "Instalación cancelada."
+      exit 0
+    fi
   fi
 fi
 

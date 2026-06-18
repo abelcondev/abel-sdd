@@ -50,6 +50,43 @@ validate_args() {
   fi
 }
 
+issue_type_for() {
+  local state="$1"
+  case "${state}" in
+    design/spec-needed|design/designing|design/design-ready)
+      echo "[Design]"
+      ;;
+    dev/backlog|dev/spec-needed|dev/spec-ready|dev/implementing|dev/blocked|dev/review|dev/rejected|dev/testing|dev/done|dev/cancelled)
+      echo "[Dev]"
+      ;;
+    *)
+      echo ""
+      ;;
+  esac
+}
+
+validate_state_transition() {
+  local source_state="$1"
+  local target_state="$2"
+  local source_type=""
+  local target_type=""
+
+  source_type="$(issue_type_for "${source_state}")"
+  target_type="$(issue_type_for "${target_state}")"
+
+  if [[ -z "${source_type}" ]]; then
+    die "Estado origen inválido: '${source_state}'. Estados válidos: design/<estado> o dev/<estado>."
+  fi
+
+  if [[ -z "${target_type}" ]]; then
+    die "Estado destino inválido: '${target_state}'. Estados válidos: design/<estado> o dev/<estado>."
+  fi
+
+  if [[ "${source_type}" != "${target_type}" ]]; then
+    die "No se puede mover ${source_type} a ${target_type}. Mantené el tipo de Issue: design/* → design/* o dev/* → dev/*."
+  fi
+}
+
 main() {
   local feature_slug="$1"
   local issue="$2"
@@ -59,6 +96,13 @@ main() {
   local project_path="${REPO_ROOT}/sdd/projects/${feature_slug}"
   local source_file="${project_path}/${source_state}/${issue}.md"
   local target_file="${project_path}/${target_state}/${issue}.md"
+  local issue_type=""
+  local source_rel=""
+  local target_rel=""
+  local commit_msg=""
+
+  validate_state_transition "${source_state}" "${target_state}"
+  issue_type="$(issue_type_for "${source_state}")"
 
   if [ ! -f "${source_file}" ]; then
     die "No existe ${source_file}"
@@ -68,17 +112,10 @@ main() {
     die "Ya existe ${target_file}"
   fi
 
-  local issue_type="Issue"
-  if [[ "${source_state}" == design/* ]]; then
-    issue_type="[Design]"
-  elif [[ "${source_state}" == dev/* ]]; then
-    issue_type="[Dev]"
-  fi
-
   log_info "Moviendo ${issue} ${issue_type}: ${source_state} → ${target_state}"
 
-  local source_rel="${source_file#${REPO_ROOT}/}"
-  local target_rel="${target_file#${REPO_ROOT}/}"
+  source_rel="${source_file#${REPO_ROOT}/}"
+  target_rel="${target_file#${REPO_ROOT}/}"
 
   # git mv solo funciona bien si el archivo ya está committed.
   # Si es nuevo (solo staged o untracked), hacemos mv manual + git add.
@@ -102,7 +139,7 @@ main() {
   git -C "${REPO_ROOT}" add "${target_file}"
 
   # Commitear solo el cambio de esta issue, no otros archivos staged.
-  local commit_msg="chore(sdd): ${issue} ${issue_type} ${source_state} → ${target_state}"
+  commit_msg="chore(sdd): ${issue} ${issue_type} ${source_state} → ${target_state}"
   if git -C "${REPO_ROOT}" diff --cached --quiet -- "${target_file}"; then
     log_warn "No hay cambios para commitear."
     exit 0
