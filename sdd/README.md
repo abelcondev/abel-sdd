@@ -19,6 +19,7 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 | `sdd/quality-gates.md` | Definition of Ready/Done y checklist C1–C7. |
 | `sdd/testing.md` | Estrategia de testing, TDD, fixtures, cobertura. |
 | `sdd/security.md` | Principios de seguridad, RBAC, PII, cumplimiento. |
+| `sdd/troubleshooting.md` | Guía de problemas comunes y soluciones del framework SDD. |
 | `sdd/delivery.md` | Commits, PRs, merge y cierre. |
 | `sdd/decisions/` | ADRs (Architecture Decision Records) del proyecto. |
 | `sdd/templates/` | Templates para projects e issues. |
@@ -57,6 +58,6 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 | Feature | Design | Dev | Worktree |
 |---|---|---|---|
-| *(ninguno)* | — | — | — |
+| `mejoras-framework-sdd` | `design-ready` | `implementing` | `/Users/abelconde/Zed/abel-sdd-mejoras-framework-sdd` |
 
 > Para más detalle, ver `sdd/workflow.md`.
