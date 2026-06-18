@@ -147,3 +147,12 @@ No aplica.
 1. Mover la Issue `[Dev]` a `dev/testing/`.
 2. Mergear el worktree a `main` y eliminar el worktree.
 3. Mover la Issue `[Dev]` a `dev/done/`.
+
+## Cierre
+
+- **Resultado**: feature mergeada a `main`. El framework SDD ahora incluye ejemplos completos en `sdd/architecture.md` y `sdd/conventions.md`, validaciones de estado en `init.sh`, scripts más robustos, templates mejorados, ADRs iniciales, guía de troubleshooting y prompts de agentes reforzados.
+- **Decisiones relevantes**:
+  - D1: incluir ejemplos dentro de las plantillas en lugar de una carpeta `sdd/examples/` separada.
+  - D2: extender `init.sh` con bash puro, sin dependencias de runtime.
+  - D3: usar `install.sh --update` con backups timestamped de `AGENTS.md` y `CLAUDE.md`.
+- **Próximos pasos**: considerar agregar CI para validar `init.sh` y `shellcheck` en los scripts; evaluar crear un test runner ligero para scripts del framework.
