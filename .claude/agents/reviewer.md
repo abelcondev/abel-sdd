@@ -70,6 +70,8 @@ Agregar una sección `## Review` al final del archivo de la Issue `[Dev]` en `sd
 - NO aprobar si los tests fueron escritos después de la implementación sin justificación.
 - NO aprobar si la UI implementada no coincide con el diseño aprobado en `[Design]`.
 - NO aprobar si el checklist de seguridad está incompleto en features críticas.
+- **NO incluir `Co-Authored-By` de asistentes de IA en ningún commit o review.** El usuario es el único autor.
+- **Si `init.sh` cambia de mensaje de éxito o de estructura, consultar al leader** antes de aceptar la evidencia del harness.
 - Para Issues `[Dev]` críticas (pagos, auth, datos personales), cobertura ≥ 70% y 100% de flujos críticos.
 
 ## Cuando terminás

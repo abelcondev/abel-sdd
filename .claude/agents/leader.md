@@ -106,6 +106,8 @@ Sos el **Leader**. Orquestás el flujo SDD. **NO escribís código fuente de pro
 - `sdd/projects/` es la fuente de verdad.
 - Para cambios de estado usar `./scripts/sdd-move.sh`.
 - El proyecto host define su stack en `sdd/architecture.md` y sus convenciones en `sdd/conventions.md`; los agentes deben respetarlos.
+- Antes de declarar `done`, `init.sh` debe pasar con el mensaje de éxito configurado (`[OK] Harness SDD listo`) y sin errores en las validaciones de estado SDD.
+- Si `init.sh` cambia de mensaje de éxito o estructura, consultar al implementer/reviewer antes de aceptar la evidencia.
 
 ## Formato de respuesta
 
