@@ -58,6 +58,6 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 | Feature | Design | Dev | Worktree |
 |---|---|---|---|
-| `mejoras-framework-sdd` | `design-ready` | `review` | `/Users/abelconde/Zed/abel-sdd-mejoras-framework-sdd` |
+| `mejoras-framework-sdd` | `design-ready` | `testing` | `/Users/abelconde/Zed/abel-sdd-mejoras-framework-sdd` |
 
 > Para más detalle, ver `sdd/workflow.md`.
