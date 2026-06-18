@@ -33,6 +33,16 @@ warn() {
   echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
+# Cuenta archivos .md directamente bajo un directorio.
+count_md_files() {
+  local dir="$1"
+  if [[ ! -d "${dir}" ]]; then
+    echo 0
+    return
+  fi
+  find "${dir}" -maxdepth 1 -type f -name '*.md' 2>/dev/null | wc -l | tr -d ' '
+}
+
 # ─────────────────────────────────────────
 # 1. Archivos del harness
 # ─────────────────────────────────────────
@@ -94,9 +104,126 @@ else
 fi
 
 # ─────────────────────────────────────────
-# 3. Checks adicionales del proyecto (opcional)
+# 3. Validaciones de estado SDD
 # ─────────────────────────────────────────
-log_section "3. Checks adicionales del proyecto"
+log_section "3. Validaciones de estado SDD"
+
+DESIGN_STATES=(spec-needed designing design-ready)
+DEV_STATES=(backlog spec-needed spec-ready implementing blocked review rejected testing done cancelled)
+
+state_is_valid() {
+  local state="$1"
+  local type="$2"
+  local s=""
+
+  if [[ "${type}" == "design" ]]; then
+    for s in "${DESIGN_STATES[@]}"; do
+      if [[ "${s}" == "${state}" ]]; then
+        return 0
+      fi
+    done
+  elif [[ "${type}" == "dev" ]]; then
+    for s in "${DEV_STATES[@]}"; do
+      if [[ "${s}" == "${state}" ]]; then
+        return 0
+      fi
+    done
+  fi
+
+  return 1
+}
+
+# 3.1 Concurrencia: máximo una Issue [Dev] en implementing/ o review/.
+if [ -d "sdd/projects" ]; then
+  implementing_count=0
+  review_count=0
+
+  implementing_count=$(find sdd/projects -mindepth 3 -maxdepth 3 -type d -name implementing -exec find {} -maxdepth 1 -type f -name '*.md' \; 2>/dev/null | wc -l | tr -d ' ')
+  review_count=$(find sdd/projects -mindepth 3 -maxdepth 3 -type d -name review -exec find {} -maxdepth 1 -type f -name '*.md' \; 2>/dev/null | wc -l | tr -d ' ')
+
+  active_dev_count=$((implementing_count + review_count))
+
+  if [[ "${active_dev_count}" -eq 0 ]]; then
+    ok "No hay Issues [Dev] en implementing/ ni review/"
+  elif [[ "${active_dev_count}" -eq 1 ]]; then
+    ok "Hay exactamente una Issue [Dev] en implementing/ o review/"
+  else
+    fail "Hay ${active_dev_count} Issues [Dev] en implementing/ o review/. Debe haber solo una."
+  fi
+else
+  warn "No se puede validar concurrencia: falta sdd/projects/"
+fi
+
+# 3.2 Cada project debe tener al menos una Issue [Design] y una [Dev].
+# 3.3 Las carpetas de estado deben ser válidas según sdd/workflow.md.
+if [ -d "sdd/projects" ]; then
+  projects_found=0
+
+  for project_dir in sdd/projects/*/; do
+    [[ -d "${project_dir}" ]] || continue
+    projects_found=$((projects_found + 1))
+
+    project_name="$(basename "${project_dir}")"
+    design_count=0
+    dev_count=0
+
+    if [ -d "${project_dir}/design" ]; then
+      for state_dir in "${project_dir}/design"/*/; do
+        [[ -d "${state_dir}" ]] || continue
+        state_name="$(basename "${state_dir}")"
+        if state_is_valid "${state_name}" design; then
+          design_count=$((design_count + $(count_md_files "${state_dir}")))
+        else
+          fail "${project_name}/design/${state_name} no es un estado válido para [Design]"
+        fi
+      done
+
+      # No debería haber archivos sueltos directamente en design/
+      if [[ "$(count_md_files "${project_dir}/design")" -gt 0 ]]; then
+        fail "${project_name}/design/ contiene archivos .md fuera de una carpeta de estado"
+      fi
+    fi
+
+    if [ -d "${project_dir}/dev" ]; then
+      for state_dir in "${project_dir}/dev"/*/; do
+        [[ -d "${state_dir}" ]] || continue
+        state_name="$(basename "${state_dir}")"
+        if state_is_valid "${state_name}" dev; then
+          dev_count=$((dev_count + $(count_md_files "${state_dir}")))
+        else
+          fail "${project_name}/dev/${state_name} no es un estado válido para [Dev]"
+        fi
+      done
+
+      if [[ "$(count_md_files "${project_dir}/dev")" -gt 0 ]]; then
+        fail "${project_name}/dev/ contiene archivos .md fuera de una carpeta de estado"
+      fi
+    fi
+
+    if [[ "${design_count}" -eq 0 ]]; then
+      fail "${project_name} no tiene ninguna Issue [Design]"
+    else
+      ok "${project_name}: tiene al menos una Issue [Design]"
+    fi
+
+    if [[ "${dev_count}" -eq 0 ]]; then
+      fail "${project_name} no tiene ninguna Issue [Dev]"
+    else
+      ok "${project_name}: tiene al menos una Issue [Dev]"
+    fi
+  done
+
+  if [[ "${projects_found}" -eq 0 ]]; then
+    warn "No hay projects en sdd/projects/"
+  fi
+else
+  warn "No se puede validar projects: falta sdd/projects/"
+fi
+
+# ─────────────────────────────────────────
+# 4. Checks adicionales del proyecto (opcional)
+# ─────────────────────────────────────────
+log_section "4. Checks adicionales del proyecto"
 
 if [ -x "./scripts/project-checks.sh" ]; then
   echo "Corriendo ./scripts/project-checks.sh..."
