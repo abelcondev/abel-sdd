@@ -64,3 +64,26 @@ Implementación de [<feature>], basada en el diseño aprobado en [Issue Design].
 - Diseño aprobado: `sdd/projects/<feature-slug>/design/design-ready/`
 - Artboards: `<feature-slug>-<screen>`
 - Screenshots: [links]
+
+## Changelog
+
+| Fecha | Autor | Cambio | Motivo |
+|---|---|---|---|
+| YYYY-MM-DD | Nombre | Breve descripción del cambio | Por qué se hizo |
+
+> Registrar cambios estructurales, técnicos o de alcance durante el ciclo de vida de la issue.
+
+## Review
+
+### Veredicto: ✅ Aprobado / ❌ Rechazado
+
+### Hallazgos
+1. ...
+
+### Trazabilidad R<n> → Test
+| Requisito | Test file | Línea | Estado |
+|-----------|-----------|-------|--------|
+| R1 | ... | ... | ✅ |
+
+### Accionables (si fue rechazado)
+1. ...

@@ -67,3 +67,21 @@ CUANDO ..., el sistema DEBE ... (notación EARS).
 ## Dependencies
 
 - Bloquea a: `[Dev] <issue-dev>`
+
+## Changelog
+
+| Fecha | Autor | Cambio | Motivo |
+|---|---|---|---|
+| YYYY-MM-DD | Nombre | Breve descripción del cambio | Por qué se hizo |
+
+> Registrar cambios estructurales o de alcance durante el ciclo de vida de la issue.
+
+## Review
+
+### Veredicto: ✅ Aprobado / ❌ Rechazado
+
+### Hallazgos
+1. ...
+
+### Accionables (si fue rechazado)
+1. ...
