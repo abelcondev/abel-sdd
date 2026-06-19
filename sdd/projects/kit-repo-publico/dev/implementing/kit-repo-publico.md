@@ -55,3 +55,10 @@ Implementación del kit básico de repo público para `abel-sdd`.
 ## Dependencies
 
 - blockedBy: [Design] `kit-repo-publico`
+
+## Notas de progreso
+
+- 2026-06-19: README.md reescrito con badge de CI, secciones completas y diagrama de flujo.
+- 2026-06-19: Creados `.github/workflows/ci.yml`, `CONTRIBUTING.md`, `CHANGELOG.md` y `.github/PULL_REQUEST_TEMPLATE.md`.
+- 2026-06-19: `.gitignore` actualizado con worktrees hermanos, logs de init, entornos e IDEs.
+- 2026-06-19: Commits atómicos realizados. `./init.sh` pasa: `[OK] Harness SDD listo`.
