@@ -1,7 +1,7 @@
 # [Dev] Kit básico de repo público
 
 Project: `sdd/projects/kit-repo-publico/`
-Estado: `dev/implementing`
+Estado: `dev/review`
 
 ## Context
 
