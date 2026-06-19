@@ -111,6 +111,9 @@ No aplica.
 - 2026-06-19: ADR-0003 creado en `sdd/decisions/0003-integracion-bdd-con-fase-product.md`.
 - 2026-06-19: `.claude/agents/spec_author.md` actualizado con responsabilidades de [Product].
 - 2026-06-19: `./init.sh` pasa con `[OK] Harness SDD listo`. Se migró `mejoras-framework-sdd` a [Product] para cumplir la validación.
+- 2026-06-19 (rework): H1 corregido — eliminado bloque duplicado en `.claude/agents/spec_author.md`.
+- 2026-06-19 (rework): H2 corregido — referencia genérica `dev/<estado>/integrar-bdd-product.md` en ADR-0003.
+- 2026-06-19 (rework): H3 atendido — `scripts/sdd-move.sh` ahora advierte si [Design] avanza sin [Product] en `product-ready/` o [Dev] sin [Design] en `design-ready/`.
 
 ## Review
 
