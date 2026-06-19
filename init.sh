@@ -108,6 +108,7 @@ fi
 # ─────────────────────────────────────────
 log_section "3. Validaciones de estado SDD"
 
+PRODUCT_STATES=(discovery product-ready)
 DESIGN_STATES=(spec-needed designing design-ready)
 DEV_STATES=(backlog spec-needed spec-ready implementing blocked review rejected testing done cancelled)
 
@@ -116,7 +117,13 @@ state_is_valid() {
   local type="$2"
   local s=""
 
-  if [[ "${type}" == "design" ]]; then
+  if [[ "${type}" == "product" ]]; then
+    for s in "${PRODUCT_STATES[@]}"; do
+      if [[ "${s}" == "${state}" ]]; then
+        return 0
+      fi
+    done
+  elif [[ "${type}" == "design" ]]; then
     for s in "${DESIGN_STATES[@]}"; do
       if [[ "${s}" == "${state}" ]]; then
         return 0
@@ -154,7 +161,7 @@ else
   warn "No se puede validar concurrencia: falta sdd/projects/"
 fi
 
-# 3.2 Cada project debe tener al menos una Issue [Design] y una [Dev].
+# 3.2 Cada project debe tener al menos una Issue [Product], una [Design] y una [Dev].
 # 3.3 Las carpetas de estado deben ser válidas según sdd/workflow.md.
 if [ -d "sdd/projects" ]; then
   projects_found=0
@@ -164,8 +171,26 @@ if [ -d "sdd/projects" ]; then
     projects_found=$((projects_found + 1))
 
     project_name="$(basename "${project_dir}")"
+    product_count=0
     design_count=0
     dev_count=0
+
+    if [ -d "${project_dir}/product" ]; then
+      for state_dir in "${project_dir}/product"/*/; do
+        [[ -d "${state_dir}" ]] || continue
+        state_name="$(basename "${state_dir}")"
+        if state_is_valid "${state_name}" product; then
+          product_count=$((product_count + $(count_md_files "${state_dir}")))
+        else
+          fail "${project_name}/product/${state_name} no es un estado válido para [Product]"
+        fi
+      done
+
+      # No debería haber archivos sueltos directamente en product/
+      if [[ "$(count_md_files "${project_dir}/product")" -gt 0 ]]; then
+        fail "${project_name}/product/ contiene archivos .md fuera de una carpeta de estado"
+      fi
+    fi
 
     if [ -d "${project_dir}/design" ]; then
       for state_dir in "${project_dir}/design"/*/; do
@@ -198,6 +223,12 @@ if [ -d "sdd/projects" ]; then
       if [[ "$(count_md_files "${project_dir}/dev")" -gt 0 ]]; then
         fail "${project_name}/dev/ contiene archivos .md fuera de una carpeta de estado"
       fi
+    fi
+
+    if [[ "${product_count}" -eq 0 ]]; then
+      fail "${project_name} no tiene ninguna Issue [Product]"
+    else
+      ok "${project_name}: tiene al menos una Issue [Product]"
     fi
 
     if [[ "${design_count}" -eq 0 ]]; then
