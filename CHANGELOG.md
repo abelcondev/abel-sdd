@@ -22,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `sdd-cli` one-command installer. Run `sdd init` from any Git repository to download and install the latest SDD.
+- `install-cli.sh` script to install `sdd-cli` with `curl ... | bash`.
 
 ### Changed
 

@@ -53,6 +53,12 @@ chmod +x ~/.local/bin/sdd
 
 Make sure `~/.local/bin` is in your `PATH`.
 
+Or use the installer script:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/abelcondev/abel-sdd/main/install-cli.sh | bash
+```
+
 Then, from any project:
 
 ```bash
