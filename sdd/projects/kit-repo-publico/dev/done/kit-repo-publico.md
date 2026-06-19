@@ -1,7 +1,7 @@
 # [Dev] Kit básico de repo público
 
 Project: `sdd/projects/kit-repo-publico/`
-Estado: `dev/testing`
+Estado: `dev/done`
 
 ## Context
 
@@ -164,3 +164,9 @@ Implementación del kit básico de repo público para `abel-sdd`.
 - [x] Audit de dependencias sin vulnerabilidades críticas (N/A).
 - [x] No hard deletes en entidades de negocio (N/A).
 - [x] Secrets fuera del código.
+
+## Cierre
+
+- **Resultado**: feature mergeada a `main`. El repo ahora tiene README mejorado, CI con GitHub Actions, CONTRIBUTING.md, CHANGELOG.md, PR template y `.gitignore` revisado.
+- **Decisiones relevantes**: usar GitHub Actions nativo para CI; formato Keep a Changelog para el changelog.
+- **Próximos pasos**: publicar el repo en GitHub, configurar Template repository y verificar que el badge de CI apunte al owner/repo correcto.

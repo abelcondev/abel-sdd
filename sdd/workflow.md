@@ -268,6 +268,6 @@ El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, P
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| `kit-repo-publico` | `product-ready` | `design-ready` | `testing` | `abel-sdd-kit-repo-publico` |
+| *(ninguno)* | — | — | — | — |
 
 > Este índice se actualiza manualmente.
