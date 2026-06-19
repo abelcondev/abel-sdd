@@ -8,7 +8,15 @@ Thumbs.db
 
 # Logs
 *.log
+/tmp/sdd-init-*.log
 
 # Local notes
 NOTES.md
 TODO.md
+
+# Environment
+.env
+.env.local
+
+# Worktrees hermanos generados por scripts/sdd-worktree.sh
+abel-sdd-*/
