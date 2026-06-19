@@ -2,7 +2,7 @@
 
 - **Estado**: aprobada
 - **Fecha**: 2026-06-19
-- **Decisores**: @leader, @spec_author, @implementer
+- **Decisores**: @orchestrator, @specifier, @developer
 
 ## Contexto
 

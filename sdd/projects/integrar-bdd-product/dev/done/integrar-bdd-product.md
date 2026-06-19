@@ -44,8 +44,8 @@ Implementación técnica de la integración de BDD en el framework SDD. Se agreg
 | `scripts/sdd-worktree.sh` | modificar | Crear `product/discovery/` y `product/product-ready/` |
 | `scripts/sdd-move.sh` | modificar | Soportar estados `product/*` |
 | `init.sh` | modificar | Validar [Product], [Design], [Dev] |
-| `.claude/agents/leader.md` | modificar | Incluir [Product] en acciones |
-| `.claude/agents/spec_author.md` | modificar | Incluir [Product] en responsabilidades |
+| `.claude/agents/orchestrator.md` | modificar | Incluir [Product] en acciones |
+| `.claude/agents/specifier.md` | modificar | Incluir [Product] en responsabilidades |
 | `sdd/decisions/` | crear | ADR sobre integración de BDD |
 
 ## Technical Notes
@@ -64,7 +64,7 @@ Implementación técnica de la integración de BDD en el framework SDD. Se agreg
 6. Modificar `scripts/sdd-worktree.sh` para crear `product/`.
 7. Modificar `scripts/sdd-move.sh` para soportar `product/*`.
 8. Extender `init.sh` para validar [Product].
-9. Actualizar `.claude/agents/leader.md` y `.claude/agents/spec_author.md`.
+9. Actualizar `.claude/agents/orchestrator.md` y `.claude/agents/specifier.md`.
 10. Crear ADR sobre integración de BDD.
 11. Correr `./init.sh` y verificar.
 
@@ -105,13 +105,13 @@ No aplica.
 - 2026-06-19: R2 completado — template `sdd/templates/issue-product.md` creado.
 - 2026-06-19: R4/R5 completados — templates `issue-design.md` e `issue-dev.md` actualizados con BDD Reference y BDD Test Plan.
 - 2026-06-19: R1 completado — `sdd/workflow.md` y `sdd/README.md` documentan la fase [Product] y el flujo Product → Design → Dev.
-- 2026-06-19: R3 completado — `sdd/workflow.md` y `.claude/agents/leader.md` reflejan que [Design] no avanza hasta [Product] en `product-ready`.
+- 2026-06-19: R3 completado — `sdd/workflow.md` y `.claude/agents/orchestrator.md` reflejan que [Design] no avanza hasta [Product] en `product-ready`.
 - 2026-06-19: R6 completado — templates normalizados con secciones claras de BDD y trazabilidad entre fases.
 - 2026-06-19: R7 completado — `scripts/sdd-worktree.sh`, `scripts/sdd-move.sh` e `init.sh` soportan y validan [Product].
 - 2026-06-19: ADR-0003 creado en `sdd/decisions/0003-integracion-bdd-con-fase-product.md`.
-- 2026-06-19: `.claude/agents/spec_author.md` actualizado con responsabilidades de [Product].
+- 2026-06-19: `.claude/agents/specifier.md` actualizado con responsabilidades de [Product].
 - 2026-06-19: `./init.sh` pasa con `[OK] Harness SDD listo`. Se migró `mejoras-framework-sdd` a [Product] para cumplir la validación.
-- 2026-06-19 (rework): H1 corregido — eliminado bloque duplicado en `.claude/agents/spec_author.md`.
+- 2026-06-19 (rework): H1 corregido — eliminado bloque duplicado en `.claude/agents/specifier.md`.
 - 2026-06-19 (rework): H2 corregido — referencia genérica `dev/<estado>/integrar-bdd-product.md` en ADR-0003.
 - 2026-06-19 (rework): H3 atendido — `scripts/sdd-move.sh` ahora advierte si [Design] avanza sin [Product] en `product-ready/` o [Dev] sin [Design] en `design-ready/`.
 
@@ -123,7 +123,7 @@ La re-revisión confirma que los hallazgos H1 y H2 de la review anterior fueron 
 
 ### Hallazgos
 
-1. **H1 — Contenido duplicado en `.claude/agents/spec_author.md`** ✅ **Resuelto**
+1. **H1 — Contenido duplicado en `.claude/agents/specifier.md`** ✅ **Resuelto**
    La sección `### Fase 1: Issue [Design]` ya no contiene el bloque duplicado de bullets. El orden ahora es: Context, Requirements, Acceptance Criteria, BDD Reference, UI/UX Design.
 
 2. **H2 — Referencia de estado incorrecta en ADR-0003** ✅ **Resuelto**
@@ -138,7 +138,7 @@ La re-revisión confirma que los hallazgos H1 y H2 de la review anterior fueron 
 |---|---|---|---|
 | R1 | [Product] | `scripts/sdd-worktree.sh` crea `product/discovery/` y `product/product-ready/`; `sdd/workflow.md` sección 2 documenta la estructura | ✅ |
 | R2 | [Product] | `sdd/templates/issue-product.md` incluye Context, Product Goals, Requirements, Acceptance Criteria, BDD Scenarios, Risks y Dependencies | ✅ |
-| R3 | [Product] | `sdd/workflow.md` sección 5 y `.claude/agents/leader.md` reglas de oro definen que `[Design]` no avanza hasta `[Product]` en `product-ready/` | ✅ |
+| R3 | [Product] | `sdd/workflow.md` sección 5 y `.claude/agents/orchestrator.md` reglas de oro definen que `[Design]` no avanza hasta `[Product]` en `product-ready/` | ✅ |
 | R4 | [Product] | `sdd/templates/issue-design.md` sección `BDD Reference` | ✅ |
 | R5 | [Product] | `sdd/templates/issue-dev.md` sección `BDD Test Plan` | ✅ |
 | R6 | [Product] | Templates de [Product], [Design] y [Dev] con secciones claras de BDD y trazabilidad | ✅ |
@@ -160,7 +160,7 @@ La re-revisión confirma que los hallazgos H1 y H2 de la review anterior fueron 
 
 #### C1 — Harness completo
 - [x] `AGENTS.md`, `CLAUDE.md`, `sdd/README.md`, `sdd/workflow.md`, `sdd/architecture.md`, `sdd/conventions.md`, `sdd/quality-gates.md`, `sdd/testing.md`, `sdd/security.md`, `sdd/delivery.md` existen.
-- [x] `.claude/agents/` tiene `leader.md`, `spec_author.md`, `implementer.md`, `reviewer.md`.
+- [x] `.claude/agents/` tiene `orchestrator.md`, `specifier.md`, `developer.md`, `auditor.md`.
 - [x] `init.sh` existe, es ejecutable y pasa con `[OK] Harness SDD listo`.
 - [x] `sdd/projects/` existe y tiene al menos un project.
 
@@ -202,7 +202,7 @@ La re-revisión confirma que los hallazgos H1 y H2 de la review anterior fueron 
 
 Ninguno. La feature está aprobada para pasar a `dev/testing/` y esperar validación humana del merge.
 
-### Próximo paso sugerido para el Leader
+### Próximo paso sugerido para el Orchestrator
 
 1. Mover esta Issue `[Dev]` a `dev/testing/`.
 2. Esperar validación humana del merge.

@@ -45,7 +45,7 @@ Usar **archivos Markdown en el repositorio** como fuente de verdad:
 | Alternativa | Por qué no se eligió |
 |---|---|
 | GitHub Issues / Jira como fuente de verdad | Dependencia de servicio externo, no versionado junto al código, difícil de auditar offline. |
-| YAML/JSON para specs | Menos legible para humanos y reviewers; requiere parser específico. |
+| YAML/JSON para specs | Menos legible para humanos y revisores; requiere parser específico. |
 | Wiki del repo | No representa el estado por carpeta; menos estructurado para el workflow SDD. |
 
 ## Referencias

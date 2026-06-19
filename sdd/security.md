@@ -157,7 +157,7 @@ Si se descubre una vulnerabilidad o fuga de datos durante una feature:
 
 ## 10. Checklist final de seguridad (C7)
 
-El `reviewer` verifica estos ítems antes de aprobar una feature crítica:
+El `auditor` verifica estos ítems antes de aprobar una feature crítica:
 
 - [ ] RBAC validado en tests.
 - [ ] Inputs sanitizados y validados.

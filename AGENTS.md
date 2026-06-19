@@ -8,9 +8,9 @@ NO es una biblia de reglas: es un **mapa**. Lee solo lo que necesites cuando lo 
 
 ## 1. Before starting (obligatorio)
 
-En cada sesión, el agente leader DEBE:
+En cada sesión, el agente orchestrator DEBE:
 
-1. **Leer `CLAUDE.md`** — fuerza el rol leader.
+1. **Leer `CLAUDE.md`** — fuerza el rol orchestrator.
 2. **Leer `sdd/README.md`** — entiende el flujo SDD.
 3. **Consultar `sdd/projects/`** — estado actual de features e issues.
 4. **Correr `init.sh` bajo demanda** — cuando el usuario lo pida, antes de declarar `done`, o cuando haya cambios que justifiquen verificar el entorno. No ejecutarlo automáticamente al inicio de cada sesión.
@@ -21,7 +21,7 @@ En cada sesión, el agente leader DEBE:
 
 | Ruta/Archivo | Contenido | ¿Cuándo leerlo? |
 |---|---|---|
-| `CLAUDE.md` | Forzador de rol leader + stack mínimo | Siempre al inicio |
+| `CLAUDE.md` | Forzador de rol orchestrator + stack mínimo | Siempre al inicio |
 | `AGENTS.md` | Este archivo — mapa y hard rules | Siempre al inicio |
 | `sdd/README.md` | Índice del SDD | Antes de cualquier trabajo |
 | `sdd/workflow.md` | Estados, flujo de trabajo, worktrees, reglas de oro | Antes de cualquier trabajo |
@@ -55,7 +55,7 @@ Reglas no negociables:
 - **Issue `[Design]` se considera cerrada cuando llega a `Design Ready`**.
 - **Issue `[Dev]` no avanza hasta que Issue `[Design]` esté en `Design Ready`**.
 - **Tests antes de implementación (TDD)**. Cada `R<n>` genera al menos un test rojo antes del código.
-- **No editar código de producción directamente desde el leader**. El leader orquesta; el implementer escribe código.
+- **No editar código de producción directamente desde el orchestrator**. El orchestrator orquesta; el developer escribe código.
 - **Todo cambio importante se registra**, no solo en el chat: en `sdd/projects/` (estado, descripción de Issue/Project), o en `sdd/decisions/` cuando afecta la arquitectura.
 - **`sdd/` es la fuente de verdad** para estado, specs y tareas. No hay `feature_list.yaml` ni `specs/` local.
 - **Ninguna Issue `[Dev]` con UI pasa a `Implementing` sin diseño aprobado en `[Design]`**.
@@ -117,10 +117,10 @@ backlog → spec-needed → spec-ready → implementing → review → testing �
 | `backlog` | Issue creada, bloqueada por `[Design]`. |
 | `spec-needed` | Falta escribir el spec técnico + plan de implementación + Test Plan. |
 | `spec-ready` | Spec técnico completo. Espera aprobación humana. |
-| `implementing` | Implementer trabajando en el worktree. |
+| `implementing` | Developer trabajando en el worktree. |
 | `blocked` | Issue pausada por bloqueo externo o decisión pendiente. |
-| `review` | Código listo. Reviewer verificando. |
-| `rejected` | Reviewer rechazó. Requiere retrabajo. |
+| `review` | Código listo. Auditor verificando. |
+| `rejected` | Auditor rechazó. Requiere retrabajo. |
 | `testing` | Mergeado. Validación final. |
 | `done` | Feature completada y verificada. |
 | `cancelled` | Issue descartada. |
@@ -129,16 +129,16 @@ backlog → spec-needed → spec-ready → implementing → review → testing �
 
 | Fase | Responsable | Acción |
 |---|---|---|
-| Idea | Humano/Leader | Crear worktree de feature con `./scripts/sdd-worktree.sh create <feature-slug>`. |
-| Spec Design | spec_author | Entrevistar al humano con `AskUserQuestion` y escribir spec en archivo de Issue `[Design]`. |
-| Spec review | Humano | Aprobar spec funcional/UI. Leader mueve el archivo a `design/designing/` con `./scripts/sdd-move.sh`. |
+| Idea | Humano/Orchestrator | Crear worktree de feature con `./scripts/sdd-worktree.sh create <feature-slug>`. |
+| Spec Design | specifier | Entrevistar al humano con `AskUserQuestion` y escribir spec en archivo de Issue `[Design]`. |
+| Spec review | Humano | Aprobar spec funcional/UI. Orchestrator mueve el archivo a `design/designing/` con `./scripts/sdd-move.sh`. |
 | Diseño UI | Humano/Agente asistido | Iterar en la herramienta de diseño del proyecto. Actualizar assets en Issue `[Design]`. |
-| Design review | Humano | Aprobar diseño. Leader mueve el archivo a `design/design-ready/`. |
-| Spec Dev | spec_author | Escribir spec técnico + Test Plan + Impact Analysis en archivo de Issue `[Dev]`. Leader mueve a `dev/spec-needed/` o `dev/spec-ready/`. |
-| Spec technical review | Humano | Aprobar spec técnico. Leader mueve a `dev/implementing/`. |
-| Implementación | implementer | Ejecutar TDD: escribir tests rojos, implementación mínima, refactor. Escribir código en el proyecto. Al terminar, leader mueve a `dev/review/`. |
-| Review | reviewer | Auditar contra `sdd/quality-gates.md` C1–C7 y `sdd/security.md`. |
-| Closure | Leader | Mergear el worktree a `main`, eliminar worktree, mover archivo a `dev/done/`. |
+| Design review | Humano | Aprobar diseño. Orchestrator mueve el archivo a `design/design-ready/`. |
+| Spec Dev | specifier | Escribir spec técnico + Test Plan + Impact Analysis en archivo de Issue `[Dev]`. Orchestrator mueve a `dev/spec-needed/` o `dev/spec-ready/`. |
+| Spec technical review | Humano | Aprobar spec técnico. Orchestrator mueve a `dev/implementing/`. |
+| Implementación | developer | Ejecutar TDD: escribir tests rojos, implementación mínima, refactor. Escribir código en el proyecto. Al terminar, orchestrator mueve a `dev/review/`. |
+| Review | auditor | Auditar contra `sdd/quality-gates.md` C1–C7 y `sdd/security.md`. |
+| Closure | Orchestrator | Mergear el worktree a `main`, eliminar worktree, mover archivo a `dev/done/`. |
 
 ---
 

@@ -121,7 +121,7 @@ No aplica.
 | R4 | Revisión manual: `sdd/templates/issue-design.md` e `issue-dev.md` incluyen secciones `Review` y `Changelog`. | ✅ |
 | R5 | Revisión manual: `install.sh --update` crea backups timestamped de `AGENTS.md` y `CLAUDE.md`. | ✅ |
 | R6 | Revisión manual: existen `sdd/decisions/0001-uso-de-worktrees-por-feature.md`, `sdd/decisions/0002-markdown-como-fuente-de-verdad.md`, `sdd/decisions/adr-template.md` y `sdd/troubleshooting.md`. | ✅ |
-| R7 | Revisión manual: `.claude/agents/leader.md`, `.claude/agents/spec_author.md`, `.claude/agents/implementer.md` y `.claude/agents/reviewer.md` refuerzan `Co-Authored-By` y cambios en `init.sh`. | ✅ |
+| R7 | Revisión manual: `.claude/agents/orchestrator.md`, `.claude/agents/specifier.md`, `.claude/agents/developer.md` y `.claude/agents/auditor.md` refuerzan `Co-Authored-By` y cambios en `init.sh`. | ✅ |
 
 ### Trazabilidad TDD / Commits
 | Requisito | Commit(s) relevantes | Estado |
