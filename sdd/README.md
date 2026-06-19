@@ -60,6 +60,6 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| `integrar-bdd-product` | `product-ready` | `design-ready` | `implementing` | `abel-sdd-integrar-bdd-product` |
+| `integrar-bdd-product` | `product-ready` | `design-ready` | `review` | `abel-sdd-integrar-bdd-product` |
 
 > Para más detalle, ver `sdd/workflow.md`.
