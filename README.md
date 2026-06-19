@@ -1,5 +1,7 @@
 # abel-sdd
 
+[![CI](https://github.com/abelconde/abel-sdd/actions/workflows/ci.yml/badge.svg)](https://github.com/abelconde/abel-sdd/actions/workflows/ci.yml)
+
 > Framework de trabajo **agnóstico al stack** para diseñar, construir y entregar software con specs, gates humanos, worktrees y TDD.
 
 ## ¿Qué es?
@@ -14,12 +16,14 @@
 
 No impone lenguaje, framework, base de datos, package manager ni herramienta de diseño. Cada proyecto completa sus propias decisiones en `sdd/architecture.md` y `sdd/conventions.md`.
 
-## Instalación en un proyecto
+## Instalación
+
+Descargá el framework y ejecutá el instalador:
 
 ```bash
 git clone <url-del-repo> /tmp/abel-sdd
 cd /tmp/abel-sdd
-./install.sh /ruta/a/tu/proyecto
+./install.sh /ruta/a/tu-proyecto
 ```
 
 O, si ya tenés el repo local:
@@ -29,6 +33,8 @@ cd /ruta/a/abel-sdd
 ./install.sh /ruta/a/tu-proyecto
 ```
 
+> El instalador copia `sdd/`, `scripts/`, `.claude/agents/`, `AGENTS.md`, `CLAUDE.md` e `init.sh` al proyecto destino, sin tocar su código fuente.
+
 Luego, en el proyecto destino:
 
 1. Completá `sdd/architecture.md` con el stack del proyecto.
@@ -36,7 +42,7 @@ Luego, en el proyecto destino:
 3. Opcional: creá `scripts/project-checks.sh` para agregar validaciones de tests/lint/build.
 4. Corré `./init.sh` para verificar el harness.
 
-## Uso
+## Uso rápido
 
 ### Crear una feature
 
@@ -69,6 +75,8 @@ chore(sdd): login [Design] spec-needed → designing
 ./init.sh
 ```
 
+Debe imprimir `[OK] Harness SDD listo` antes de declarar una sesión como cerrada.
+
 ## Estructura
 
 ```text
@@ -76,6 +84,13 @@ chore(sdd): login [Design] spec-needed → designing
 ├── AGENTS.md              # Mapa de agentes
 ├── CLAUDE.md              # Prompt de orchestrator
 ├── init.sh                # Verifica el harness SDD
+├── install.sh             # Instala el framework en un proyecto destino
+├── LICENSE
+├── CONTRIBUTING.md        # Guía para contribuidores
+├── CHANGELOG.md           # Historial de cambios
+├── .github/
+│   ├── workflows/ci.yml   # CI con GitHub Actions
+│   └── PULL_REQUEST_TEMPLATE.md
 ├── sdd/
 │   ├── README.md          # Índice
 │   ├── workflow.md        # Estados y flujo
@@ -100,14 +115,32 @@ chore(sdd): login [Design] spec-needed → designing
 | Rol | Qué hace | Qué NO hace |
 |---|---|---|
 | **Orchestrator** | Orquesta el flujo, mueve estados, cierra sesiones | Nunca edita código de producción |
-| **specifier** | Escribe specs funcionales y técnicos; entrevista al humano | No implementa código |
-| **developer** | Escribe código y tests siguiendo TDD | No salta gates ni aprueba su propio trabajo |
-| **auditor** | Audita código contra los quality gates C1–C7 | No implementa en la misma feature que revisa |
+| **Specifier** | Escribe specs funcionales y técnicos; entrevista al humano | No implementa código |
+| **Developer** | Escribe código y tests siguiendo TDD | No salta gates ni aprueba su propio trabajo |
+| **Auditor** | Audita código contra los quality gates C1–C7 | No implementa en la misma feature que revisa |
 | **Humano** | Aprueba los 4 gates | No escribe código ni specs (salvo que quiera) |
 
-## Contribuir
+## Flujo
 
-Si querés mejorar el framework, editá los archivos en este repo y enviá un PR/MR.
+Cada feature pasa por tres fases con gates humanos de aprobación entre ellas:
+
+```text
+┌──────────┐     ┌──────────┐     ┌──────────┐
+│ Product  │ --> │  Design  │ --> │   Dev    │
+│ discovery│     │designing │     │implementing
+│product-  │     │design-   │     │review ->  
+│  ready   │     │  ready   │     │  testing  │
+└──────────┘     └──────────┘     └──────────┘
+     │                 │                 │
+     └─────────────────┴─────────────────┘
+              Gate humano obligatorio
+```
+
+1. **Product**: se define el problema, alcance y out-of-scope.
+2. **Design**: se itera el spec funcional/UI hasta obtener aprobación.
+3. **Dev**: se escribe el spec técnico, se implementa con TDD y se audita.
+
+Ver `sdd/workflow.md` para el detalle completo de estados y transiciones.
 
 ## Licencia
 
