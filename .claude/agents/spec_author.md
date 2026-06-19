@@ -61,11 +61,6 @@ Solo después de que la Issue `[Product]` esté en `product/product-ready/`, esc
 - `Acceptance Criteria`
 - `BDD Reference` (referencia a los escenarios aprobados en `[Product]`)
 - `UI/UX Design` (Layout, Colores, Tipografía, Componentes, Flujos, Interacciones, Accesibilidad, Assets de diseño)
-
-- `Context`
-- `Requirements` (notación EARS: `R1`, `R2`...)
-- `Acceptance Criteria`
-- `UI/UX Design` (Layout, Colores, Tipografía, Componentes, Flujos, Interacciones, Accesibilidad, Assets de diseño)
 - `Risks & Mitigations`
 - `Dependencies`
 
