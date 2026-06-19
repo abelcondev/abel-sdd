@@ -34,7 +34,7 @@ log_error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
 die() { log_error "$*"; exit 1; }
 
 ensure_repo_root() {
-  if [[ ! -d "${REPO_ROOT}/.git" ]]; then
+  if [[ ! -e "${REPO_ROOT}/.git" ]]; then
     die "No se encontró .git en ${REPO_ROOT}"
   fi
 }
@@ -94,6 +94,7 @@ cmd_create() {
   git worktree add "${worktree_path}" "${branch_name}"
 
   log_info "Creando estructura vacía del project en sdd/projects/${feature_slug}/..."
+  mkdir -p "${project_path}/product"/{discovery,product-ready}
   mkdir -p "${project_path}/design"/{spec-needed,designing,design-ready}
   mkdir -p "${project_path}/dev"/{backlog,spec-needed,spec-ready,implementing,blocked,review,rejected,testing,done,cancelled}
 
@@ -133,6 +134,7 @@ Breve descripción del problema u oportunidad de negocio.
 
 ## Issues
 
+- Product: \`sdd/projects/${feature_slug}/product/\`
 - Design: \`sdd/projects/${feature_slug}/design/\`
 - Dev: \`sdd/projects/${feature_slug}/dev/\`
 EOF
