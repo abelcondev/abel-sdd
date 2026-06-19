@@ -1,0 +1,141 @@
+#!/usr/bin/env bash
+#
+# sdd-cli — One-command installer for the abel-sdd framework.
+#
+# Install this script once:
+#   curl -fsSL https://raw.githubusercontent.com/abelcondev/abel-sdd/main/sdd-cli > ~/.local/bin/sdd
+#   chmod +x ~/.local/bin/sdd
+#
+# Then run from any Git repository:
+#   sdd init          # Install SDD into the current project
+#   sdd update        # Update SDD in the current project
+#   sdd worktree      # Alias for ./scripts/sdd-worktree.sh (after installation)
+#   sdd status        # Run ./init.sh in the current project
+#
+# The script always downloads the latest version of the framework from the
+# main branch of https://github.com/abelcondev/abel-sdd before installing.
+
+set -euo pipefail
+
+SDD_REPO="abelcondev/abel-sdd"
+SDD_BRANCH="main"
+SDD_ZIP_URL="https://github.com/${SDD_REPO}/archive/refs/heads/${SDD_BRANCH}.zip"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+log_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
+log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
+log_error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
+log_step() { echo -e "${BLUE}▶${NC} $*"; }
+
+die() { log_error "$*"; exit 1; }
+
+show_help() {
+  cat <<EOF
+Usage: sdd <command>
+
+Commands:
+  init       Install the latest SDD into the current Git repository.
+  update     Update SDD in the current Git repository.
+  status     Run ./init.sh to verify the SDD harness.
+  worktree   Pass through to ./scripts/sdd-worktree.sh (create|remove|list|status).
+  help       Show this help.
+
+Examples:
+  sdd init
+  sdd update
+  sdd worktree create login-y-signup
+  sdd status
+
+The latest framework files are always downloaded from:
+  https://github.com/${SDD_REPO}/tree/${SDD_BRANCH}
+EOF
+}
+
+download_and_extract() {
+  local tmp_dir=""
+  local extract_dir=""
+
+  tmp_dir="$(mktemp -d -t abel-sdd-XXXXXX)"
+  extract_dir="${tmp_dir}/abel-sdd-${SDD_BRANCH}"
+
+  log_step "Downloading latest SDD from ${SDD_REPO}/${SDD_BRANCH}..." >&2
+  curl -fsSL "${SDD_ZIP_URL}" -o "${tmp_dir}/abel-sdd.zip"
+
+  log_step "Extracting..." >&2
+  unzip -q "${tmp_dir}/abel-sdd.zip" -d "${tmp_dir}"
+
+  if [[ ! -d "${extract_dir}" ]]; then
+    die "Could not find extracted framework at ${extract_dir}"
+  fi
+
+  echo "${extract_dir}"
+}
+
+cmd_init() {
+  local extract_dir=""
+
+  extract_dir="$(download_and_extract)"
+
+  log_step "Running installer..."
+  "${extract_dir}/install.sh"
+}
+
+cmd_update() {
+  local extract_dir=""
+
+  extract_dir="$(download_and_extract)"
+
+  log_step "Running updater..."
+  "${extract_dir}/install.sh" --update
+}
+
+cmd_status() {
+  if [[ ! -x "./init.sh" ]]; then
+    die "No ./init.sh found. Run 'sdd init' first."
+  fi
+
+  ./init.sh
+}
+
+cmd_worktree() {
+  if [[ ! -x "./scripts/sdd-worktree.sh" ]]; then
+    die "No ./scripts/sdd-worktree.sh found. Run 'sdd init' first."
+  fi
+
+  ./scripts/sdd-worktree.sh "$@"
+}
+
+main() {
+  local command="${1:-help}"
+  shift || true
+
+  case "${command}" in
+    init)
+      cmd_init
+      ;;
+    update)
+      cmd_update
+      ;;
+    status)
+      cmd_status
+      ;;
+    worktree)
+      cmd_worktree "$@"
+      ;;
+    help|--help|-h)
+      show_help
+      ;;
+    *)
+      log_error "Unknown command: ${command}"
+      show_help
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"
