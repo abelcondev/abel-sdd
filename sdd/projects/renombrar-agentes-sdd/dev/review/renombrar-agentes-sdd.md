@@ -1,7 +1,7 @@
 # [Dev] Renombrar agentes del SDD
 
 Project: `sdd/projects/renombrar-agentes-sdd/`
-Estado: `dev/implementing`
+Estado: `dev/review`
 
 ## Context
 
