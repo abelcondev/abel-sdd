@@ -34,6 +34,9 @@ Ejemplos:
   ./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
   ./scripts/sdd-move.sh login-y-dashboard-layout login dev/implementing dev/review
 
+ Estados válidos para [Product]:
+   product/discovery, product/product-ready
+
  Estados válidos para [Design]:
    design/spec-needed, design/designing, design/design-ready
 
@@ -53,6 +56,9 @@ validate_args() {
 issue_type_for() {
   local state="$1"
   case "${state}" in
+    product/discovery|product/product-ready)
+      echo "[Product]"
+      ;;
     design/spec-needed|design/designing|design/design-ready)
       echo "[Design]"
       ;;
@@ -75,15 +81,15 @@ validate_state_transition() {
   target_type="$(issue_type_for "${target_state}")"
 
   if [[ -z "${source_type}" ]]; then
-    die "Estado origen inválido: '${source_state}'. Estados válidos: design/<estado> o dev/<estado>."
+    die "Estado origen inválido: '${source_state}'. Estados válidos: product/<estado>, design/<estado> o dev/<estado>."
   fi
 
   if [[ -z "${target_type}" ]]; then
-    die "Estado destino inválido: '${target_state}'. Estados válidos: design/<estado> o dev/<estado>."
+    die "Estado destino inválido: '${target_state}'. Estados válidos: product/<estado>, design/<estado> o dev/<estado>."
   fi
 
   if [[ "${source_type}" != "${target_type}" ]]; then
-    die "No se puede mover ${source_type} a ${target_type}. Mantené el tipo de Issue: design/* → design/* o dev/* → dev/*."
+    die "No se puede mover ${source_type} a ${target_type}. Mantené el tipo de Issue: product/* → product/*, design/* → design/* o dev/* → dev/*."
   fi
 }
 
@@ -111,6 +117,20 @@ main() {
   if [ -f "${target_file}" ]; then
     die "Ya existe ${target_file}"
   fi
+
+  # Advertencias de gates entre fases (no bloqueantes).
+  case "${target_state}" in
+    design/spec-needed|design/designing|design/design-ready)
+      if [ ! -f "${project_path}/product/product-ready/${issue}.md" ]; then
+        log_warn "[Product] no está en product-ready/. Asegurate de que la fase [Product] esté aprobada antes de avanzar [Design]."
+      fi
+      ;;
+    dev/backlog|dev/spec-needed|dev/spec-ready|dev/implementing|dev/blocked|dev/review|dev/rejected|dev/testing|dev/done)
+      if [ ! -f "${project_path}/design/design-ready/${issue}.md" ]; then
+        log_warn "[Design] no está en design-ready/. Asegurate de que la fase [Design] esté aprobada antes de avanzar [Dev]."
+      fi
+      ;;
+  esac
 
   log_info "Moviendo ${issue} ${issue_type}: ${source_state} → ${target_state}"
 

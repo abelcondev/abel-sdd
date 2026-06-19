@@ -37,10 +37,23 @@ Implementación de [<feature>], basada en el diseño aprobado en [Issue Design].
 
 ## Test Plan
 
+### Tests derivados de los R<n>
+
 | Requisito | Test de aceptación | Tipo | Prioridad |
 |---|---|---|---|
 | R1 | ... | unitario / integración | obligatorio |
 | R2 | ... | unitario / integración | obligatorio |
+
+### BDD Test Plan
+
+Escenarios Gherkin aprobados en [Product] convertidos en tests de aceptación automatizados o manuales.
+
+| Scenario | Dado / When / Then | Tipo de test | Estado |
+|---|---|---|---|
+| [nombre] | `Given ... When ... Then ...` | integración / e2e / manual | pendiente |
+| [nombre] | `Given ... When ... Then ...` | integración / e2e / manual | pendiente |
+
+- Issue [Product] de referencia: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
 
 ## Security Considerations
 

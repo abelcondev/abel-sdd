@@ -23,6 +23,7 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 | `sdd/delivery.md` | Commits, PRs, merge y cierre. |
 | `sdd/decisions/` | ADRs (Architecture Decision Records) del proyecto. |
 | `sdd/templates/` | Templates para projects e issues. |
+| `sdd/templates/issue-product.md` | Template para la Issue `[Product]` (BDD, product goals, acceptance criteria). |
 | `sdd/projects/` | Projects e issues activas. |
 
 ---
@@ -48,6 +49,7 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 - Una sola Issue `[Dev]` en `implementing/` o `review/` a la vez.
 - `[Dev]` no avanza hasta que `[Design]` esté en `design/design-ready/`.
+- `[Design]` no avanza hasta que `[Product]` esté en `product/product-ready/`.
 - Tests antes de implementación (TDD).
 - `init.sh` verde antes de declarar `done`.
 - `sdd/` es la fuente de verdad.
@@ -56,8 +58,8 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 ## Índice de projects activos
 
-| Feature | Design | Dev | Worktree |
-|---|---|---|---|
-| *(ninguno)* | — | — | — |
+| Feature | Product | Design | Dev | Worktree |
+|---|---|---|---|---|
+| `integrar-bdd-product` | `product-ready` | `design-ready` | `testing` | `abel-sdd-integrar-bdd-product` |
 
 > Para más detalle, ver `sdd/workflow.md`.
