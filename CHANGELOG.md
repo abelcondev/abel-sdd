@@ -19,6 +19,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Agents `.claude/agents/product_manager.md`, `.claude/agents/designer.md`, and `.claude/agents/tech_specifier.md`.
 
+### Added
+
+- `sdd-cli` one-command installer. Run `sdd init` from any Git repository to download and install the latest SDD.
+
 ### Changed
 
 - All SDD docs, templates, agent prompts, scripts, and the PR template translated to English.

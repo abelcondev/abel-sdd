@@ -42,6 +42,27 @@ Then, in the destination project:
 3. Optional: create `scripts/project-checks.sh` to add test/lint/build validations.
 4. Run `./init.sh` to verify the harness.
 
+## One-command installer
+
+Install `sdd-cli` once and run it from any local Git repository:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/abelcondev/abel-sdd/main/sdd-cli > ~/.local/bin/sdd
+chmod +x ~/.local/bin/sdd
+```
+
+Make sure `~/.local/bin` is in your `PATH`.
+
+Then, from any project:
+
+```bash
+cd /path/to/your-project
+sdd init     # Install the latest SDD
+sdd update   # Update an existing SDD
+sdd status   # Run ./init.sh
+sdd worktree create login-y-dashboard-layout
+```
+
 ## Quick start
 
 ### Create a feature
