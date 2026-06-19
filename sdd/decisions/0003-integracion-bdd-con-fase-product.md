@@ -48,6 +48,6 @@ La Issue `[Product]` incluye: Context, Product Goals, Requirements, Acceptance C
 
 - Issue [Product]: `sdd/projects/integrar-bdd-product/product/product-ready/integrar-bdd-product.md`
 - Issue [Design]: `sdd/projects/integrar-bdd-product/design/design-ready/integrar-bdd-product.md`
-- Issue [Dev]: `sdd/projects/integrar-bdd-product/dev/implementing/integrar-bdd-product.md`
+- Issue [Dev]: `sdd/projects/integrar-bdd-product/dev/<estado>/integrar-bdd-product.md`
 - Workflow: `sdd/workflow.md`
 - Template [Product]: `sdd/templates/issue-product.md`
