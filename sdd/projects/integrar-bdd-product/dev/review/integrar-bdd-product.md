@@ -1,7 +1,7 @@
 # [Dev] Integrar BDD con fase de Producto en el SDD
 
 Project: `sdd/projects/integrar-bdd-product/`
-Estado: `dev/implementing`
+Estado: `dev/review`
 
 ## Context
 
