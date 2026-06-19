@@ -268,6 +268,6 @@ El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, P
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| `renombrar-agentes-sdd` | `product-ready` | `design-ready` | `testing` | `abel-sdd-renombrar-agentes-sdd` |
+| *(ninguno)* | — | — | — | — |
 
 > Este índice se actualiza manualmente.

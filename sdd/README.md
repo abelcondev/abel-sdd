@@ -60,6 +60,6 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| `renombrar-agentes-sdd` | `product-ready` | `design-ready` | `testing` | `abel-sdd-renombrar-agentes-sdd` |
+| *(ninguno)* | — | — | — | — |
 
 > Para más detalle, ver `sdd/workflow.md`.

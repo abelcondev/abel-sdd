@@ -1,7 +1,7 @@
 # [Dev] Renombrar agentes del SDD
 
 Project: `sdd/projects/renombrar-agentes-sdd/`
-Estado: `dev/testing`
+Estado: `dev/done`
 
 ## Context
 
@@ -138,3 +138,9 @@ Ninguno. La feature está aprobada para pasar a `dev/testing/` y esperar validac
 2. Esperar validación humana del merge.
 3. Mergear el worktree `abel-sdd-renombrar-agentes-sdd` a `main`.
 4. Mover la Issue a `dev/done/` y eliminar el worktree.
+
+## Cierre
+
+- **Resultado**: feature mergeada a `main`. Los agentes del framework SDD ahora se llaman `orchestrator`, `specifier`, `developer` y `auditor`.
+- **Decisiones relevantes**: se conservaron los nombres viejos solo como registro histórico en el spec de esta feature.
+- **Próximos pasos**: actualizar documentación externa o README del repo si es necesario.
