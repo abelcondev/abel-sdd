@@ -118,6 +118,20 @@ main() {
     die "Ya existe ${target_file}"
   fi
 
+  # Advertencias de gates entre fases (no bloqueantes).
+  case "${target_state}" in
+    design/spec-needed|design/designing|design/design-ready)
+      if [ ! -f "${project_path}/product/product-ready/${issue}.md" ]; then
+        log_warn "[Product] no está en product-ready/. Asegurate de que la fase [Product] esté aprobada antes de avanzar [Design]."
+      fi
+      ;;
+    dev/backlog|dev/spec-needed|dev/spec-ready|dev/implementing|dev/blocked|dev/review|dev/rejected|dev/testing|dev/done)
+      if [ ! -f "${project_path}/design/design-ready/${issue}.md" ]; then
+        log_warn "[Design] no está en design-ready/. Asegurate de que la fase [Design] esté aprobada antes de avanzar [Dev]."
+      fi
+      ;;
+  esac
+
   log_info "Moviendo ${issue} ${issue_type}: ${source_state} → ${target_state}"
 
   source_rel="${source_file#${REPO_ROOT}/}"
