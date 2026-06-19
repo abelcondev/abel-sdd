@@ -268,6 +268,6 @@ El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, P
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| `integrar-bdd-product` | `product-ready` | `design-ready` | `testing` | `abel-sdd-integrar-bdd-product` |
+| *(ninguno)* | — | — | — | — |
 
 > Este índice se actualiza manualmente.

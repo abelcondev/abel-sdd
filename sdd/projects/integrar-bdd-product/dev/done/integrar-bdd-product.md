@@ -208,3 +208,12 @@ Ninguno. La feature está aprobada para pasar a `dev/testing/` y esperar validac
 2. Esperar validación humana del merge.
 3. Mergear el worktree `abel-sdd-integrar-bdd-product` a `main`.
 4. Mover la Issue a `dev/done/` y eliminar el worktree.
+
+## Cierre
+
+- **Resultado**: feature mergeada a `main`. El framework SDD ahora incluye una fase `[Product]` para descubrimiento de comportamiento con BDD, que alimenta `[Design]` y `[Dev]`.
+- **Decisiones relevantes**:
+  - D1: dos estados para [Product] (`discovery/` y `product-ready/`).
+  - D2: `init.sh` valida que cada project tenga `[Product]`, `[Design]` y `[Dev]`.
+  - D3: templates separados para [Product], [Design] y [Dev] con trazabilidad BDD.
+- **Próximos pasos**: evaluar si agregar un agente `product_manager` dedicado; considerar CI que valide escenarios Gherkin.
