@@ -99,3 +99,15 @@ Implementación técnica de la integración de BDD en el framework SDD. Se agreg
 ## UI Reference
 
 No aplica.
+
+## Notas de progreso
+
+- 2026-06-19: R2 completado — template `sdd/templates/issue-product.md` creado.
+- 2026-06-19: R4/R5 completados — templates `issue-design.md` e `issue-dev.md` actualizados con BDD Reference y BDD Test Plan.
+- 2026-06-19: R1 completado — `sdd/workflow.md` y `sdd/README.md` documentan la fase [Product] y el flujo Product → Design → Dev.
+- 2026-06-19: R3 completado — `sdd/workflow.md` y `.claude/agents/leader.md` reflejan que [Design] no avanza hasta [Product] en `product-ready`.
+- 2026-06-19: R6 completado — templates normalizados con secciones claras de BDD y trazabilidad entre fases.
+- 2026-06-19: R7 completado — `scripts/sdd-worktree.sh`, `scripts/sdd-move.sh` e `init.sh` soportan y validan [Product].
+- 2026-06-19: ADR-0003 creado en `sdd/decisions/0003-integracion-bdd-con-fase-product.md`.
+- 2026-06-19: `.claude/agents/spec_author.md` actualizado con responsabilidades de [Product].
+- 2026-06-19: `./init.sh` pasa con `[OK] Harness SDD listo`. Se migró `mejoras-framework-sdd` a [Product] para cumplir la validación.
