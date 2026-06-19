@@ -1,6 +1,6 @@
 # abel-sdd
 
-[![CI](https://github.com/abelconde/abel-sdd/actions/workflows/ci.yml/badge.svg)](https://github.com/abelconde/abel-sdd/actions/workflows/ci.yml)
+[![CI](https://github.com/abelcondev/abel-sdd/actions/workflows/ci.yml/badge.svg)](https://github.com/abelcondev/abel-sdd/actions/workflows/ci.yml)
 
 > Framework de trabajo **agnóstico al stack** para diseñar, construir y entregar software con specs, gates humanos, worktrees y TDD.
 
