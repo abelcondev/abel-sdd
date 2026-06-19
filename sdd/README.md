@@ -60,6 +60,6 @@ Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| *(ninguno)* | — | — | — | — |
+| `kit-repo-publico` | `product-ready` | `design-ready` | `review` | `abel-sdd-kit-repo-publico` |
 
 > Para más detalle, ver `sdd/workflow.md`.
