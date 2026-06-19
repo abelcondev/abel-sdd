@@ -2,40 +2,40 @@
 
 Slug: `<feature-slug>`
 
-## Contexto
+## Context
 
-Breve descripción del problema u oportunidad de negocio.
+Brief description of the business problem or opportunity.
 
-## Alcance
+## Scope
 
-- Funcionalidad incluida 1.
-- Funcionalidad incluida 2.
+- Included functionality 1.
+- Included functionality 2.
 
 ## Out of scope
 
-- Funcionalidad futura 1.
+- Future functionality 1.
 
 ## Milestones
 
 1. MVP: ...
-2. Iteración 2: ...
+2. Iteration 2: ...
 
-## Módulos afectados
+## Affected modules
 
-- `<ruta-al-módulo-1>/` — crear / modificar
-- `<ruta-al-módulo-2>/` — reutilizar (no modificar)
+- `<path-to-module-1>/` — create / modify
+- `<path-to-module-2>/` — reuse (do not modify)
 
-## Riesgos
+## Risks
 
-| Riesgo | Impacto | Mitigación |
+| Risk | Impact | Mitigation |
 |---|---|---|
-| ... | alto/medio/bajo | ... |
+| ... | high/medium/low | ... |
 
 ## Issues
 
 - Design: `sdd/projects/<feature-slug>/design/`
 - Dev: `sdd/projects/<feature-slug>/dev/`
 
-## Decisiones
+## Decisions
 
 - `sdd/decisions/<feature-slug>-<decision>.md`

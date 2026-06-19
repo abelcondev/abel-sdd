@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
 #
-# sdd-worktree.sh — Gestor de worktrees para el flujo SDD.
+# sdd-worktree.sh — Worktree manager for the SDD flow.
 #
-# Cada feature vive en su propio worktree aislado, hermano del repo principal:
-#   <repo-padre>/<repo-name>-<feature-slug>/
-# con rama `feature/<feature-slug>`. Dentro del worktree se escriben los specs,
-# se itera el diseño y se implementa el código.
+# Each feature lives in its own isolated worktree, sibling of the main repo:
+#   <parent-repo>/<repo-name>-<feature-slug>/
+# with branch `feature/<feature-slug>`. Inside the worktree the specs are written,
+# the design is iterated, and the code is implemented.
 #
-# Uso:
+# Usage:
 #   ./scripts/sdd-worktree.sh create <feature-slug>
 #   ./scripts/sdd-worktree.sh remove <feature-slug>
 #   ./scripts/sdd-worktree.sh list
 #   ./scripts/sdd-worktree.sh status <feature-slug>
 #
-# Ejemplo:
+# Example:
 #   ./scripts/sdd-worktree.sh create login-y-dashboard-layout
 
 set -euo pipefail
@@ -25,7 +25,7 @@ WORKTREE_BASE="$(dirname "${REPO_ROOT}")"
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+NC='\033[0m'
 
 log_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
 log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
@@ -35,7 +35,7 @@ die() { log_error "$*"; exit 1; }
 
 ensure_repo_root() {
   if [[ ! -e "${REPO_ROOT}/.git" ]]; then
-    die "No se encontró .git en ${REPO_ROOT}"
+    die "No .git found in ${REPO_ROOT}"
   fi
 }
 
@@ -46,7 +46,7 @@ get_main_branch() {
   elif git show-ref --verify --quiet refs/heads/master; then
     main_branch="master"
   else
-    die "No se encontró rama main ni master"
+    die "Neither main nor master branch found"
   fi
   echo "${main_branch}"
 }
@@ -54,7 +54,7 @@ get_main_branch() {
 validate_feature_slug() {
   local slug="$1"
   if [[ ! "${slug}" =~ ^[a-z0-9]+(-[a-z0-9]+)*$ ]]; then
-    die "Slug inválido. Usá kebab-case en minúsculas (ej. login-y-dashboard-layout)"
+    die "Invalid slug. Use kebab-case lowercase (e.g. login-y-dashboard-layout)"
   fi
 }
 
@@ -63,7 +63,7 @@ worktree_path_for() {
   echo "${WORKTREE_BASE}/${REPO_NAME}-${slug}"
 }
 
-# ─── Comandos ─────────────────────────────────────────────────────────
+# ─── Commands ─────────────────────────────────────────────────────────
 
 cmd_create() {
   local feature_slug="$1"
@@ -79,21 +79,21 @@ cmd_create() {
   project_path="${worktree_path}/sdd/projects/${feature_slug}"
 
   if [[ -d "${worktree_path}" ]]; then
-    die "El worktree para '${feature_slug}' ya existe en ${worktree_path}"
+    die "Worktree for '${feature_slug}' already exists at ${worktree_path}"
   fi
 
   if git show-ref --verify --quiet "refs/heads/${branch_name}"; then
-    die "La rama '${branch_name}' ya existe. Eliminá el worktree anterior o usá otro slug."
+    die "Branch '${branch_name}' already exists. Remove the previous worktree or use another slug."
   fi
 
   main_branch="$(get_main_branch)"
-  log_info "Creando rama '${branch_name}' desde '${main_branch}'..."
+  log_info "Creating branch '${branch_name}' from '${main_branch}'..."
   git branch "${branch_name}" "${main_branch}"
 
-  log_info "Creando worktree en ${worktree_path}..."
+  log_info "Creating worktree at ${worktree_path}..."
   git worktree add "${worktree_path}" "${branch_name}"
 
-  log_info "Creando estructura vacía del project en sdd/projects/${feature_slug}/..."
+  log_info "Creating empty project structure in sdd/projects/${feature_slug}/..."
   mkdir -p "${project_path}/product"/{discovery,product-ready}
   mkdir -p "${project_path}/design"/{spec-needed,designing,design-ready}
   mkdir -p "${project_path}/dev"/{backlog,spec-needed,spec-ready,implementing,blocked,review,rejected,testing,done,cancelled}
@@ -103,34 +103,34 @@ cmd_create() {
 
 Slug: \`${feature_slug}\`
 
-## Contexto
+## Context
 
-Breve descripción del problema u oportunidad de negocio.
+Brief description of the business problem or opportunity.
 
-## Alcance
+## Scope
 
-- Funcionalidad incluida 1.
-- Funcionalidad incluida 2.
+- Included functionality 1.
+- Included functionality 2.
 
 ## Out of scope
 
-- Funcionalidad futura 1.
+- Future functionality 1.
 
 ## Milestones
 
 1. MVP: ...
-2. Iteración 2: ...
+2. Iteration 2: ...
 
-## Módulos afectados
+## Affected modules
 
-- \`<ruta-al-módulo>/\` — crear / modificar
-- \`<ruta-al-módulo>/\` — reutilizar (no modificar)
+- \`<path-to-module>/\` — create / modify
+- \`<path-to-module>/\` — reuse (do not modify)
 
-## Riesgos
+## Risks
 
-| Riesgo | Impacto | Mitigación |
+| Risk | Impact | Mitigation |
 |---|---|---|
-| ... | alto/medio/bajo | ... |
+| ... | high/medium/low | ... |
 
 ## Issues
 
@@ -142,16 +142,16 @@ EOF
   (
     cd "${worktree_path}"
     git add "sdd/projects/${feature_slug}/"
-    git commit -m "chore(sdd): crear project ${feature_slug}" || true
+    git commit -m "chore(sdd): create project ${feature_slug}" || true
   )
 
   echo ""
-  log_info "Worktree listo para la feature '${feature_slug}'"
-  echo "  Ruta:    ${worktree_path}"
-  echo "  Rama:    ${branch_name}"
+  log_info "Worktree ready for feature '${feature_slug}'"
+  echo "  Path:    ${worktree_path}"
+  echo "  Branch:  ${branch_name}"
   echo "  Project: ${project_path}"
   echo ""
-  log_info "Próximo paso: prepará tu entorno (dependencias, variables de entorno, etc.) y empezá el spec."
+  log_info "Next step: prepare your environment (dependencies, environment variables, etc.) and start the spec."
   echo ""
 }
 
@@ -166,40 +166,40 @@ cmd_remove() {
   worktree_path="$(worktree_path_for "${feature_slug}")"
 
   if [[ -d "${worktree_path}" ]]; then
-    log_info "Eliminando worktree ${worktree_path}..."
+    log_info "Removing worktree ${worktree_path}..."
     if git worktree remove "${worktree_path}" 2>/dev/null; then
-      log_info "Worktree eliminado limpiamente."
+      log_info "Worktree removed cleanly."
     else
-      log_warn "Worktree con cambios no commiteados o bloqueado. Forzando eliminación..."
+      log_warn "Worktree has uncommitted changes or is locked. Forcing removal..."
       git worktree remove --force "${worktree_path}" || {
-        log_warn "No se pudo eliminar con git worktree remove. Limpiando manualmente..."
+        log_warn "Could not remove with git worktree remove. Cleaning up manually..."
       }
     fi
   else
-    log_warn "No existe worktree para '${feature_slug}'"
+    log_warn "No worktree exists for '${feature_slug}'"
   fi
 
-  # Asegurar que git no retenga referencias al worktree
+  # Make sure git does not keep references to the worktree
   git worktree prune 2>/dev/null || true
 
   if git show-ref --verify --quiet "refs/heads/${branch_name}"; then
-    log_info "Eliminando rama local '${branch_name}'..."
+    log_info "Removing local branch '${branch_name}'..."
     git branch -D "${branch_name}" 2>/dev/null || true
   fi
 
-  # Limpia directorio residual si quedó
+  # Clean residual directory if it remains
   if [[ -d "${worktree_path}" ]]; then
     rm -rf "${worktree_path}"
   fi
 
-  log_info "Worktree y rama de '${feature_slug}' eliminados."
+  log_info "Worktree and branch for '${feature_slug}' removed."
 }
 
 cmd_list() {
   ensure_repo_root
 
-  echo "Worktrees de features activos:"
-  echo "──────────────────────────────"
+  echo "Active feature worktrees:"
+  echo "─────────────────────────"
 
   local found=0
   local path=""
@@ -217,14 +217,14 @@ cmd_list() {
 
     if [[ -n "${feature_slug}" ]]; then
       echo "  📁 ${feature_slug}"
-      echo "     Ruta: ${path}"
-      echo "     Rama: ${ref}"
+      echo "     Path:   ${path}"
+      echo "     Branch: ${ref}"
       found=1
     fi
   done <<< "$(git worktree list 2>/dev/null || true)"
 
   if [[ "$found" -eq 0 ]]; then
-    echo "  (ninguno)"
+    echo "  (none)"
   fi
 }
 
@@ -239,28 +239,28 @@ cmd_status() {
   worktree_path="$(worktree_path_for "${feature_slug}")"
 
   if [[ ! -d "${worktree_path}" ]]; then
-    die "No existe worktree para '${feature_slug}'. Crealo con: ./scripts/sdd-worktree.sh create ${feature_slug}"
+    die "No worktree exists for '${feature_slug}'. Create it with: ./scripts/sdd-worktree.sh create ${feature_slug}"
   fi
 
-  echo "Estado del worktree '${feature_slug}':"
-  echo "────────────────────────────────────"
-  echo "Ruta:  ${worktree_path}"
-  echo "Rama:  $(cd "${worktree_path}" && git branch --show-current)"
+  echo "Worktree '${feature_slug}' status:"
+  echo "──────────────────────────────────"
+  echo "Path:  ${worktree_path}"
+  echo "Branch: $(cd "${worktree_path}" && git branch --show-current)"
   echo ""
 
   if ! (cd "${worktree_path}" && git diff --quiet && git diff --cached --quiet); then
-    dirty=" (con cambios no commiteados)"
+    dirty=" (with uncommitted changes)"
   fi
-  echo "Git:   ${dirty:-limpio}"
+  echo "Git:   ${dirty:-clean}"
 
   if [[ -x "${worktree_path}/init.sh" ]]; then
     echo ""
-    echo "Corriendo ./init.sh..."
+    echo "Running ./init.sh..."
     (
       cd "${worktree_path}"
       ./init.sh >/tmp/sdd-init-${feature_slug}.log 2>&1 && \
-        log_info "init.sh pasó" || \
-        log_warn "init.sh falló — revisá /tmp/sdd-init-${feature_slug}.log"
+        log_info "init.sh passed" || \
+        log_warn "init.sh failed — check /tmp/sdd-init-${feature_slug}.log"
     )
   fi
 }
@@ -269,23 +269,23 @@ cmd_status() {
 
 show_help() {
   cat <<EOF
-Uso: ./scripts/sdd-worktree.sh <comando> <feature-slug>
+Usage: ./scripts/sdd-worktree.sh <command> <feature-slug>
 
-Comandos:
-  create <feature-slug>   Crear rama + worktree + estructura SDD
-  remove <feature-slug>   Eliminar worktree + rama
-  list                    Listar worktrees de features activos
-  status <feature-slug>   Mostrar estado y correr init.sh
+Commands:
+  create <feature-slug>   Create branch + worktree + SDD structure
+  remove <feature-slug>   Remove worktree + branch
+  list                    List active feature worktrees
+  status <feature-slug>   Show status and run init.sh
 
-Ejemplos:
+Examples:
   ./scripts/sdd-worktree.sh create login-y-dashboard-layout
   ./scripts/sdd-worktree.sh status login-y-dashboard-layout
   ./scripts/sdd-worktree.sh remove login-y-dashboard-layout
 
-Nota:
-  Los worktrees se crean como hermanos del repo principal:
+Note:
+  Worktrees are created as siblings of the main repo:
     ${WORKTREE_BASE}/${REPO_NAME}-<feature-slug>
-  Este script no instala dependencias ni abre un editor específico.
+  This script does not install dependencies or open a specific editor.
 EOF
 }
 

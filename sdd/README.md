@@ -1,65 +1,65 @@
 # SDD — Software Design & Development
 
-Este directorio es la **fuente de verdad** del flujo SDD de este proyecto.
+This directory is the **source of truth** for this project's SDD flow.
 
-- Los **specs** viven en `sdd/projects/`.
-- El **estado** de cada issue se representa por la **carpeta** donde está su archivo `.md`.
-- El flujo SDD es **agnóstico al stack**: no impone lenguaje, framework ni herramientas. Cada proyecto completa `sdd/architecture.md` y `sdd/conventions.md` con sus propias decisiones.
+- **Specs** live in `sdd/projects/`.
+- The **state** of each issue is represented by the **folder** where its `.md` file is located.
+- The SDD flow is **stack-agnostic**: it does not impose language, framework, or tooling. Each project completes `sdd/architecture.md` and `sdd/conventions.md` with its own decisions.
 
 ---
 
-## Mapa del SDD
+## SDD Map
 
-| Archivo | Propósito |
+| File | Purpose |
 |---|---|
-| `sdd/README.md` | Este índice. |
-| `sdd/workflow.md` | Estados, flujo de trabajo, worktrees, reglas de oro. |
-| `sdd/architecture.md` | **Plantilla** para definir el stack, capas y decisiones arquitectónicas del proyecto. |
-| `sdd/conventions.md` | **Plantilla** para definir estilo de código, naming y convenciones del proyecto. |
-| `sdd/quality-gates.md` | Definition of Ready/Done y checklist C1–C7. |
-| `sdd/testing.md` | Estrategia de testing, TDD, fixtures, cobertura. |
-| `sdd/security.md` | Principios de seguridad, RBAC, PII, cumplimiento. |
-| `sdd/troubleshooting.md` | Guía de problemas comunes y soluciones del framework SDD. |
-| `sdd/delivery.md` | Commits, PRs, merge y cierre. |
-| `sdd/decisions/` | ADRs (Architecture Decision Records) del proyecto. |
-| `sdd/templates/` | Templates para projects e issues. |
-| `sdd/templates/issue-product.md` | Template para la Issue `[Product]` (BDD, product goals, acceptance criteria). |
-| `sdd/projects/` | Projects e issues activas. |
+| `sdd/README.md` | This index. |
+| `sdd/workflow.md` | States, workflow, worktrees, golden rules. |
+| `sdd/architecture.md` | **Template** for defining the project's stack, layers, and architectural decisions. |
+| `sdd/conventions.md` | **Template** for defining code style, naming, and project conventions. |
+| `sdd/quality-gates.md` | Definition of Ready/Done and C1–C7 checklist. |
+| `sdd/testing.md` | Testing strategy, TDD, fixtures, coverage. |
+| `sdd/security.md` | Security principles, RBAC, PII, compliance. |
+| `sdd/troubleshooting.md` | Guide to common SDD framework problems and solutions. |
+| `sdd/delivery.md` | Commits, PRs, merge, and closure. |
+| `sdd/decisions/` | Project ADRs (Architecture Decision Records). |
+| `sdd/templates/` | Templates for projects and issues. |
+| `sdd/templates/issue-product.md` | Template for the `[Product]` Issue (BDD, product goals, acceptance criteria). |
+| `sdd/projects/` | Active projects and issues. |
 
 ---
 
-## Cómo empezar
+## How to Start
 
-1. Completar `sdd/architecture.md` con el stack y decisiones arquitectónicas del proyecto.
-2. Completar `sdd/conventions.md` con estilo, naming y convenciones del proyecto.
-3. Leer `sdd/workflow.md` para entender el ciclo de vida.
-4. Leer `sdd/quality-gates.md`, `sdd/testing.md` y `sdd/security.md` antes de declarar `done`.
-5. Crear una feature:
+1. Complete `sdd/architecture.md` with the project's stack and architectural decisions.
+2. Complete `sdd/conventions.md` with style, naming, and project conventions.
+3. Read `sdd/workflow.md` to understand the lifecycle.
+4. Read `sdd/quality-gates.md`, `sdd/testing.md`, and `sdd/security.md` before declaring `done`.
+5. Create a feature:
    ```bash
    ./scripts/sdd-worktree.sh create <feature-slug>
    ```
-6. Mover issues entre estados:
+6. Move issues between states:
    ```bash
-   ./scripts/sdd-move.sh <project> <issue> <origen> <destino>
+   ./scripts/sdd-move.sh <project> <issue> <source> <destination>
    ```
 
 ---
 
-## Reglas de oro (resumen)
+## Golden Rules (Summary)
 
-- Una sola Issue `[Dev]` en `implementing/` o `review/` a la vez.
-- `[Dev]` no avanza hasta que `[Design]` esté en `design/design-ready/`.
-- `[Design]` no avanza hasta que `[Product]` esté en `product/product-ready/`.
-- Tests antes de implementación (TDD).
-- `init.sh` verde antes de declarar `done`.
-- `sdd/` es la fuente de verdad.
+- Only one `[Dev]` Issue in `implementing/` or `review/` at a time.
+- `[Dev]` does not advance until `[Design]` is in `design/design-ready/`.
+- `[Design]` does not advance until `[Product]` is in `product/product-ready/`.
+- Tests before implementation (TDD).
+- `init.sh` green before declaring `done`.
+- `sdd/` is the source of truth.
 
 ---
 
-## Índice de projects activos
+## Active Projects Index
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| *(ninguno)* | — | — | — | — |
+| *(none)* | — | — | — | — |
 
-> Para más detalle, ver `sdd/workflow.md`.
+> For more detail, see `sdd/workflow.md`.

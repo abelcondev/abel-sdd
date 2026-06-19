@@ -1,47 +1,47 @@
-# Contribuir a abel-sdd
+# Contributing to abel-sdd
 
-¡Gracias por interesarte en mejorar el framework! Seguimos un flujo ligero basado en issues y pull requests.
+Thank you for your interest in improving the framework! We follow a lightweight issue and pull request flow.
 
-## Cómo proponer cambios
+## How to propose changes
 
-1. **Abrí un issue** (o usá el flujo SDD local con `sdd/projects/`) describiendo el problema o mejora.
-2. **Forká el repo** o creá una rama/feature con `scripts/sdd-worktree.sh` si tenés permisos.
-3. **Hacé tus cambios** de forma atómica y documentada.
-4. **Abrí un Pull Request** usando el template que aparece automáticamente.
-5. **Asegurate de que el CI pase** antes de pedir review.
+1. **Open an issue** (or use the local SDD flow with `sdd/projects/`) describing the problem or improvement.
+2. **Fork the repo** or create a feature branch with `scripts/sdd-worktree.sh` if you have permissions.
+3. **Make your changes** atomically and with clear documentation.
+4. **Open a Pull Request** using the template that appears automatically.
+5. **Make sure CI passes** before asking for review.
 
-## Cómo correr `./init.sh` localmente
+## How to run `./init.sh` locally
 
-Antes de enviar un PR, verificá que el harness SDD esté listo:
+Before sending a PR, verify that the SDD harness is ready:
 
 ```bash
 ./init.sh
 ```
 
-Si todo está bien, verás:
+If everything is OK, you will see:
 
 ```text
-[OK] Harness SDD listo
+[OK] SDD harness ready
 ```
 
-Si falla, corregí los errores reportados y volvé a ejecutarlo.
+If it fails, fix the reported errors and run it again.
 
-## Convención de commits
+## Commit convention
 
-Usamos [Conventional Commits](https://www.conventionalcommits.org/):
+We use [Conventional Commits](https://www.conventionalcommits.org):
 
-- `docs(<scope>): ...` — cambios en documentación.
-- `chore(<scope>): ...` — tareas de mantenimiento, estado del SDD, scripts, etc.
-- `feat(<scope>): ...` — nueva funcionalidad.
-- `fix(<scope>): ...` — corrección de errores.
+- `docs(<scope>): ...` — documentation changes.
+- `chore(<scope>): ...` — maintenance tasks, SDD state, scripts, etc.
+- `feat(<scope>): ...` — new functionality.
+- `fix(<scope>): ...` — bug fixes.
 - `test(<scope>): ...` — tests.
-- `refactor(<scope>): ...` — refactor sin cambios de comportamiento.
+- `refactor(<scope>): ...` — refactor without behavior changes.
 
-Para cambios relacionados con el flujo SDD local usamos el scope `sdd`:
+For changes related to the local SDD flow we use the `sdd` scope:
 
 ```text
-chore(sdd): mover login [Dev] implementing → review
-docs(readme): agregar badge de CI — kit-repo-publico/kit-repo-publico
+chore(sdd): move login [Dev] implementing → review
+docs(readme): add CI badge — kit-repo-publico/kit-repo-publico
 ```
 
-Mantené los commits atómicos y con mensajes claros en español (idioma principal del proyecto).
+Keep commits atomic and with clear messages in English (the project's primary language).

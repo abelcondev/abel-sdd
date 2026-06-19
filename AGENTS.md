@@ -1,95 +1,95 @@
-# AGENTS.md — Mapa para Agentes del SDD
+# AGENTS.md — Map for SDD Agents
 
-Este archivo es el **punto de entrada** para cualquier agente que trabaje en un proyecto que use el SDD.
+This file is the **entry point** for any agent working on a project that uses the SDD.
 
-NO es una biblia de reglas: es un **mapa**. Lee solo lo que necesites cuando lo necesites.
-
----
-
-## 1. Before starting (obligatorio)
-
-En cada sesión, el agente orchestrator DEBE:
-
-1. **Leer `CLAUDE.md`** — fuerza el rol orchestrator.
-2. **Leer `sdd/README.md`** — entiende el flujo SDD.
-3. **Consultar `sdd/projects/`** — estado actual de features e issues.
-4. **Correr `init.sh` bajo demanda** — cuando el usuario lo pida, antes de declarar `done`, o cuando haya cambios que justifiquen verificar el entorno. No ejecutarlo automáticamente al inicio de cada sesión.
+It is NOT a bible of rules: it is a **map**. Read only what you need when you need it.
 
 ---
 
-## 2. Mapa del repositorio
+## 1. Before starting (mandatory)
 
-| Ruta/Archivo | Contenido | ¿Cuándo leerlo? |
+In every session, the orchestrator agent MUST:
+
+1. **Read `CLAUDE.md`** — enforces the orchestrator role.
+2. **Read `sdd/README.md`** — understand the SDD flow.
+3. **Check `sdd/projects/`** — current state of features and issues.
+4. **Run `init.sh` on demand** — when the user asks, before declaring `done`, or when there are changes that justify verifying the environment. Do not run it automatically at the start of every session.
+
+---
+
+## 2. Repository map
+
+| Path/File | Content | When to read |
 |---|---|---|
-| `CLAUDE.md` | Forzador de rol orchestrator + stack mínimo | Siempre al inicio |
-| `AGENTS.md` | Este archivo — mapa y hard rules | Siempre al inicio |
-| `sdd/README.md` | Índice del SDD | Antes de cualquier trabajo |
-| `sdd/workflow.md` | Estados, flujo de trabajo, worktrees, reglas de oro | Antes de cualquier trabajo |
-| `sdd/architecture.md` | **Plantilla** de stack y decisiones arquitectónicas | Antes de implementar |
-| `sdd/conventions.md` | **Plantilla** de estilo, naming e idioma | Antes de escribir código |
-| `sdd/quality-gates.md` | Definition of Ready/Done, checklist C1–C7 | Antes de declarar done |
-| `sdd/testing.md` | Estrategia de testing, TDD, fixtures, cobertura | Antes de escribir tests |
-| `sdd/security.md` | Seguridad, RBAC, PII, cumplimiento | Antes de implementar features con datos sensibles |
-| `sdd/delivery.md` | Commits, PRs, merge y cierre | Antes de entregar |
-| `sdd/decisions/` | ADRs (Architecture Decision Records) | Cuando se toman decisiones arquitectónicas |
-| `scripts/sdd-worktree.sh` | Gestor de worktrees | Al crear una feature |
-| `scripts/sdd-move.sh` | Mover issues entre estados | Al cambiar estado |
-| `.claude/agents/` | Definiciones de roles | Nunca editar directamente |
-| `sdd/projects/` | Projects, issues y specs locales | Fuente de verdad del flujo SDD |
+| `CLAUDE.md` | Role enforcer + minimal stack | At the start |
+| `AGENTS.md` | This file — map and hard rules | At the start |
+| `sdd/README.md` | SDD index | Before any work |
+| `sdd/workflow.md` | States, workflow, worktrees, golden rules | Before any work |
+| `sdd/architecture.md` | **Template** for stack and architectural decisions | Before implementing |
+| `sdd/conventions.md` | **Template** for style, naming, and language | Before writing code |
+| `sdd/quality-gates.md` | Definition of Ready/Done, checklist C1–C7 | Before declaring done |
+| `sdd/testing.md` | Testing strategy, TDD, fixtures, coverage | Before writing tests |
+| `sdd/security.md` | Security, RBAC, PII, compliance | Before implementing features with sensitive data |
+| `sdd/delivery.md` | Commits, PRs, merge, and closure | Before delivering |
+| `sdd/decisions/` | ADRs (Architecture Decision Records) | When architectural decisions are made |
+| `scripts/sdd-worktree.sh` | Worktree manager | When creating a feature |
+| `scripts/sdd-move.sh` | Move issues between states | When changing state |
+| `.claude/agents/` | Role definitions | Never edit directly |
+| `sdd/projects/` | Local projects, issues, and specs | Source of truth for the SDD flow |
 
 ---
 
 ## 3. Hard rules
 
-Reglas no negociables:
+Non-negotiable rules:
 
-- **Cada feature es un Project en `sdd/projects/<slug>/`**, con al menos una Issue `[Design]` y una Issue `[Dev]`.
-- **Cada feature vive en su propio worktree** desde el inicio: `<repo-principal>-<feature-slug>/`.
-- **Una sola Issue `[Dev]` en `Implementing` o `Review` a la vez**.
-- **No declarar `done` sin `init.sh` verde**.
-- **No saltear gates humanos**:
-  1. `Spec Needed` → `Designing` (aprobación del spec funcional/UI).
-  2. `Designing` → `Design Ready` (aprobación del diseño UI).
-  3. `Spec Ready` → `Implementing` (aprobación del spec técnico).
-  4. `Review` → `Testing` (aprobación del review/merge).
-- **Issue `[Design]` se considera cerrada cuando llega a `Design Ready`**.
-- **Issue `[Dev]` no avanza hasta que Issue `[Design]` esté en `Design Ready`**.
-- **Tests antes de implementación (TDD)**. Cada `R<n>` genera al menos un test rojo antes del código.
-- **No editar código de producción directamente desde el orchestrator**. El orchestrator orquesta; el developer escribe código.
-- **Todo cambio importante se registra**, no solo en el chat: en `sdd/projects/` (estado, descripción de Issue/Project), o en `sdd/decisions/` cuando afecta la arquitectura.
-- **`sdd/` es la fuente de verdad** para estado, specs y tareas. No hay `feature_list.yaml` ni `specs/` local.
-- **Ninguna Issue `[Dev]` con UI pasa a `Implementing` sin diseño aprobado en `[Design]`**.
-- **Dejar el repo limpio al cerrar**. Sin archivos temporales ni branches huérfanos.
+- **Each feature is a Project in `sdd/projects/<slug>/`**, with at least one Issue `[Design]` and one Issue `[Dev]`.
+- **Each feature lives in its own worktree** from the start: `<main-repo>-<feature-slug>/`.
+- **Only one Issue `[Dev]` in `Implementing` or `Review` at a time**.
+- **Do not declare `done` without a green `init.sh`**.
+- **Do not skip human gates**:
+  1. `Spec Needed` → `Designing` (approval of the functional/UI spec).
+  2. `Designing` → `Design Ready` (approval of the UI design).
+  3. `Spec Ready` → `Implementing` (approval of the technical spec).
+  4. `Review` → `Testing` (approval of the review/merge).
+- **Issue `[Design]` is considered closed when it reaches `Design Ready`**.
+- **Issue `[Dev]` does not advance until Issue `[Design]` is in `Design Ready`**.
+- **Tests before implementation (TDD)**. Each `R<n>` generates at least one red test before code.
+- **Do not edit production code directly from the orchestrator**. The orchestrator orchestrates; the developer writes code.
+- **Every important change is recorded**, not only in chat: in `sdd/projects/` (state, Issue/Project description), or in `sdd/decisions/` when it affects architecture.
+- **`sdd/` is the source of truth** for state, specs, and tasks. There is no local `feature_list.yaml` nor `specs/` folder.
+- **No Issue `[Dev]` with UI moves to `Implementing` without an approved design in `[Design]`**.
+- **Leave the repo clean when closing**. No temporary files or orphan branches.
 
 ---
 
-## 4. Workflow SDD local
+## 4. Local SDD workflow
 
-`sdd/` es la fuente de verdad. Ver `sdd/workflow.md` para el detalle completo.
+`sdd/` is the source of truth. See `sdd/workflow.md` for full details.
 
-### Entidades
+### Entities
 
 ```text
-sdd/projects/<feature-slug>/ = Feature (ej. "login-y-dashboard-layout")
-  ├── README.md = contexto, alcance y out-of-scope de la feature
+sdd/projects/<feature-slug>/ = Feature (e.g., "login-y-dashboard-layout")
+  ├── README.md = context, scope, and out-of-scope of the feature
   ├── design/
-  │   ├── spec-needed/   = issues con spec funcional/UI pendiente
-  │   ├── designing/     = issues iterando diseño UI
-  │   └── design-ready/  = issues aprobadas
+  │   ├── spec-needed/   = issues with functional/UI spec pending
+  │   ├── designing/     = issues iterating UI design
+  │   └── design-ready/  = approved issues
   └── dev/
-      ├── backlog/       = issues bloqueadas por [Design]
-      ├── spec-needed/   = issues con spec técnico pendiente
-      ├── spec-ready/    = issues con spec técnico completo (espera aprobación)
-      ├── implementing/  = issues en implementación
-      ├── blocked/       = issues pausadas por bloqueo externo
-      ├── review/        = issues en review
-      ├── rejected/      = issues rechazadas en review (retrabajo)
-      ├── testing/       = issues mergeadas, en validación final
-      ├── done/          = issues completadas
-      └── cancelled/     = issues descartadas
+      ├── backlog/       = issues blocked by [Design]
+      ├── spec-needed/   = issues with technical spec pending
+      ├── spec-ready/    = issues with complete technical spec (awaiting approval)
+      ├── implementing/  = issues in implementation
+      ├── blocked/       = issues paused due to external blocker
+      ├── review/        = issues in review
+      ├── rejected/      = issues rejected in review (rework)
+      ├── testing/       = merged issues, in final validation
+      ├── done/          = completed issues
+      └── cancelled/     = discarded issues
 ```
 
-### Estados
+### States
 
 **Issue `[Design]`**:
 
@@ -97,11 +97,11 @@ sdd/projects/<feature-slug>/ = Feature (ej. "login-y-dashboard-layout")
 spec-needed → designing → design-ready
 ```
 
-| Estado | Significado |
+| State | Meaning |
 |---|---|
-| `spec-needed` | Issue creada. Falta escribir el spec funcional + UI/UX. |
-| `designing` | Se itera el diseño UI en la herramienta de diseño del proyecto. |
-| `design-ready` | Diseño UI aprobado. La Issue `[Dev]` puede avanzar. |
+| `spec-needed` | Issue created. Functional + UI/UX spec still needs to be written. |
+| `designing` | UI design is iterated in the project's design tool. |
+| `design-ready` | UI design approved. Issue `[Dev]` may advance. |
 
 **Issue `[Dev]`**:
 
@@ -112,53 +112,55 @@ backlog → spec-needed → spec-ready → implementing → review → testing �
                                     cancelled
 ```
 
-| Estado | Significado |
+| State | Meaning |
 |---|---|
-| `backlog` | Issue creada, bloqueada por `[Design]`. |
-| `spec-needed` | Falta escribir el spec técnico + plan de implementación + Test Plan. |
-| `spec-ready` | Spec técnico completo. Espera aprobación humana. |
-| `implementing` | Developer trabajando en el worktree. |
-| `blocked` | Issue pausada por bloqueo externo o decisión pendiente. |
-| `review` | Código listo. Auditor verificando. |
-| `rejected` | Auditor rechazó. Requiere retrabajo. |
-| `testing` | Mergeado. Validación final. |
-| `done` | Feature completada y verificada. |
-| `cancelled` | Issue descartada. |
+| `backlog` | Issue created, blocked by `[Design]`. |
+| `spec-needed` | Technical spec + implementation plan + Test Plan still need to be written. |
+| `spec-ready` | Technical spec complete. Awaiting human approval. |
+| `implementing` | Developer working in the worktree. |
+| `blocked` | Issue paused due to external blocker or pending decision. |
+| `review` | Code ready. Auditor verifying. |
+| `rejected` | Auditor rejected. Rework required. |
+| `testing` | Merged. Final validation. |
+| `done` | Feature completed and verified. |
+| `cancelled` | Issue discarded. |
 
-### Responsabilidades por fase
+### Responsibilities by phase
 
-| Fase | Responsable | Acción |
+| Phase | Responsible | Action |
 |---|---|---|
-| Idea | Humano/Orchestrator | Crear worktree de feature con `./scripts/sdd-worktree.sh create <feature-slug>`. |
-| Spec Design | specifier | Entrevistar al humano con `AskUserQuestion` y escribir spec en archivo de Issue `[Design]`. |
-| Spec review | Humano | Aprobar spec funcional/UI. Orchestrator mueve el archivo a `design/designing/` con `./scripts/sdd-move.sh`. |
-| Diseño UI | Humano/Agente asistido | Iterar en la herramienta de diseño del proyecto. Actualizar assets en Issue `[Design]`. |
-| Design review | Humano | Aprobar diseño. Orchestrator mueve el archivo a `design/design-ready/`. |
-| Spec Dev | specifier | Escribir spec técnico + Test Plan + Impact Analysis en archivo de Issue `[Dev]`. Orchestrator mueve a `dev/spec-needed/` o `dev/spec-ready/`. |
-| Spec technical review | Humano | Aprobar spec técnico. Orchestrator mueve a `dev/implementing/`. |
-| Implementación | developer | Ejecutar TDD: escribir tests rojos, implementación mínima, refactor. Escribir código en el proyecto. Al terminar, orchestrator mueve a `dev/review/`. |
-| Review | auditor | Auditar contra `sdd/quality-gates.md` C1–C7 y `sdd/security.md`. |
-| Closure | Orchestrator | Mergear el worktree a `main`, eliminar worktree, mover archivo a `dev/done/`. |
+| Idea | Human/Orchestrator | Create feature worktree with `./scripts/sdd-worktree.sh create <feature-slug>`. |
+| Product Discovery | product_manager | Interview the human with `AskUserQuestion` and write product spec + BDD in Issue `[Product]`. |
+| Product review | Human | Approve product spec. Orchestrator moves file to `product/product-ready/`. |
+| Spec Design | designer | Interview the human with `AskUserQuestion` and write functional + UI/UX spec in Issue `[Design]`. |
+| Spec review | Human | Approve functional/UI spec. Orchestrator moves file to `design/designing/` with `./scripts/sdd-move.sh`. |
+| UI Design | Human/Assisted agent | Iterate in the project's design tool. Update assets in Issue `[Design]`. |
+| Design review | Human | Approve design. Orchestrator moves file to `design/design-ready/`. |
+| Spec Dev | tech_specifier | Write technical spec + Test Plan + Impact Analysis in Issue `[Dev]` file. Orchestrator moves to `dev/spec-needed/` or `dev/spec-ready/`. |
+| Spec technical review | Human | Approve technical spec. Orchestrator moves to `dev/implementing/`. |
+| Implementation | developer | Run TDD: write red tests, minimum implementation, refactor. Write code in the project. When finished, orchestrator moves to `dev/review/`. |
+| Review | auditor | Audit against `sdd/quality-gates.md` C1–C7 and `sdd/security.md`. |
+| Closure | Orchestrator | Merge the worktree into `main`, remove worktree, move file to `dev/done/`. |
 
 ---
 
 ## 5. Session close lifecycle
 
-Antes de declarar una sesión cerrada:
+Before declaring a session closed:
 
-1. Correr `init.sh`. Debe imprimir `[OK] Harness SDD listo`.
-2. Si se terminó una Issue `[Dev]`, asegurar que su archivo esté en `dev/done/`.
-3. Si se cerró una Issue `[Design]`, asegurar que su archivo esté en `design/design-ready/`.
-4. Actualizar `sdd/README.md` y `sdd/workflow.md` con el estado actual de projects.
-5. Asegurar que no haya archivos untracked sospechosos.
+1. Run `init.sh`. It must print `[OK] SDD harness ready`.
+2. If an Issue `[Dev]` was finished, make sure its file is in `dev/done/`.
+3. If an Issue `[Design]` was closed, make sure its file is in `design/design-ready/`.
+4. Update `sdd/README.md` and `sdd/workflow.md` with the current state of projects.
+5. Make sure there are no suspicious untracked files.
 
 ---
 
 ## 6. If blocked
 
-Si un agente se bloquea:
+If an agent gets blocked:
 
-1. Re-leer los docs relevantes.
-2. Mover la Issue a `dev/blocked/` con `./scripts/sdd-move.sh`.
-3. Documentar el bloqueo como comentario en la Issue correspondiente de `sdd/projects/` (`[Design]` o `[Dev]`).
-4. Parar la sesión. No inventar workarounds.
+1. Re-read the relevant docs.
+2. Move the Issue to `dev/blocked/` with `./scripts/sdd-move.sh`.
+3. Document the blocker as a comment in the corresponding Issue in `sdd/projects/` (`[Design]` or `[Dev]`).
+4. Stop the session. Do not invent workarounds.

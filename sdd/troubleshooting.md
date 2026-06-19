@@ -1,29 +1,29 @@
 # SDD — Troubleshooting
 
-Guía de problemas comunes al usar el framework SDD y sus scripts.
+Guide to common problems when using the SDD framework and its scripts.
 
 ---
 
 ## Worktree
 
-### `El worktree para '<slug>' ya existe`
+### `Worktree for '<slug>' already exists`
 
-**Causa**: Ya existe un directorio de worktree o una rama `feature/<slug>`.
+**Cause**: A worktree directory or a `feature/<slug>` branch already exists.
 
-**Solución**:
+**Solution**:
 
 ```bash
-# Verificar worktrees existentes
+# List existing worktrees
 ./scripts/sdd-worktree.sh list
 
-# Si la feature ya terminó o se abandonó, eliminarla
+# If the feature already finished or was abandoned, remove it
 ./scripts/sdd-worktree.sh remove <slug>
 
-# Luego crear la nueva feature
+# Then create the new feature
 ./scripts/sdd-worktree.sh create <slug>
 ```
 
-Si el directorio quedó residual por un error previo:
+If the directory was left over from a previous error:
 
 ```bash
 git worktree prune
@@ -31,171 +31,171 @@ rm -rf <repo-principal>-<slug>
 git branch -D feature/<slug>
 ```
 
-### `No se pudo eliminar con git worktree remove`
+### `Could not remove with git worktree remove`
 
-**Causa**: El worktree tiene procesos abiertos, archivos bloqueados o cambios no commiteados.
+**Cause**: The worktree has open processes, locked files, or uncommitted changes.
 
-**Solución**:
+**Solution**:
 
-1. Cerrar editores/terminales que usen el directorio.
-2. Desde el repo principal:
+1. Close editors/terminals using the directory.
+2. From the main repo:
    ```bash
    ./scripts/sdd-worktree.sh remove <slug>
    ```
-   El script intenta eliminación forzada y limpia residuales.
-3. Si persiste:
+   The script tries forced removal and cleans leftovers.
+3. If it persists:
    ```bash
-   git worktree remove --force <ruta-del-worktree>
+   git worktree remove --force <worktree-path>
    git worktree prune
-   rm -rf <ruta-del-worktree>
+   rm -rf <worktree-path>
    git branch -D feature/<slug>
    ```
 
 ---
 
-## Slug inválido
+## Invalid Slug
 
-### `Slug inválido. Usá kebab-case en minúsculas`
+### `Invalid slug. Use kebab-case in lowercase`
 
-**Causa**: El slug contiene mayúsculas, tildes, espacios, guiones bajos o caracteres especiales.
+**Cause**: The slug contains uppercase letters, accents, spaces, underscores, or special characters.
 
-**Solución**: Usar solo minúsculas, números y guiones. Ejemplos válidos:
+**Solution**: Use only lowercase letters, numbers, and hyphens. Valid examples:
 
-- `login-y-dashboard-layout`
-- `mejoras-framework-sdd`
-- `reporte-de-ventas-v2`
+- `login-and-dashboard-layout`
+- `sdd-framework-improvements`
+- `sales-report-v2`
 
-Ejemplos inválidos:
+Invalid examples:
 
-- `LoginYDashboard` → `login-y-dashboard-layout`
-- `mejoras_framework` → `mejoras-framework`
-- `reporte de ventas` → `reporte-de-ventas`
+- `LoginAndDashboard` → `login-and-dashboard-layout`
+- `improvements_framework` → `improvements-framework`
+- `sales report` → `sales-report`
 
 ---
 
-## Mover issues entre estados
+## Moving Issues Between States
 
-### `Estado destino inválido: '...'`
+### `Invalid destination state: '...'`
 
-**Causa**: El estado destino no está en la lista válida para [Design] o [Dev], o se intentó cambiar de tipo.
+**Cause**: The destination state is not in the valid list for [Design] or [Dev], or a type change was attempted.
 
-**Solución**: Revisar `sdd/workflow.md` y usar estados válidos:
+**Solution**: Review `sdd/workflow.md` and use valid states:
 
 - [Design]: `design/spec-needed`, `design/designing`, `design/design-ready`
 - [Dev]: `dev/backlog`, `dev/spec-needed`, `dev/spec-ready`, `dev/implementing`, `dev/blocked`, `dev/review`, `dev/rejected`, `dev/testing`, `dev/done`, `dev/cancelled`
 
-Ejemplo correcto:
+Correct example:
 
 ```bash
-./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
-./scripts/sdd-move.sh login-y-dashboard-layout login dev/implementing dev/review
+./scripts/sdd-move.sh login-and-dashboard-layout login design/spec-needed design/designing
+./scripts/sdd-move.sh login-and-dashboard-layout login dev/implementing dev/review
 ```
 
-### `No existe sdd/projects/<slug>/<estado>/<issue>.md`
+### `sdd/projects/<slug>/<state>/<issue>.md does not exist`
 
-**Causa**: La Issue no está en el estado origen indicado.
+**Cause**: The Issue is not in the indicated source state.
 
-**Solución**: Verificar el estado actual con `git status` o listando la carpeta:
+**Solution**: Verify the current state with `git status` or by listing the folder:
 
 ```bash
 ls sdd/projects/<slug>/dev/*/
 ```
 
-### `Ya existe sdd/projects/<slug>/<estado>/<issue>.md`
+### `sdd/projects/<slug>/<state>/<issue>.md already exists`
 
-**Causa**: Ya hay un archivo con el mismo nombre en el estado destino.
+**Cause**: A file with the same name already exists in the destination state.
 
-**Solución**: Revisar si el movimiento ya se hizo o si hay una issue duplicada. No sobrescribir sin confirmar.
+**Solution**: Check if the move was already done or if there is a duplicate issue. Do not overwrite without confirmation.
 
 ---
 
-## `init.sh` falla
+## `init.sh` Fails
 
-### `[FAIL] <project> no tiene ninguna Issue [Design]` / `[Dev]`
+### `[FAIL] <project> has no [Design] Issue` / `[Dev]`
 
-**Causa**: El project no cumple el requisito mínimo de tener al menos una Issue de cada tipo.
+**Cause**: The project does not meet the minimum requirement of having at least one Issue of each type.
 
-**Solución**: Crear los archivos correspondientes en:
+**Solution**: Create the corresponding files in:
 
 - `sdd/projects/<slug>/design/spec-needed/<issue>.md`
 - `sdd/projects/<slug>/dev/backlog/<issue>.md`
 
-### `[FAIL] Hay N Issues [Dev] en implementing/ o review/`
+### `[FAIL] There are N [Dev] Issues in implementing/ or review/`
 
-**Causa**: Hay más de una Issue [Dev] en `dev/implementing/` o `dev/review/` simultáneamente.
+**Cause**: There is more than one `[Dev]` Issue in `dev/implementing/` or `dev/review/` simultaneously.
 
-**Solución**: Terminar o pausar una de las issues. Opciones:
+**Solution**: Finish or pause one of the issues. Options:
 
-- Mover la que no esté activa a `dev/blocked/`.
-- Finalizar el review de una antes de empezar otra.
+- Move the inactive one to `dev/blocked/`.
+- Finish the review of one before starting another.
 
-### `[FAIL] <project>/design/<carpeta> no es un estado válido`
+### `[FAIL] <project>/design/<folder> is not a valid state`
 
-**Causa**: Existe una carpeta dentro de `design/` o `dev/` que no está en la lista de estados válidos.
+**Cause**: A folder exists inside `design/` or `dev/` that is not in the list of valid states.
 
-**Solución**: Renombrar o eliminar la carpeta. Ver estados válidos en `sdd/workflow.md`.
+**Solution**: Rename or remove the folder. See valid states in `sdd/workflow.md`.
 
-### `[FAIL] <project>/design/ contiene archivos .md fuera de una carpeta de estado`
+### `[FAIL] <project>/design/ contains .md files outside a state folder`
 
-**Causa**: Hay archivos Markdown directamente en `design/` o `dev/`, en lugar de dentro de una subcarpeta de estado.
+**Cause**: There are Markdown files directly in `design/` or `dev/`, instead of inside a state subfolder.
 
-**Solución**: Mover el archivo a la carpeta de estado correspondiente.
+**Solution**: Move the file to the corresponding state folder.
 
 ---
 
-## Instalación
+## Installation
 
-### `El directorio destino no es un repositorio Git`
+### `Destination directory is not a Git repository`
 
-**Causa**: Se ejecutó `install.sh` sobre un directorio que no es un repo Git.
+**Cause**: `install.sh` was run on a directory that is not a Git repo.
 
-**Solución**: Inicializar Git en el proyecto destino antes de instalar el SDD:
+**Solution**: Initialize Git in the destination project before installing SDD:
 
 ```bash
-cd /ruta/a/tu-proyecto
+cd /path/to/your-project
 git init
 git commit --allow-empty -m "init"
 ```
 
-Luego volver a correr `./install.sh`.
+Then run `./install.sh` again.
 
-### Se sobrescribieron `AGENTS.md` o `CLAUDE.md` sin querer
+### `AGENTS.md` or `CLAUDE.md` were accidentally overwritten`
 
-**Causa**: Se corrió `./install.sh` sin `--update` y se confirmó la sobrescritura, o se usó `--update` sin revisar backups.
+**Cause**: `./install.sh` was run without `--update` and overwrite was confirmed, or `--update` was used without reviewing backups.
 
-**Solución**: El modo `--update` crea backups con timestamp:
+**Solution**: `--update` mode creates timestamped backups:
 
 ```bash
-ls -la <destino>/AGENTS.md.backup-*
-ls -la <destino>/CLAUDE.md.backup-*
+ls -la <destination>/AGENTS.md.backup-*
+ls -la <destination>/CLAUDE.md.backup-*
 ```
 
-Restaurar el backup deseado:
+Restore the desired backup:
 
 ```bash
-cp <destino>/AGENTS.md.backup-<timestamp> <destino>/AGENTS.md
-cp <destino>/CLAUDE.md.backup-<timestamp> <destino>/CLAUDE.md
+cp <destination>/AGENTS.md.backup-<timestamp> <destination>/AGENTS.md
+cp <destination>/CLAUDE.md.backup-<timestamp> <destination>/CLAUDE.md
 ```
 
 ---
 
-## Commits y git
+## Commits and Git
 
-### Cambios de estado no aparecen en `git log`
+### State changes do not appear in `git log`
 
-**Causa**: El movimiento se hizo con `mv` manual sin commit.
+**Cause**: The move was done with manual `mv` without a commit.
 
-**Solución**: Usar siempre `./scripts/sdd-move.sh`, que genera el commit automáticamente. Si ya se movió manualmente:
+**Solution**: Always use `./scripts/sdd-move.sh`, which generates the automatic commit. If already moved manually:
 
 ```bash
 git add sdd/projects/<slug>/
-git commit -m "chore(sdd): <issue> [Dev|Design] <origen> → <destino>"
+git commit -m "chore(sdd): <issue> [Dev|Design] <source> → <destination>"
 ```
 
 ---
 
-## Referencias
+## References
 
-- Workflow y estados: `sdd/workflow.md`
+- Workflow and states: `sdd/workflow.md`
 - Scripts: `scripts/sdd-worktree.sh`, `scripts/sdd-move.sh`, `install.sh`
-- Verificación: `init.sh`
+- Verification: `init.sh`

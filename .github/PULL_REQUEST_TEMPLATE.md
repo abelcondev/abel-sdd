@@ -1,21 +1,21 @@
-## Descripción
+## Description
 
-Breve descripción del cambio.
+Brief description of the change.
 
-## Tipo de cambio
+## Type of change
 
 - [ ] Bug fix
-- [ ] Nueva feature
-- [ ] Cambio de documentación
-- [ ] Mantenimiento / chore
+- [ ] New feature
+- [ ] Documentation change
+- [ ] Maintenance / chore
 
 ## Checklist
 
-- [ ] `./init.sh` pasa localmente.
-- [ ] Se actualizó la documentación si aplica (`README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, etc.).
-- [ ] Se siguieron las convenciones de commits del proyecto.
-- [ ] El PR tiene una descripción clara del cambio.
+- [ ] `./init.sh` passes locally.
+- [ ] Documentation was updated if applicable (`README.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, etc.).
+- [ ] Project commit conventions were followed.
+- [ ] The PR has a clear description of the change.
 
-## Notas adicionales
+## Additional notes
 
-Cualquier contexto extra para el reviewer.
+Any extra context for the reviewer.

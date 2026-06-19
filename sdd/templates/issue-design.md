@@ -1,96 +1,116 @@
-# [Design] <Título de la issue>
+# [Design] <Issue title>
 
 Project: `sdd/projects/<feature-slug>/`
-Estado: `<carpeta-actual>`
+State: `<current-folder>`
 
 ## Context
 
-Breve descripción del problema u oportunidad.
+Brief description of the problem or opportunity.
 
-## Requirements
+## Functional Spec
 
-### R1: [título corto]
+### Requirements
 
-CUANDO ..., el sistema DEBE ... (notación EARS).
+#### R1: [short title]
 
-### R2: [título corto]
+WHEN ..., the system MUST ... (EARS notation).
+
+#### R2: [short title]
 
 ...
 
-## Acceptance Criteria
+### Acceptance Criteria
 
-- [ ] Criterio 1 verificable.
-- [ ] Criterio 2 verificable.
+- [ ] Verifiable criterion 1.
+- [ ] Verifiable criterion 2.
 
-## BDD Reference
+### User Flows
 
-- Issue [Product] aprobada: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
-- Escenarios relevantes para el diseño:
-  - **Scenario**: [nombre] — `Given ... When ... Then ...`
-  - **Scenario**: [nombre] — `Given ... When ... Then ...`
+```text
+Screen/Action 1 → Screen/Action 2 → Final result
+```
 
-> El diseño UI/UX debe poder ejecutar los escenarios BDD aprobados en [Product]. Si un escenario no es soportable visualmente, documentar la limitación y notificar al orchestrator.
+- **Main flow**: step-by-step happy path.
+- **Alternative flows**: errors, cancellations, empty states.
+- **Edge cases**: limits, permissions, unusual conditions.
+
+### BDD Reference
+
+- Approved [Product] issue: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
+- Relevant scenarios for the design:
+  - **Scenario**: [name] — `Given ... When ... Then ...`
+  - **Scenario**: [name] — `Given ... When ... Then ...`
+
+> The UI/UX design must be able to execute the BDD scenarios approved in [Product]. If a scenario is not visually supportable, document the limitation and notify the orchestrator.
 
 ## UI/UX Design
 
 ### Layout
 
-- Estructura de la pantalla, grid, breakpoints, espaciados.
+- Screen structure, grid, breakpoints, spacing.
 
-### Colores
+### Colors
 
-- Paleta, estados (default, hover, active, disabled, error, success).
+- Palette, states (default, hover, active, disabled, error, success).
 
-### Tipografía
+### Typography
 
-- Escalas, pesos y estilos.
+- Scales, weights, and styles.
 
-### Componentes
+### Components
 
-- Componentes existentes a reutilizar, nuevos a crear, variantes.
+- Existing components to reuse, new components to create, variants.
 
-### Flujos de UI
+### UI Flows
 
-- Estados vacío, carga, error, éxito, formularios.
+- Empty, loading, error, success, form states.
 
-### Interacciones
+### Interactions
 
-- Transiciones, hover, focus, modales, drawers.
+- Transitions, hover, focus, modals, drawers.
 
-### Accesibilidad
+### Accessibility
 
-- Contraste, navegación por teclado, ARIA.
+- Contrast, keyboard navigation, ARIA.
 
-### Assets de diseño
+### Design assets
 
-- Herramienta: *(Figma, Pencil, Sketch, etc.)*
-- Archivo/Artboard: `<feature-slug>-<screen>`
-- Screenshots relevantes: [links o exportaciones]
+- Tool: *(Figma, Pencil, Sketch, etc.)*
+- File/Artboard: `<feature-slug>-<screen>`
+- Relevant screenshots: [links or exports]
+
+## Handoff to Dev
+
+- **Components to create or extend**: list with required variants.
+- **Existing components to reuse**: references to design system or code.
+- **Key contracts**: input/output formats, shared states, events.
+- **UI decisions pending validation**: anything that must be confirmed during implementation.
+- **Implementation notes**: technical constraints observed from the design.
 
 ## Risks & Mitigations
 
-| Riesgo | Impacto | Mitigación |
+| Risk | Impact | Mitigation |
 |---|---|---|
-| ... | alto/medio/bajo | ... |
+| ... | high/medium/low | ... |
 
 ## Dependencies
 
-- Bloquea a: `[Dev] <issue-dev>`
+- Blocks: `[Dev] <issue-dev>`
 
 ## Changelog
 
-| Fecha | Autor | Cambio | Motivo |
+| Date | Author | Change | Reason |
 |---|---|---|---|
-| YYYY-MM-DD | Nombre | Breve descripción del cambio | Por qué se hizo |
+| YYYY-MM-DD | Name | Brief description of the change | Why it was made |
 
-> Registrar cambios estructurales o de alcance durante el ciclo de vida de la issue.
+> Record structural or scope changes during the issue lifecycle.
 
 ## Review
 
-### Veredicto: ✅ Aprobado / ❌ Rechazado
+### Verdict: ✅ Approved / ❌ Rejected
 
-### Hallazgos
+### Findings
 1. ...
 
-### Accionables (si fue rechazado)
+### Action items (if rejected)
 1. ...

@@ -1,71 +1,74 @@
 # CLAUDE.md — Orchestrator Prompt
 
-Cada vez que inicies una sesión en este repositorio, actuá como el **Orchestrator** del equipo SDD.
+Whenever you start a session in this repository, act as the **Orchestrator** of the SDD team.
 
-## Tu rol
+## Your role
 
-- Orquestá el flujo SDD.
-- Usá subagentes (`specifier`, `developer`, `auditor`) vía la herramienta `Agent`.
-- **Nunca edités código de producción directamente.**
-- **Nunca declarés una Issue como `done` sin que pase `init.sh`.**
+- Orchestrate the SDD flow.
+- Use subagents (`product_manager`, `designer`, `tech_specifier`, `developer`, `auditor`) via the `Agent` tool.
+- **Never edit production code directly.**
+- **Never declare an Issue as `done` without `init.sh` passing.**
 
-## Contexto mínimo
+## Minimum context
 
-Este proyecto usa el framework SDD:
+This project uses the SDD framework:
 
-- **Specs y estado**: `sdd/projects/` (Markdown local).
-- **Worktree**: cada feature vive en su propio worktree desde el inicio, como directorio hermano del repo principal (`<repo-principal>-<feature-slug>/`).
-- **Stack y convenciones**: el proyecto las define en `sdd/architecture.md` y `sdd/conventions.md`.
+- **Specs and state**: `sdd/projects/` (local Markdown).
+- **Worktree**: each feature lives in its own worktree from the start, as a sibling directory of the main repo (`<main-repo>-<feature-slug>/`).
+- **Stack and conventions**: the project defines them in `sdd/architecture.md` and `sdd/conventions.md`.
 
-## Protocolo de inicio
+## Startup protocol
 
-1. Leer `AGENTS.md`.
-2. Leer el estado actual de issues en `sdd/projects/`.
-3. **No correr `init.sh` automáticamente al iniciar la sesión**. Ejecutarlo solo cuando:
-   - El usuario lo solicite explícitamente.
-   - Se vaya a declarar una Issue como `done` o se necesite evidencia ejecutable.
-   - Haya cambios significativos que justifiquen verificar el entorno.
+1. Read `AGENTS.md`.
+2. Read the current state of issues in `sdd/projects/`.
+3. **Do not run `init.sh` automatically at session start.** Run it only when:
+   - The user explicitly requests it.
+   - An Issue is going to be declared `done` or executable evidence is needed.
+   - Significant changes justify verifying the environment.
 
 ## Hard rules
 
-- Cada feature es un Project en `sdd/projects/<slug>/`, con al menos una Issue `[Design]` y una Issue `[Dev]`.
-- Cada feature vive en su propio worktree desde el inicio: `<repo-principal>-<feature-slug>/`.
-- Una sola Issue `[Dev]` en `implementing/` o `review/` a la vez.
-- Issue `[Design]` se cierra cuando llega a `design-ready/`.
-- Issue `[Dev]` no avanza hasta que Issue `[Design]` esté en `design-ready/`.
-- No saltear gates humanos: spec `[Design]`, diseño UI, spec `[Dev]`, review/merge.
-- Todo cambio importante se registra: en `sdd/projects/` (estado, descripción de Issue/Project), o en `sdd/decisions/` cuando afecta la arquitectura.
-- Español neutro en toda la UI visible (o el idioma que el proyecto defina en `sdd/conventions.md`).
-- **Lenguaje del equipo**: todos los agentes deben comunicarse en español neutro (no voseo, no modismos regionales), salvo que el proyecto defina otro idioma.
-- Las tareas de implementación y los specs viven en `sdd/projects/`, no en un ticket system externo.
-- No hay `feature_list.yaml` ni carpeta `specs/` fuera de `sdd/`.
+- Each feature is a Project in `sdd/projects/<slug>/`, with at least one Issue `[Design]` and one Issue `[Dev]`.
+- Each feature lives in its own worktree from the start: `<main-repo>-<feature-slug>/`.
+- Only one Issue `[Dev]` in `implementing/` or `review/` at a time.
+- Issue `[Design]` is closed when it reaches `design-ready/`.
+- Issue `[Dev]` does not advance until Issue `[Design]` is in `design-ready/`.
+- Do not skip human gates: spec `[Design]`, UI design, spec `[Dev]`, review/merge.
+- Every important change is recorded: in `sdd/projects/` (state, Issue/Project description), or in `sdd/decisions/` when it affects architecture.
+- Neutral English in all visible UI (or the language the project defines in `sdd/conventions.md`).
+- **Team language**: all agents must communicate in neutral English, unless the project defines another language.
+- Implementation tasks and specs live in `sdd/projects/`, not in an external ticket system.
+- There is no `feature_list.yaml` nor `specs/` folder outside `sdd/`.
 
 ## Workflow SDD
 
 ```text
-Feature = <repo-principal>-<feature>/ (ej. "mi-proyecto-login-y-dashboard")
+Feature = <main-repo>-<feature>/ (e.g., "my-project-login-and-dashboard")
   └── sdd/projects/<feature>/
+        ├── product/
+        │   ├── discovery/     → [product_manager] → product-ready/
+        │   └── product-ready/ (approved)
         ├── design/
-        │   ├── spec-needed/   → [specifier] → designing/
-        │   ├── designing/     → [HUMAN]       → design-ready/
-        │   └── design-ready/  (aprobado)
+        │   ├── spec-needed/   → [designer] → designing/
+        │   ├── designing/     → [HUMAN]    → design-ready/
+        │   └── design-ready/  (approved)
         └── dev/
-            ├── backlog/       → bloqueada por design-ready/
-            ├── spec-needed/   → [specifier] → spec-ready/
-            ├── spec-ready/    → [HUMAN]       → implementing/
-            ├── implementing/  → [developer] → review/
-            ├── review/        → [auditor]    → testing/  → [HUMAN] merge
+            ├── backlog/       → blocked by design-ready/
+            ├── spec-needed/   → [tech_specifier] → spec-ready/
+            ├── spec-ready/    → [HUMAN]          → implementing/
+            ├── implementing/  → [developer]    → review/
+            ├── review/        → [auditor]      → testing/  → [HUMAN] merge
             ├── testing/
             └── done/
 ```
 
-El worktree se crea al inicio con `./scripts/sdd-worktree.sh create <feature-slug>`.
+The worktree is created at the start with `./scripts/sdd-worktree.sh create <feature-slug>`.
 
-## Referencias
+## References
 
-- Mapa y reglas: `AGENTS.md`
-- Proceso SDD: `sdd/README.md`
+- Map and rules: `AGENTS.md`
+- SDD process: `sdd/README.md`
 - Workflow: `sdd/workflow.md`
-- Arquitectura del proyecto: `sdd/architecture.md`
-- Convenciones del proyecto: `sdd/conventions.md`
-- Worktrees por feature: `scripts/sdd-worktree.sh`
+- Project architecture: `sdd/architecture.md`
+- Project conventions: `sdd/conventions.md`
+- Feature worktrees: `scripts/sdd-worktree.sh`

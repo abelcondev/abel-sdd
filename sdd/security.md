@@ -1,168 +1,168 @@
-# Security — Seguridad en el SDD
+# Security — Security in SDD
 
-La seguridad no es un paso extra: es una dimensión que se revisa en cada feature.
-
----
-
-## 1. Principios
-
-1. **Mínimo privilegio**: un rol solo accede a lo que necesita.
-2. **Defensa en profundidad**: validar en cliente, servidor y base de datos.
-3. **Datos sensibles por defecto**: asumir que cualquier dato puede ser sensible hasta demostrar lo contrario.
-4. **No hard deletes**: las entidades de negocio usan estados terminales (`cancelado`, `anulado`, `inactivo`).
-5. **Audit trail**: toda mutación crítica registra quién, cuándo y qué cambió.
+Security is not an extra step: it is a dimension reviewed in every feature.
 
 ---
 
-## 2. Checklist de seguridad por feature
+## 1. Principles
 
-Toda Issue `[Dev]` debe considerar estos ítems. Si aplica, debe documentarse en el spec técnico.
-
-### Auth y permisos
-
-- [ ] ¿La ruta o función verifica autenticación?
-- [ ] ¿Se valida el rol del usuario antes de ejecutar la acción?
-- [ ] ¿Un usuario puede ver/modificar datos de otro usuario?
-- [ ] ¿Las acciones críticas requieren rol explícito (no "cualquier usuario logueado")?
-
-### Datos
-
-- [ ] ¿Se sanitizan inputs del usuario?
-- [ ] ¿Se validan tipos y rangos en el servidor/edge?
-- [ ] ¿No se loggea PII (documentos de identidad, datos de pago, emails, teléfonos)?
-- [ ] ¿Los errores no filtran información interna (stack traces, IDs de DB)?
-
-### Dependencias
-
-- [ ] ¿Se corrió el audit de dependencias antes de mergear?
-- [ ] ¿Las nuevas dependencias son necesarias y mantenidas?
-- [ ] ¿No se agregan librerías duplicadas en funcionalidad?
-
-### Infraestructura
-
-- [ ] ¿Los secrets solo viven en variables de entorno y nunca en el código?
-- [ ] ¿El archivo de entorno del worktree no se commitea?
-- [ ] ¿No hay endpoints expuestos sin autorización?
+1. **Least privilege**: a role only accesses what it needs.
+2. **Defense in depth**: validate on client, server, and database.
+3. **Sensitive by default**: assume any data may be sensitive until proven otherwise.
+4. **No hard deletes**: business entities use terminal states (`cancelled`, `voided`, `inactive`).
+5. **Audit trail**: every critical mutation records who, when, and what changed.
 
 ---
 
-## 3. Gates de seguridad por riesgo
+## 2. Security Checklist per Feature
 
-### Features críticas
+Every `[Dev]` Issue must consider these items. If applicable, it must be documented in the technical spec.
 
-Las features que tocan **pagos, auth, datos personales u operaciones financieras** tienen gates adicionales:
+### Auth and Permissions
 
-- Cobertura de tests del 100% en flujos críticos.
-- Review de seguridad explícito en el checklist.
-- Audit trail obligatorio.
-- No se mergean sin aprobación humana adicional.
+- [ ] Does the route or function verify authentication?
+- [ ] Is the user's role validated before executing the action?
+- [ ] Can a user view/modify another user's data?
+- [ ] Do critical actions require an explicit role (not "any logged-in user")?
 
-### Features estándar
+### Data
 
-- Checklist de seguridad completado en el spec técnico.
-- Audit de dependencias sin vulnerabilidades críticas.
-- RBAC verificado en tests de integración.
+- [ ] Are user inputs sanitized?
+- [ ] Are types and ranges validated on the server/edge?
+- [ ] Is PII not logged (identity documents, payment data, emails, phones)?
+- [ ] Do errors not leak internal information (stack traces, DB IDs)?
+
+### Dependencies
+
+- [ ] Was the dependency audit run before merging?
+- [ ] Are new dependencies necessary and maintained?
+- [ ] Are no duplicate functionality libraries added?
+
+### Infrastructure
+
+- [ ] Do secrets live only in environment variables and never in code?
+- [ ] Is the worktree environment file not committed?
+- [ ] Are there no exposed endpoints without authorization?
 
 ---
 
-## 4. PII y datos sensibles
+## 3. Security Gates by Risk
 
-### Qué se considera PII
+### Critical Features
 
-- Nombres completos.
-- Documentos de identidad / pasaportes.
-- Datos de pago (tarjetas, cuentas).
-- Emails y teléfonos (en contextos que permitan identificación).
-- Cualquier otro dato que el proyecto defina como sensible.
+Features that touch **payments, auth, personal data, or financial operations** have additional gates:
 
-### Reglas
+- 100% test coverage on critical flows.
+- Explicit security review in the checklist.
+- Mandatory audit trail.
+- Not merged without additional human approval.
 
-- No loggear PII en consola ni en servicios de terceros.
-- No exponer PII en URLs ni en respuestas de API sin necesidad.
-- Implementar eliminación lógica, no física, salvo requerimiento legal explícito.
-- Respetar derechos de acceso, rectificación y cancelación.
+### Standard Features
+
+- Security checklist completed in the technical spec.
+- Dependency audit without critical vulnerabilities.
+- RBAC verified in integration tests.
+
+---
+
+## 4. PII and Sensitive Data
+
+### What Is Considered PII
+
+- Full names.
+- Identity documents / passports.
+- Payment data (cards, accounts).
+- Emails and phones (in contexts that allow identification).
+- Any other data the project defines as sensitive.
+
+### Rules
+
+- Do not log PII in console or third-party services.
+- Do not expose PII in URLs or API responses without need.
+- Implement logical deletion, not physical, unless there is explicit legal requirement.
+- Respect rights of access, rectification, and cancellation.
 
 ---
 
 ## 5. RBAC
 
-Cada proyecto define sus roles en `sdd/architecture.md`. Cada feature debe documentar:
+Each project defines its roles in `sdd/architecture.md`. Each feature must document:
 
 ```markdown
-## Permisos
+## Permissions
 
-| Acción | Admin | Operator | Viewer |
+| Action | Admin | Operator | Viewer |
 |---|---|---|---|
-| Crear recurso | ✅ | ✅ | ❌ |
-| Ver todos los recursos | ✅ | ❌ | ❌ |
-| Ver mis recursos | ✅ | ✅ | ✅ |
+| Create resource | ✅ | ✅ | ❌ |
+| View all resources | ✅ | ❌ | ❌ |
+| View my resources | ✅ | ✅ | ✅ |
 ```
 
-Y cada test de integración debe validar al menos un caso de acceso denegado.
+And each integration test must validate at least one denied access case.
 
 ---
 
-## 6. Dependencias y vulnerabilidades
+## 6. Dependencies and Vulnerabilities
 
-### Antes de agregar una dependencia
+### Before Adding a Dependency
 
-1. Justificarla en una `D<n>` del spec técnico.
-2. Verificar que no duplique funcionalidad existente.
-3. Revisar fecha de último release, issues abiertos y licencia.
+1. Justify it in a `D<n>` of the technical spec.
+2. Verify it does not duplicate existing functionality.
+3. Review last release date, open issues, and license.
 
-### Antes de mergear
+### Before Merging
 
 ```bash
-<audit-de-dependencias>
+<dependency-audit>
 ```
 
-> El proyecto completa con su package manager.
+> The project completes with its package manager.
 
-Si hay vulnerabilidades críticas, se resuelven antes del merge. Si no se pueden resolver, se documenta en `## Riesgos` de la Issue `[Dev]`.
-
----
-
-## 7. Secrets y entornos
-
-- El archivo de entorno se copia/manualiza al crear un worktree.
-- El archivo de entorno real nunca se commitea (debe estar en `.gitignore`).
-- No hardcodear API keys, tokens ni credenciales.
-- Para tests, usar valores de fixture en lugar de secrets reales.
+If there are critical vulnerabilities, they are resolved before merge. If they cannot be resolved, document them in the `## Risks` section of the `[Dev]` Issue.
 
 ---
 
-## 8. Cumplimiento normativo
+## 7. Secrets and Environments
 
-El proyecto debe adaptar esta sección a las regulaciones que le apliquen (ej. GDPR, Ley de Protección de Datos Personales del país de operación, etc.).
-
-Principios generales:
-
-- Consentimiento explícito para datos personales.
-- Derecho de acceso, rectificación y cancelación.
-- Eliminación lógica, no física.
-- Registro de tratamiento alineado con el audit trail.
+- The environment file is copied/manualized when creating a worktree.
+- The real environment file is never committed (must be in `.gitignore`).
+- Do not hardcode API keys, tokens, or credentials.
+- For tests, use fixture values instead of real secrets.
 
 ---
 
-## 9. Reporte de incidentes
+## 8. Regulatory Compliance
 
-Si se descubre una vulnerabilidad o fuga de datos durante una feature:
+The project must adapt this section to the regulations that apply to it (e.g. GDPR, the data protection law of the country of operation, etc.).
 
-1. Detener el avance de la Issue `[Dev]` y moverla a `dev/blocked/`.
-2. Documentar el incidente en la sección `## Riesgos` de la Issue.
-3. Notificar al humano antes de continuar.
-4. No mergear hasta que el riesgo esté mitigado.
+General principles:
+
+- Explicit consent for personal data.
+- Right of access, rectification, and cancellation.
+- Logical deletion, not physical.
+- Processing record aligned with the audit trail.
 
 ---
 
-## 10. Checklist final de seguridad (C7)
+## 9. Incident Reporting
 
-El `auditor` verifica estos ítems antes de aprobar una feature crítica:
+If a vulnerability or data breach is discovered during a feature:
 
-- [ ] RBAC validado en tests.
-- [ ] Inputs sanitizados y validados.
-- [ ] No se loggea PII.
-- [ ] Audit trail presente en mutaciones críticas.
-- [ ] Audit de dependencias sin vulnerabilidades críticas.
-- [ ] No hard deletes en entidades de negocio.
-- [ ] Secrets fuera del código.
+1. Stop the `[Dev]` Issue's progress and move it to `dev/blocked/`.
+2. Document the incident in the `## Risks` section of the Issue.
+3. Notify the human before continuing.
+4. Do not merge until the risk is mitigated.
+
+---
+
+## 10. Final Security Checklist (C7)
+
+The `auditor` verifies these items before approving a critical feature:
+
+- [ ] RBAC validated in tests.
+- [ ] Inputs sanitized and validated.
+- [ ] No PII logged.
+- [ ] Audit trail present on critical mutations.
+- [ ] Dependency audit without critical vulnerabilities.
+- [ ] No hard deletes on business entities.
+- [ ] Secrets outside the codebase.

@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# init.sh — Validación del harness SDD.
-# Uso: ./init.sh
+# init.sh — SDD harness validation.
+# Usage: ./init.sh
 #
-# Este script verifica que la estructura y archivos del SDD estén presentes.
-# No ejecuta tests, lint, build ni valida herramientas del stack.
-# Cada proyecto puede extender este script con sus propios checks.
+# This script verifies that the SDD structure and files are present.
+# It does not run tests, lint, build, or validate stack tools.
+# Each project can extend this script with its own checks.
 
 set -euo pipefail
 
@@ -33,7 +33,7 @@ warn() {
   echo -e "${YELLOW}[WARN]${NC} $1"
 }
 
-# Cuenta archivos .md directamente bajo un directorio.
+# Count .md files directly under a directory.
 count_md_files() {
   local dir="$1"
   if [[ ! -d "${dir}" ]]; then
@@ -44,9 +44,9 @@ count_md_files() {
 }
 
 # ─────────────────────────────────────────
-# 1. Archivos del harness
+# 1. Harness files
 # ─────────────────────────────────────────
-log_section "1. Archivos del harness"
+log_section "1. Harness files"
 
 required_files=(
   "AGENTS.md"
@@ -61,7 +61,9 @@ required_files=(
   "sdd/security.md"
   "sdd/delivery.md"
   ".claude/agents/orchestrator.md"
-  ".claude/agents/specifier.md"
+  ".claude/agents/product_manager.md"
+  ".claude/agents/designer.md"
+  ".claude/agents/tech_specifier.md"
   ".claude/agents/developer.md"
   ".claude/agents/auditor.md"
 )
@@ -70,43 +72,43 @@ for f in "${required_files[@]}"; do
   if [ -f "$f" ]; then
     ok "$f"
   else
-    fail "Falta $f"
+    fail "Missing $f"
   fi
 done
 
 # ─────────────────────────────────────────
-# 2. Configuración SDD local
+# 2. Local SDD configuration
 # ─────────────────────────────────────────
-log_section "2. Configuración SDD local"
+log_section "2. Local SDD configuration"
 
 if [ -d "sdd/projects" ]; then
-  ok "sdd/projects/ existe"
+  ok "sdd/projects/ exists"
 else
-  fail "Falta sdd/projects/"
+  fail "Missing sdd/projects/"
 fi
 
 if [ -d "sdd/decisions" ]; then
-  ok "sdd/decisions/ existe"
+  ok "sdd/decisions/ exists"
 else
-  warn "Falta sdd/decisions/ — crear con: mkdir -p sdd/decisions"
+  warn "Missing sdd/decisions/ — create with: mkdir -p sdd/decisions"
 fi
 
 if [ -f "feature_list.yaml" ]; then
-  fail "feature_list.yaml aún existe. El flujo SDD no lo usa; eliminarlo."
+  fail "feature_list.yaml still exists. The SDD flow does not use it; remove it."
 else
-  ok "feature_list.yaml eliminado"
+  ok "feature_list.yaml removed"
 fi
 
 if [ -d "specs" ]; then
-  warn "La carpeta specs/ aún existe. En el flujo SDD los specs viven en sdd/projects/."
+  warn "The specs/ folder still exists. In the SDD flow specs live in sdd/projects/."
 else
-  ok "Carpeta specs/ eliminada"
+  ok "specs/ folder removed"
 fi
 
 # ─────────────────────────────────────────
-# 3. Validaciones de estado SDD
+# 3. SDD state validations
 # ─────────────────────────────────────────
-log_section "3. Validaciones de estado SDD"
+log_section "3. SDD state validations"
 
 PRODUCT_STATES=(discovery product-ready)
 DESIGN_STATES=(spec-needed designing design-ready)
@@ -140,7 +142,7 @@ state_is_valid() {
   return 1
 }
 
-# 3.1 Concurrencia: máximo una Issue [Dev] en implementing/ o review/.
+# 3.1 Concurrency: at most one Issue [Dev] in implementing/ or review/.
 if [ -d "sdd/projects" ]; then
   implementing_count=0
   review_count=0
@@ -151,18 +153,18 @@ if [ -d "sdd/projects" ]; then
   active_dev_count=$((implementing_count + review_count))
 
   if [[ "${active_dev_count}" -eq 0 ]]; then
-    ok "No hay Issues [Dev] en implementing/ ni review/"
+    ok "No [Dev] Issues in implementing/ or review/"
   elif [[ "${active_dev_count}" -eq 1 ]]; then
-    ok "Hay exactamente una Issue [Dev] en implementing/ o review/"
+    ok "Exactly one [Dev] Issue in implementing/ or review/"
   else
-    fail "Hay ${active_dev_count} Issues [Dev] en implementing/ o review/. Debe haber solo una."
+    fail "There are ${active_dev_count} [Dev] Issues in implementing/ or review/. There must be only one."
   fi
 else
-  warn "No se puede validar concurrencia: falta sdd/projects/"
+  warn "Cannot validate concurrency: sdd/projects/ is missing"
 fi
 
-# 3.2 Cada project debe tener al menos una Issue [Product], una [Design] y una [Dev].
-# 3.3 Las carpetas de estado deben ser válidas según sdd/workflow.md.
+# 3.2 Every project must have at least one Issue [Product], one [Design], and one [Dev].
+# 3.3 State folders must be valid according to sdd/workflow.md.
 if [ -d "sdd/projects" ]; then
   projects_found=0
 
@@ -182,13 +184,13 @@ if [ -d "sdd/projects" ]; then
         if state_is_valid "${state_name}" product; then
           product_count=$((product_count + $(count_md_files "${state_dir}")))
         else
-          fail "${project_name}/product/${state_name} no es un estado válido para [Product]"
+          fail "${project_name}/product/${state_name} is not a valid state for [Product]"
         fi
       done
 
-      # No debería haber archivos sueltos directamente en product/
+      # There should be no loose files directly in product/
       if [[ "$(count_md_files "${project_dir}/product")" -gt 0 ]]; then
-        fail "${project_name}/product/ contiene archivos .md fuera de una carpeta de estado"
+        fail "${project_name}/product/ contains .md files outside a state folder"
       fi
     fi
 
@@ -199,13 +201,13 @@ if [ -d "sdd/projects" ]; then
         if state_is_valid "${state_name}" design; then
           design_count=$((design_count + $(count_md_files "${state_dir}")))
         else
-          fail "${project_name}/design/${state_name} no es un estado válido para [Design]"
+          fail "${project_name}/design/${state_name} is not a valid state for [Design]"
         fi
       done
 
-      # No debería haber archivos sueltos directamente en design/
+      # There should be no loose files directly in design/
       if [[ "$(count_md_files "${project_dir}/design")" -gt 0 ]]; then
-        fail "${project_name}/design/ contiene archivos .md fuera de una carpeta de estado"
+        fail "${project_name}/design/ contains .md files outside a state folder"
       fi
     fi
 
@@ -216,65 +218,65 @@ if [ -d "sdd/projects" ]; then
         if state_is_valid "${state_name}" dev; then
           dev_count=$((dev_count + $(count_md_files "${state_dir}")))
         else
-          fail "${project_name}/dev/${state_name} no es un estado válido para [Dev]"
+          fail "${project_name}/dev/${state_name} is not a valid state for [Dev]"
         fi
       done
 
       if [[ "$(count_md_files "${project_dir}/dev")" -gt 0 ]]; then
-        fail "${project_name}/dev/ contiene archivos .md fuera de una carpeta de estado"
+        fail "${project_name}/dev/ contains .md files outside a state folder"
       fi
     fi
 
     if [[ "${product_count}" -eq 0 ]]; then
-      fail "${project_name} no tiene ninguna Issue [Product]"
+      fail "${project_name} has no [Product] Issue"
     else
-      ok "${project_name}: tiene al menos una Issue [Product]"
+      ok "${project_name}: has at least one [Product] Issue"
     fi
 
     if [[ "${design_count}" -eq 0 ]]; then
-      fail "${project_name} no tiene ninguna Issue [Design]"
+      fail "${project_name} has no [Design] Issue"
     else
-      ok "${project_name}: tiene al menos una Issue [Design]"
+      ok "${project_name}: has at least one [Design] Issue"
     fi
 
     if [[ "${dev_count}" -eq 0 ]]; then
-      fail "${project_name} no tiene ninguna Issue [Dev]"
+      fail "${project_name} has no [Dev] Issue"
     else
-      ok "${project_name}: tiene al menos una Issue [Dev]"
+      ok "${project_name}: has at least one [Dev] Issue"
     fi
   done
 
   if [[ "${projects_found}" -eq 0 ]]; then
-    warn "No hay projects en sdd/projects/"
+    warn "No projects in sdd/projects/"
   fi
 else
-  warn "No se puede validar projects: falta sdd/projects/"
+  warn "Cannot validate projects: sdd/projects/ is missing"
 fi
 
 # ─────────────────────────────────────────
-# 4. Checks adicionales del proyecto (opcional)
+# 4. Additional project checks (optional)
 # ─────────────────────────────────────────
-log_section "4. Checks adicionales del proyecto"
+log_section "4. Additional project checks"
 
 if [ -x "./scripts/project-checks.sh" ]; then
-  echo "Corriendo ./scripts/project-checks.sh..."
+  echo "Running ./scripts/project-checks.sh..."
   if ./scripts/project-checks.sh; then
-    ok "project-checks.sh pasó"
+    ok "project-checks.sh passed"
   else
-    fail "project-checks.sh falló"
+    fail "project-checks.sh failed"
   fi
 else
-  warn "No existe ./scripts/project-checks.sh. El proyecto puede crearlo para agregar validaciones de stack (tests, lint, build, etc.)."
+  warn "./scripts/project-checks.sh does not exist. The project can create it to add stack validations (tests, lint, build, etc.)."
 fi
 
 # ─────────────────────────────────────────
-# Resumen
+# Summary
 # ─────────────────────────────────────────
 echo ""
 if [ "$ERRORS" -eq 0 ]; then
-  echo -e "${GREEN}[OK] Harness SDD listo${NC}"
+  echo -e "${GREEN}[OK] SDD harness ready${NC}"
   exit 0
 else
-  echo -e "${RED}[FAIL] Harness SDD NO está listo — $ERRORS error(es)${NC}"
+  echo -e "${RED}[FAIL] SDD harness is not ready — $ERRORS error(s)${NC}"
   exit 1
 fi

@@ -1,181 +1,181 @@
 # Quality Gates — Definition of Ready / Done
 
-La regla de oro: **executable evidence, not claims**.
+The golden rule: **executable evidence, not claims**.
 
-Todo trabajo se demuestra con evidencia ejecutable, no con afirmaciones.
+All work is demonstrated with executable evidence, not assertions.
 
 ---
 
 ## 1. Definition of Ready (DoR)
 
-Una Issue `[Dev]` está lista para pasar de `dev/spec-ready/` a `dev/implementing/` cuando:
+A `[Dev]` Issue is ready to move from `dev/spec-ready/` to `dev/implementing/` when:
 
-- [ ] La Issue `[Design]` correspondiente está en `design/design-ready/`.
-- [ ] El spec técnico está completo (ver `templates/issue-dev.md`).
-- [ ] Las decisiones técnicas `D<n>` incluyen alternativas descartadas.
-- [ ] El **Test Plan** cubre cada `R<n>` de la Issue `[Design]`.
-- [ ] El **Impact Analysis** identifica módulos afectados.
-- [ ] El checklist de seguridad está completado si aplica.
-- [ ] No hay dependencias sin resolver.
+- [ ] The corresponding `[Design]` Issue is in `design/design-ready/`.
+- [ ] The technical spec is complete (see `templates/issue-dev.md`).
+- [ ] The technical decisions `D<n>` include discarded alternatives.
+- [ ] The **Test Plan** covers each `R<n>` from the `[Design]` Issue.
+- [ ] The **Impact Analysis** identifies affected modules.
+- [ ] The security checklist is completed if applicable.
+- [ ] There are no unresolved dependencies.
 
 ---
 
 ## 2. Definition of Done (DoD)
 
-Una Issue `[Dev]` está lista para pasar de `dev/review/` a `dev/testing/` cuando:
+A `[Dev]` Issue is ready to move from `dev/review/` to `dev/testing/` when:
 
-- [ ] Todos los `R<n>` están implementados y testeados.
-- [ ] `init.sh` pasa en el worktree.
-- [ ] Cobertura mínima alcanzada según `sdd/testing.md`.
-- [ ] Trazabilidad `R<n>` → test documentada.
-- [ ] No hay logs de debug ni código muerto.
-- [ ] La UI implementada coincide con el diseño aprobado y `[Design]`.
-- [ ] El `auditor` emitió veredicto ✅.
-- [ ] El humano aprobó el merge.
+- [ ] All `R<n>` are implemented and tested.
+- [ ] `init.sh` passes in the worktree.
+- [ ] Minimum coverage is reached per `sdd/testing.md`.
+- [ ] `R<n>` → test traceability is documented.
+- [ ] There are no debug logs or dead code.
+- [ ] The implemented UI matches the approved design and `[Design]` Issue.
+- [ ] The `auditor` issued a ✅ verdict.
+- [ ] The human approved the merge.
 
 ---
 
-## 3. Quality gates obligatorios
+## 3. Mandatory Quality Gates
 
-Antes de declarar `done`, `init.sh` debe pasar. El proyecto define en `init.sh` o en su toolchain qué comandos ejecutar. Ejemplo típico:
+Before declaring `done`, `init.sh` must pass. The project defines in `init.sh` or its toolchain which commands to run. Typical example:
 
 ```bash
-<test-runner> --coverage    # tests con cobertura
+<test-runner> --coverage    # tests with coverage
 <type-check>                # typecheck
 <linter>                    # lint
-<audit>                     # vulnerabilidades de dependencias
+<audit>                     # dependency vulnerabilities
 <build>                     # build
 ```
 
-> El proyecto completa `sdd/architecture.md` y `sdd/conventions.md` con las herramientas concretas.
+> The project completes `sdd/architecture.md` and `sdd/conventions.md` with the concrete tools.
 
 ---
 
-## 4. Niveles de verificación
+## 4. Verification Levels
 
-### 4.1 Tests unitarios
+### 4.1 Unit Tests
 
-- Happy path de cada función pública.
-- Al menos un caso de error por función pública.
-- Sin mocks innecesarios del filesystem ni de la red.
+- Happy path of every public function.
+- At least one error case per public function.
+- No unnecessary mocks of the filesystem or network.
 
-### 4.2 Tests de integración
+### 4.2 Integration Tests
 
-- Flujos entre módulos.
-- Interacción con persistencia y auth.
-- Validación de RBAC.
+- Flows between modules.
+- Interaction with persistence and auth.
+- RBAC validation.
 
-### 4.3 Build y quality gates
+### 4.3 Build and Quality Gates
 
-Verificados por `init.sh` (ver sección 3).
+Verified by `init.sh` (see section 3).
 
-### 4.4 Trazabilidad de requisitos
+### 4.4 Requirements Traceability
 
-Cada `R<n>` de la Issue `[Design]` debe mapearse a al menos un test concreto.
+Each `R<n>` from the `[Design]` Issue must map to at least one concrete test.
 
-Ejemplo de documentación en la sección `## Review`:
+Example documentation in the `## Review` section:
 
 ```markdown
-| Requisito | Test file | Línea | Estado |
+| Requirement | Test file | Line | Status |
 |-----------|-----------|-------|--------|
-| R1 | tests/unit/clientes/crear.test.ts | 23 | ✅ |
-| R2 | — | — | ❌ FALTA |
+| R1 | tests/unit/clients/create.test.ts | 23 | ✅ |
+| R2 | — | — | ❌ MISSING |
 ```
 
 ---
 
-## 5. Checklist de cierre (C1–C7)
+## 5. Closure Checklist (C1–C7)
 
-El `auditor` verifica cada ítem antes de aprobar el paso de una Issue a `done`.
+The `auditor` verifies each item before approving moving an Issue to `done`.
 
-### C1 — Harness completo
+### C1 — Complete Harness
 
-- [ ] `AGENTS.md` existe.
-- [ ] `CLAUDE.md` existe y fuerza el rol orchestrator.
-- [ ] `sdd/README.md` existe.
-- [ ] `sdd/workflow.md` existe.
-- [ ] `sdd/architecture.md` existe y está completado.
-- [ ] `sdd/conventions.md` existe y está completado.
-- [ ] `sdd/quality-gates.md` existe.
-- [ ] `sdd/testing.md` existe.
-- [ ] `sdd/security.md` existe.
-- [ ] `sdd/delivery.md` existe.
-- [ ] `.claude/agents/` tiene `orchestrator.md`, `specifier.md`, `developer.md`, `auditor.md`.
-- [ ] `init.sh` existe y es ejecutable.
-- [ ] `sdd/projects/` existe y tiene al menos un project.
+- [ ] `AGENTS.md` exists.
+- [ ] `CLAUDE.md` exists and forces the orchestrator role.
+- [ ] `sdd/README.md` exists.
+- [ ] `sdd/workflow.md` exists.
+- [ ] `sdd/architecture.md` exists and is completed.
+- [ ] `sdd/conventions.md` exists and is completed.
+- [ ] `sdd/quality-gates.md` exists.
+- [ ] `sdd/testing.md` exists.
+- [ ] `sdd/security.md` exists.
+- [ ] `sdd/delivery.md` exists.
+- [ ] `.claude/agents/` has `orchestrator.md`, `product_manager.md`, `designer.md`, `tech_specifier.md`, `developer.md`, `auditor.md`.
+- [ ] `init.sh` exists and is executable.
+- [ ] `sdd/projects/` exists and has at least one project.
 
-### C2 — Coherencia de estado
+### C2 — State Coherence
 
-- [ ] Máximo una Issue `[Dev]` en estado `implementing/` o `review/`.
-- [ ] El Project contiene al menos una Issue `[Design]` y una Issue `[Dev]`.
-- [ ] La Issue `[Dev]` está en `dev/backlog/` hasta que `[Design]` esté en `design/design-ready/`.
-- [ ] Todos los estados en `sdd/projects/` son carpetas válidas según `sdd/workflow.md`.
-- [ ] Si una Issue `[Design]` está en `design/designing/` o más allá, su descripción contiene un spec funcional + UI/UX completo.
-- [ ] Si una Issue `[Design]` está en `design/design-ready/`, su descripción contiene la sección `UI/UX Design` completa y assets del diseño.
-- [ ] Si una Issue `[Dev]` está en `dev/spec-ready/` o más allá, su descripción contiene un spec técnico completo.
-- [ ] Si una Issue `[Dev]` está en `dev/implementing/` o más allá, existe el worktree en `<repo-principal>-<project>/`.
+- [ ] At most one `[Dev]` Issue in `implementing/` or `review/`.
+- [ ] The Project contains at least one `[Design]` Issue and one `[Dev]` Issue.
+- [ ] The `[Dev]` Issue is in `dev/backlog/` until `[Design]` is in `design/design-ready/`.
+- [ ] All states in `sdd/projects/` are valid folders per `sdd/workflow.md`.
+- [ ] If a `[Design]` Issue is in `design/designing/` or beyond, its description contains a complete functional + UI/UX spec.
+- [ ] If a `[Design]` Issue is in `design/design-ready/`, its description contains the complete `UI/UX Design` section and design assets.
+- [ ] If a `[Dev]` Issue is in `dev/spec-ready/` or beyond, its description contains a complete technical spec.
+- [ ] If a `[Dev]` Issue is in `dev/implementing/` or beyond, the worktree exists at `<repo-principal>-<project>/`.
 
-### C3 — Cumplimiento arquitectónico
+### C3 — Architectural Compliance
 
-- [ ] Nuevo código respeta el stack y convenciones definidos en `sdd/architecture.md` y `sdd/conventions.md`.
-- [ ] No hay tipado/estilo que contradiga las convenciones del proyecto.
-- [ ] No hay librerías duplicadas en funcionalidad.
-- [ ] No hay logs de debug ni código muerto.
-- [ ] Todos los textos de UI están en el idioma acordado.
-- [ ] RBAC respetado en rutas y componentes nuevos.
-- [ ] Sin eliminaciones físicas en entidades de negocio: se usan estados terminales.
-- [ ] Audit trail presente en mutaciones críticas.
-- [ ] La UI implementada coincide con el diseño aprobado y la Issue `[Design]`.
+- [ ] New code respects the stack and conventions defined in `sdd/architecture.md` and `sdd/conventions.md`.
+- [ ] There is no typing/style that contradicts project conventions.
+- [ ] There are no duplicate libraries in functionality.
+- [ ] There are no debug logs or dead code.
+- [ ] All UI text is in the agreed language.
+- [ ] RBAC respected in new routes and components.
+- [ ] No physical deletions on business entities: terminal states are used.
+- [ ] Audit trail present on critical mutations.
+- [ ] The implemented UI matches the approved design and the `[Design]` Issue.
 
-### C4 — Verificación real
+### C4 — Real Verification
 
-- [ ] El test runner del proyecto pasa sin errores.
-- [ ] El type checker del proyecto pasa sin errores.
-- [ ] El linter del proyecto pasa sin advertencias.
-- [ ] El build del proyecto pasa sin errores.
-- [ ] El audit de dependencias no reporta vulnerabilidades críticas.
-- [ ] Cada requisito `R<n>` tiene al menos un test que lo valida.
+- [ ] The project's test runner passes without errors.
+- [ ] The project's type checker passes without errors.
+- [ ] The project's linter passes without warnings.
+- [ ] The project's build passes without errors.
+- [ ] The dependency audit reports no critical vulnerabilities.
+- [ ] Each `R<n>` requirement has at least one test validating it.
 
-> El proyecto define en `sdd/architecture.md` / `sdd/conventions.md` qué comandos concretos usar.
+> The project defines in `sdd/architecture.md` / `sdd/conventions.md` which concrete commands to use.
 
-### C5 — Cierre limpio de sesión
+### C5 — Clean Session Closure
 
-- [ ] `init.sh` imprime el mensaje de éxito configurado.
-- [ ] No hay archivos untracked sospechosos.
-- [ ] Si se cerró una Issue `[Dev]`, su archivo está en `dev/done/`.
-- [ ] Si se cerró una Issue `[Design]`, su archivo está en `design/design-ready/`.
-- [ ] Si se cerró una Issue `[Dev]`, el worktree fue eliminado.
-- [ ] Se actualizó `sdd/README.md` con el estado actual de projects.
+- [ ] `init.sh` prints the configured success message.
+- [ ] There are no suspicious untracked files.
+- [ ] If a `[Dev]` Issue was closed, its file is in `dev/done/`.
+- [ ] If a `[Design]` Issue was closed, its file is in `design/design-ready/`.
+- [ ] If a `[Dev]` Issue was closed, the worktree was removed.
+- [ ] `sdd/README.md` was updated with the current project state.
 
-### C6 — Cumplimiento SDD
+### C6 — SDD Compliance
 
-- [ ] La Issue `[Design]` pasó por `design/spec-needed/` → `design/designing/` → `design/design-ready/`.
-- [ ] La Issue `[Dev]` pasó por `dev/spec-needed/` → `dev/spec-ready/` → `dev/implementing/` antes de tocar código de producción.
-- [ ] El gate humano entre `spec-needed/` y `designing/` fue respetado.
-- [ ] El gate humano entre `designing/` y `design-ready/` fue respetado.
-- [ ] El gate humano entre `spec-ready/` e `implementing/` fue respetado.
-- [ ] La descripción de cada Issue usa el template de `sdd/workflow.md`.
+- [ ] The `[Design]` Issue passed through `design/spec-needed/` → `design/designing/` → `design/design-ready/`.
+- [ ] The `[Dev]` Issue passed through `dev/spec-needed/` → `dev/spec-ready/` → `dev/implementing/` before touching production code.
+- [ ] The human gate between `spec-needed/` and `designing/` was respected.
+- [ ] The human gate between `designing/` and `design-ready/` was respected.
+- [ ] The human gate between `spec-ready/` and `implementing/` was respected.
+- [ ] Each Issue description uses the template from `sdd/workflow.md`.
 
-### C7 — Seguridad
+### C7 — Security
 
-- [ ] RBAC validado en tests.
-- [ ] Inputs sanitizados y validados.
-- [ ] No se loggea PII.
-- [ ] Audit trail presente en mutaciones críticas.
-- [ ] Audit de dependencias sin vulnerabilidades críticas.
-- [ ] No hard deletes en entidades de negocio.
-- [ ] Secrets fuera del código.
+- [ ] RBAC validated in tests.
+- [ ] Inputs sanitized and validated.
+- [ ] No PII logged.
+- [ ] Audit trail present on critical mutations.
+- [ ] Dependency audit without critical vulnerabilities.
+- [ ] No hard deletes on business entities.
+- [ ] Secrets outside the codebase.
 
-Si **cualquier** checkbox de C1–C7 queda vacío, el veredicto es **❌ Rechazado** con accionables claros.
+If **any** checkbox from C1–C7 is empty, the verdict is **❌ Rejected** with clear action items.
 
 ---
 
-## 6. Anti-patrones generales
+## 6. General Anti-Patterns
 
-- "Debería funcionar" sin test ejecutable.
-- Test que solo verifica que no explota.
-- Mocking excesivo del filesystem o de la red.
-- Marcar `done` sin `init.sh` verde.
-- Mergear sin aprobación del auditor y del humano.
-- Mover una Issue `[Dev]` a `implementing/` sin que `[Design]` esté en `design/design-ready/`.
-- Modificar componentes base existentes sin aprobación previa.
+- "It should work" without an executable test.
+- A test that only verifies it does not crash.
+- Excessive mocking of the filesystem or network.
+- Declaring `done` without a green `init.sh`.
+- Merging without auditor and human approval.
+- Moving a `[Dev]` Issue to `implementing/` without `[Design]` being in `design/design-ready/`.
+- Modifying existing base components without prior approval.

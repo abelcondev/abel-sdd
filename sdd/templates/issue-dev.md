@@ -1,72 +1,72 @@
-# [Dev] <Título de la issue>
+# [Dev] <Issue title>
 
 Project: `sdd/projects/<feature-slug>/`
-Estado: `<carpeta-actual>`
+State: `<current-folder>`
 
 ## Context
 
-Implementación de [<feature>], basada en el diseño aprobado en [Issue Design].
+Implementation of [<feature>], based on the approved design in [Issue Design].
 
 ## Technical Decisions
 
-### D1: [título]
+### D1: [title]
 
-- **Elegido**: [opción]
-- **Alternativas descartadas**: [B], [C]
-- **Razón**: [por qué]
-- **Impacto**: [módulos afectados]
+- **Chosen**: [option]
+- **Discarded alternatives**: [B], [C]
+- **Reason**: [why]
+- **Impact**: [affected modules]
 
 ### D2: ...
 
 ## Impact Analysis
 
-| Módulo | Acción | Contrato expuesto |
+| Module | Action | Exposed contract |
 |---|---|---|
-| `<ruta-al-módulo-1>/` | crear / modificar | ... |
-| `<ruta-al-módulo-2>/` | reutilizar | — |
+| `<path-to-module-1>/` | create / modify | ... |
+| `<path-to-module-2>/` | reuse | — |
 
 ## Technical Notes
 
-- Tablas, APIs, librerías, consideraciones.
+- Tables, APIs, libraries, considerations.
 
 ## Implementation Plan
 
-1. Paso 1.
-2. Paso 2.
-3. Paso 3.
+1. Step 1.
+2. Step 2.
+3. Step 3.
 
 ## Test Plan
 
-### Tests derivados de los R<n>
+### Tests derived from R<n>
 
-| Requisito | Test de aceptación | Tipo | Prioridad |
+| Requirement | Acceptance test | Type | Priority |
 |---|---|---|---|
-| R1 | ... | unitario / integración | obligatorio |
-| R2 | ... | unitario / integración | obligatorio |
+| R1 | ... | unit / integration | required |
+| R2 | ... | unit / integration | required |
 
 ### BDD Test Plan
 
-Escenarios Gherkin aprobados en [Product] convertidos en tests de aceptación automatizados o manuales.
+Gherkin scenarios approved in [Product] converted into automated or manual acceptance tests.
 
-| Scenario | Dado / When / Then | Tipo de test | Estado |
+| Scenario | Given / When / Then | Test type | Status |
 |---|---|---|---|
-| [nombre] | `Given ... When ... Then ...` | integración / e2e / manual | pendiente |
-| [nombre] | `Given ... When ... Then ...` | integración / e2e / manual | pendiente |
+| [name] | `Given ... When ... Then ...` | integration / e2e / manual | pending |
+| [name] | `Given ... When ... Then ...` | integration / e2e / manual | pending |
 
-- Issue [Product] de referencia: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
+- Reference [Product] issue: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
 
 ## Security Considerations
 
-- [ ] RBAC: roles que pueden ejecutar cada acción.
-- [ ] Inputs sanitizados y validados.
-- [ ] No se expone PII.
-- [ ] Audit trail en mutaciones críticas.
+- [ ] RBAC: roles that can execute each action.
+- [ ] Inputs sanitized and validated.
+- [ ] No PII exposed.
+- [ ] Audit trail on critical mutations.
 
 ## Risks & Mitigations
 
-| Riesgo | Impacto | Mitigación |
+| Risk | Impact | Mitigation |
 |---|---|---|
-| ... | alto/medio/bajo | ... |
+| ... | high/medium/low | ... |
 
 ## Dependencies
 
@@ -74,29 +74,29 @@ Escenarios Gherkin aprobados en [Product] convertidos en tests de aceptación au
 
 ## UI Reference
 
-- Diseño aprobado: `sdd/projects/<feature-slug>/design/design-ready/`
+- Approved design: `sdd/projects/<feature-slug>/design/design-ready/`
 - Artboards: `<feature-slug>-<screen>`
 - Screenshots: [links]
 
 ## Changelog
 
-| Fecha | Autor | Cambio | Motivo |
+| Date | Author | Change | Reason |
 |---|---|---|---|
-| YYYY-MM-DD | Nombre | Breve descripción del cambio | Por qué se hizo |
+| YYYY-MM-DD | Name | Brief description of the change | Why it was made |
 
-> Registrar cambios estructurales, técnicos o de alcance durante el ciclo de vida de la issue.
+> Record structural, technical, or scope changes during the issue lifecycle.
 
 ## Review
 
-### Veredicto: ✅ Aprobado / ❌ Rechazado
+### Verdict: ✅ Approved / ❌ Rejected
 
-### Hallazgos
+### Findings
 1. ...
 
-### Trazabilidad R<n> → Test
-| Requisito | Test file | Línea | Estado |
+### Traceability R<n> → Test
+| Requirement | Test file | Line | Status |
 |-----------|-----------|-------|--------|
 | R1 | ... | ... | ✅ |
 
-### Accionables (si fue rechazado)
+### Action items (if rejected)
 1. ...

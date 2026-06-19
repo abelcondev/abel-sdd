@@ -1,40 +1,53 @@
-# SDD — Workflow, estados y ciclo de vida
+# SDD — Workflow, States, and Lifecycle
 
-Este documento define el flujo de trabajo, los estados y las reglas del SDD.
+This document defines the SDD workflow, states, and rules.
 
-Para el índice general del SDD, ver `sdd/README.md`.
-
----
-
-## 1. Entidades
-
-- **Project**: una feature de negocio, representada por `sdd/projects/<slug>/`.
-- **Issue `[Product]`**: descubrimiento de producto + escenarios BDD, archivo `.md` dentro de `sdd/projects/<slug>/product/<estado>/`. Es la primera fase y desbloquea `[Design]`.
-- **Issue `[Design]`**: spec funcional + UI/UX, archivo `.md` dentro de `sdd/projects/<slug>/design/<estado>/`. Está bloqueada por `[Product]`.
-- **Issue `[Dev]`**: spec técnico + implementación, archivo `.md` dentro de `sdd/projects/<slug>/dev/<estado>/`. Está bloqueada por `[Design]`.
+For the general SDD index, see `sdd/README.md`.
 
 ---
 
-## 2. Estructura
+## 1. Entities
+
+- **Project**: a business feature, represented by `sdd/projects/<slug>/`.
+- **Issue `[Product]`**: product discovery + BDD scenarios, `.md` file inside `sdd/projects/<slug>/product/<state>/`. It is the first phase and unlocks `[Design]`.
+- **Issue `[Design]`**: functional spec + UI/UX, `.md` file inside `sdd/projects/<slug>/design/<state>/`. Blocked by `[Product]`.
+- **Issue `[Dev]`**: technical spec + implementation, `.md` file inside `sdd/projects/<slug>/dev/<state>/`. Blocked by `[Design]`.
+
+---
+
+## 1.1 Roles
+
+| Role | Responsible for | SDD Phase |
+|---|---|---|
+| `orchestrator` | Create worktrees, move issues between states, orchestrate subagents, human gates. | Whole cycle |
+| `product_manager` | Discovery, BDD, product goals, acceptance criteria, risks, scope. | `[Product]` |
+| `designer` | Functional spec, user flows, UI/UX, accessibility, design tokens, handoff to Dev. | `[Design]` |
+| `tech_specifier` | Technical spec, technical decisions, impact analysis, Test Plan. | `[Dev]` (spec) |
+| `developer` | Implementation with TDD, production code. | `[Dev]` (implementation) |
+| `auditor` | Verification against quality gates, security, approved design, and TDD. | `[Dev]` (review) |
+
+> The `product_manager` and `designer` roles assist the human PM and Designer. The actual visual design is still done in the project's design tool; the `designer` agent structures the handoff.
+
+## 2. Structure
 
 ```text
 sdd/
-├── README.md                 # Índice del SDD
-├── workflow.md               # Este documento
-├── architecture.md           # Stack y decisiones arquitectónicas (a completar)
-├── conventions.md            # Convenciones de código (a completar)
+├── README.md                 # SDD index
+├── workflow.md               # This document
+├── architecture.md           # Stack and architectural decisions (to complete)
+├── conventions.md            # Code conventions (to complete)
 ├── quality-gates.md          # Definition of Ready / Done
-├── testing.md                # Estrategia de testing y TDD
-├── security.md               # Seguridad y cumplimiento
-├── delivery.md               # Commits, PRs, merge y cierre
-├── decisions/                # ADRs por feature o globales
-├── templates/                # Templates para projects e issues
+├── testing.md                # Testing strategy and TDD
+├── security.md               # Security and compliance
+├── delivery.md               # Commits, PRs, merge, and closure
+├── decisions/                # ADRs per feature or global
+├── templates/                # Templates for projects and issues
 └── projects/
     └── <feature-slug>/
         ├── README.md
         ├── product/
-        │   ├── discovery/       ← iteración de descubrimiento de producto
-        │   └── product-ready/   ← aprobado, desbloquea [Design]
+        │   ├── discovery/       ← product discovery iteration
+        │   └── product-ready/   ← approved, unlocks [Design]
         ├── design/
         │   ├── spec-needed/
         │   ├── designing/
@@ -44,28 +57,28 @@ sdd/
             ├── spec-needed/
             ├── spec-ready/
             ├── implementing/
-            ├── blocked/         ← issue pausada por bloqueo
+            ├── blocked/         ← issue paused by a blocker
             ├── review/
-            ├── rejected/        ← issue rechazada en review
+            ├── rejected/        ← issue rejected in review
             ├── testing/
             ├── done/
-            └── cancelled/       ← issue descartada
+            └── cancelled/       ← issue discarded
 ```
 
-### Convenciones de naming
+### Naming Conventions
 
-| Entidad | Ruta | Título dentro del archivo |
+| Entity | Path | Title inside the file |
 |---|---|---|
-| Project | `sdd/projects/login-y-dashboard-layout/README.md` | `Login y dashboard layout` |
+| Project | `sdd/projects/login-y-dashboard-layout/README.md` | `Login and Dashboard Layout` |
 | Issue Product | `sdd/projects/login-y-dashboard-layout/product/discovery/login.md` | `[Product] Login` |
 | Issue Design | `sdd/projects/login-y-dashboard-layout/design/spec-needed/login.md` | `[Design] Login` |
 | Issue Dev | `sdd/projects/login-y-dashboard-layout/dev/backlog/login.md` | `[Dev] Login` |
 
-Los slugs usan kebab-case, minúsculas, sin tildes.
+Slugs use kebab-case, lowercase, no accents.
 
 ---
 
-## 3. Estados
+## 3. States
 
 ### Issue `[Product]`
 
@@ -73,10 +86,10 @@ Los slugs usan kebab-case, minúsculas, sin tildes.
 discovery → product-ready
 ```
 
-| Carpeta | Significado |
+| Folder | Meaning |
 |---|---|
-| `product/discovery/` | Se descubre e itera el comportamiento de producto, usuarios y escenarios BDD. |
-| `product/product-ready/` | Spec de producto aprobado. La Issue `[Design]` puede avanzar. |
+| `product/discovery/` | Product behavior, users, and BDD scenarios are discovered and iterated. |
+| `product/product-ready/` | Product spec approved. The `[Design]` Issue may advance. |
 
 ### Issue `[Design]`
 
@@ -84,11 +97,11 @@ discovery → product-ready
 spec-needed → designing → design-ready
 ```
 
-| Carpeta | Significado |
+| Folder | Meaning |
 |---|---|
-| `design/spec-needed/` | Issue creada, falta el spec funcional/UI. Bloqueada hasta que `[Product]` esté en `product-ready/`. |
-| `design/designing/` | Se itera el diseño visual en la herramienta de diseño del proyecto. |
-| `design/design-ready/` | Diseño y spec aprobados. La Issue `[Dev]` puede avanzar. |
+| `design/spec-needed/` | Issue created, functional/UI spec missing. Blocked until `[Product]` is in `product-ready/`. |
+| `design/designing/` | Visual design is iterated in the project's design tool. |
+| `design/design-ready/` | Design and spec approved. The `[Dev]` Issue may advance. |
 
 ### Issue `[Dev]`
 
@@ -99,94 +112,94 @@ backlog → spec-needed → spec-ready → implementing → review → testing �
                                     cancelled
 ```
 
-| Carpeta | Significado |
+| Folder | Meaning |
 |---|---|
-| `dev/backlog/` | Issue registrada, bloqueada por `[Design]`. |
-| `dev/spec-needed/` | Falta el spec técnico. |
-| `dev/spec-ready/` | Spec técnico completo. Espera aprobación humana. |
-| `dev/implementing/` | Developer trabajando en el worktree. |
-| `dev/blocked/` | Issue pausada por bloqueo externo o decisión pendiente. |
-| `dev/review/` | Código listo. Auditor verificando. |
-| `dev/rejected/` | Auditor rechazó. Requiere retrabajo antes de volver a `implementing/`. |
-| `dev/testing/` | Mergeado. Validación final. |
-| `dev/done/` | Feature completada y verificada. |
-| `dev/cancelled/` | Issue descartada. Se conserva por trazabilidad. |
+| `dev/backlog/` | Issue registered, blocked by `[Design]`. |
+| `dev/spec-needed/` | Technical spec missing. |
+| `dev/spec-ready/` | Technical spec complete. Awaiting human approval. |
+| `dev/implementing/` | Developer working in the worktree. |
+| `dev/blocked/` | Issue paused by external blocker or pending decision. |
+| `dev/review/` | Code ready. Auditor verifying. |
+| `dev/rejected/` | Auditor rejected. Requires rework before returning to `implementing/`. |
+| `dev/testing/` | Merged. Final validation. |
+| `dev/done/` | Feature completed and verified. |
+| `dev/cancelled/` | Issue discarded. Kept for traceability. |
 
-### Estados transversales
+### Cross-Cutting States
 
-- **blocked/**: puede usarse desde `spec-needed/`, `spec-ready/` o `implementing/`. Se vuelve al estado anterior cuando se desbloquea.
-- **rejected/**: solo desde `review/`. Debe volver a `implementing/` con accionables claros.
-- **cancelled/**: estado final para issues descartadas.
+- **blocked/**: can be used from `spec-needed/`, `spec-ready/`, or `implementing/`. Return to the previous state when unblocked.
+- **rejected/**: only from `review/`. Must return to `implementing/` with clear action items.
+- **cancelled/**: final state for discarded issues.
 
 ---
 
-## 4. Cómo se modela una feature
+## 4. How a Feature Is Modeled
 
-Cada feature tiene su propio **worktree aislado** desde el inicio. Dentro del worktree se escriben los specs, se itera el diseño y se implementa el código.
+Each feature has its own **isolated worktree** from the start. Inside the worktree, specs are written, design is iterated, and code is implemented.
 
-1. Crear el worktree de la feature:
+1. Create the feature worktree:
    ```bash
    ./scripts/sdd-worktree.sh create <feature-slug>
    ```
-   Esto crea:
-   - Rama `feature/<feature-slug>`.
-   - Worktree en `<repo-principal>-<feature-slug>/`.
-   - Estructura vacía en `sdd/projects/<feature-slug>/`.
-2. Abrir el agente de coding dentro del worktree.
-3. Completar `README.md` del project y crear issues como archivos `.md` dentro de las carpetas de estado. Empezar por `[Product]`.
-4. Mover los archivos físicamente entre carpetas cuando cambian de estado.
-5. Mergear el worktree a `main` al terminar y eliminarlo.
+   This creates:
+   - Branch `feature/<feature-slug>`.
+   - Worktree at `<repo-principal>-<feature-slug>/`.
+   - Empty structure at `sdd/projects/<feature-slug>/`.
+2. Open the coding agent inside the worktree.
+3. Complete the project `README.md` and create issues as `.md` files inside state folders. Start with `[Product]`.
+4. Move files physically between folders when they change state.
+5. Merge the worktree to `main` when finished and remove it.
 
-> El proyecto debe completar `sdd/architecture.md` y `sdd/conventions.md` para que los agentes sepan qué stack y estilo usar.
+> The project must complete `sdd/architecture.md` and `sdd/conventions.md` so agents know which stack and style to use.
 
 ---
 
 ## 5. Workflow
 
-1. **Idea**: el humano describe la feature. El `orchestrator` crea el worktree con `./scripts/sdd-worktree.sh create <feature-slug>`.
-2. **Product Discovery** (dentro del worktree): el `specifier` entrevista al humano y escribe el spec de producto + escenarios BDD en `product/discovery/`. El `orchestrator` mueve el archivo a `product/product-ready/`.
-3. **Product review** (gate 0): humano aprueba. La Issue `[Product]` queda en `product/product-ready/` y desbloquea `[Design]`.
-4. **Spec Design** (dentro del worktree): el `specifier` entrevista al humano y escribe el spec funcional + UI/UX en `design/spec-needed/`, referenciando los escenarios BDD de `[Product]`. El `orchestrator` mueve el archivo a `design/designing/`.
-5. **Spec review** (gate 1): humano aprueba. El `orchestrator` mueve el archivo a `design/design-ready/`.
-6. **Design iteration**: se itera el diseño visual en la herramienta de diseño del proyecto.
-7. **Design review** (gate 2): humano aprueba diseño. La Issue `[Design]` queda en `design/design-ready/`.
-8. **Spec Dev** (dentro del worktree): el `specifier` escribe el spec técnico + Test Plan en `dev/spec-needed/`, incluyendo los escenarios BDD como tests de aceptación. El `orchestrator` mueve el archivo a `dev/spec-ready/`.
-9. **Spec technical review** (gate 3): humano aprueba. El `orchestrator` mueve el archivo a `dev/implementing/`.
-10. **Implementation** (dentro del worktree): el `developer` ejecuta TDD por cada `R<n>` y por cada escenario BDD, escribiendo código en la ubicación que el proyecto defina. Al terminar y pasar `init.sh`, el `orchestrator` mueve el archivo a `dev/review/`.
-11. **Review**: el `auditor` audita contra `sdd/quality-gates.md` C1–C7. Si aprueba: mueve el archivo a `dev/testing/` y espera validación humana del merge. Si rechaza: mueve el archivo a `dev/rejected/` con accionables.
-12. **Testing** (gate 4): humano valida el merge. El `orchestrator` mergea el worktree a `main`, elimina el worktree y mueve el archivo a `dev/done/`.
+1. **Idea**: the human describes the feature. The `orchestrator` creates the worktree with `./scripts/sdd-worktree.sh create <feature-slug>`.
+2. **Product Discovery** (inside the worktree): the `product_manager` interviews the human and writes the product spec + BDD scenarios in `product/discovery/`. The `orchestrator` moves the file to `product/product-ready/`.
+3. **Product review** (gate 0): human approves. The `[Product]` Issue remains in `product/product-ready/` and unlocks `[Design]`.
+4. **Spec Design** (inside the worktree): the `designer` interviews the human and writes the functional + UI/UX spec in `design/spec-needed/`, referencing the BDD scenarios from `[Product]`. The `orchestrator` moves the file to `design/designing/`.
+5. **Spec review** (gate 1): human approves. The `orchestrator` moves the file to `design/design-ready/`.
+6. **Design iteration**: visual design is iterated in the project's design tool.
+7. **Design review** (gate 2): human approves the design. The `[Design]` Issue remains in `design/design-ready/`.
+8. **Spec Dev** (inside the worktree): the `tech_specifier` writes the technical spec + Test Plan in `dev/spec-needed/`, including BDD scenarios as acceptance tests. The `orchestrator` moves the file to `dev/spec-ready/`.
+9. **Spec technical review** (gate 3): human approves. The `orchestrator` moves the file to `dev/implementing/`.
+10. **Implementation** (inside the worktree): the `developer` runs TDD for each `R<n>` and each BDD scenario, writing code wherever the project defines. When finished and `init.sh` passes, the `orchestrator` moves the file to `dev/review/`.
+11. **Review**: the `auditor` audits against `sdd/quality-gates.md` C1–C7. If approved: moves the file to `dev/testing/` and awaits human validation of the merge. If rejected: moves the file to `dev/rejected/` with action items.
+12. **Testing** (gate 4): human validates the merge. The `orchestrator` merges the worktree to `main`, removes the worktree, and moves the file to `dev/done/`.
 
 ---
 
-## 6. Cómo mover un issue de estado
+## 6. How to Move an Issue Between States
 
-Usar el helper:
+Use the helper:
 
 ```bash
-./scripts/sdd-move.sh <project> <issue> <estado-origen> <estado-destino>
+./scripts/sdd-move.sh <project> <issue> <source-state> <destination-state>
 ```
 
-Ejemplo:
+Example:
 
 ```bash
 ./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
 ./scripts/sdd-move.sh login-y-dashboard-layout login dev/implementing dev/review
 ```
 
-Esto ejecuta `git mv` y genera el commit de estado automáticamente:
+This runs `git mv` and generates the automatic state commit:
 
 ```text
 chore(sdd): login [Design] spec-needed → designing
 ```
 
-Para movimientos manuales:
+For manual moves:
 
 ```bash
 git mv sdd/projects/login-y-dashboard-layout/design/spec-needed/login.md \
        sdd/projects/login-y-dashboard-layout/design/designing/login.md
 ```
 
-El `orchestrator` commitea el cambio de estado:
+The `orchestrator` commits the state change:
 
 ```text
 chore(sdd): login [Design] spec-needed → designing
@@ -196,21 +209,21 @@ chore(sdd): login [Design] spec-needed → designing
 
 ## 7. Worktree
 
-Cada feature vive en su propio worktree desde el inicio:
+Each feature lives in its own worktree from the start:
 
 ```bash
 ./scripts/sdd-worktree.sh create login-y-dashboard-layout
 ```
 
-Crea:
+Creates:
 
-- Rama: `feature/login-y-dashboard-layout`
+- Branch: `feature/login-y-dashboard-layout`
 - Worktree: `<repo-principal>-login-y-dashboard-layout/`
-- Estructura vacía en `sdd/projects/login-y-dashboard-layout/`
+- Empty structure at `sdd/projects/login-y-dashboard-layout/`
 
-> El script no instala dependencias ni copia archivos de entorno. Cada proyecto debe preparar su propio entorno según su stack.
+> The script does not install dependencies or copy environment files. Each project must prepare its own environment according to its stack.
 
-Para eliminar:
+To remove:
 
 ```bash
 ./scripts/sdd-worktree.sh remove login-y-dashboard-layout
@@ -218,56 +231,56 @@ Para eliminar:
 
 ---
 
-## 8. Diseño visual
+## 8. Visual Design
 
-El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, Pencil, Sketch, etc.) como referencia para nuevas pantallas y componentes.
+The SDD assumes the project uses a **visual design tool** (Figma, Pencil, Sketch, etc.) as the reference for new screens and components.
 
-- Todo **nuevo** componente o pantalla debe existir primero en la herramienta de diseño del proyecto.
-- El link al artboard se incluye en la sección `UI/UX Design` de la Issue `[Design]`.
-- Los componentes base existentes en código son la **fuente de verdad funcional**; la herramienta de diseño actúa como referencia visual y documentación.
-- El developer no modifica componentes base existentes sin una issue específica.
+- Every **new** component or screen must first exist in the project's design tool.
+- The link to the artboard is included in the `UI/UX Design` section of the `[Design]` Issue.
+- Existing base components in code are the **functional source of truth**; the design tool acts as visual reference and documentation.
+- The developer does not modify existing base components without a specific issue.
 
-> El proyecto documenta en `sdd/conventions.md` o `sdd/architecture.md` qué herramienta de diseño usa y cómo se sincroniza con el código.
-
----
-
-## 9. Versionado del spec
-
-- **Ediciones menores**: editar el archivo directamente.
-- **Cambios estructurales**: agregar una sección `## Changelog` al final del issue con fecha, qué cambió y por qué.
-- **Cambios durante implementación**: requieren re-aprobación humana. Si `[Design]` cambia mientras `[Dev]` está en `implementing/` o más allá, el `orchestrator` debe mover `[Dev]` a `backlog/` o `spec-needed/`.
+> The project documents in `sdd/conventions.md` or `sdd/architecture.md` which design tool it uses and how it is synced with code.
 
 ---
 
-## 10. Gates humanos
+## 9. Spec Versioning
 
-1. **Producto / BDD** (`discovery/` → `product-ready/`).
-2. **Spec funcional/UI** (`spec-needed/` → `designing/`).
-3. **Diseño UI** (`designing/` → `design-ready/`).
-4. **Spec técnico** (`spec-needed/` → `spec-ready/` → `implementing/`).
+- **Minor edits**: edit the file directly.
+- **Structural changes**: add a `## Changelog` section at the end of the issue with date, what changed, and why.
+- **Changes during implementation**: require human re-approval. If `[Design]` changes while `[Dev]` is in `implementing/` or beyond, the `orchestrator` must move `[Dev]` to `backlog/` or `spec-needed/`.
+
+---
+
+## 10. Human Gates
+
+1. **Product / BDD** (`discovery/` → `product-ready/`).
+2. **Functional/UI spec** (`spec-needed/` → `designing/`).
+3. **UI design** (`designing/` → `design-ready/`).
+4. **Technical spec** (`spec-needed/` → `spec-ready/` → `implementing/`).
 5. **Review/merge** (`review/` → `testing/`).
 
 ---
 
-## 11. Reglas de oro
+## 11. Golden Rules
 
-- Una sola Issue `[Dev]` en `implementing/` o `review/` a la vez.
-- `[Dev]` no avanza hasta que `[Design]` esté en `design/design-ready/`.
-- `[Design]` no avanza hasta que `[Product]` esté en `product/product-ready/`.
-- `[Design]` se considera cerrada cuando llega a `design/design-ready/`.
-- `[Product]` se considera cerrada cuando llega a `product/product-ready/`.
-- Producto antes de diseño, diseño antes de código.
-- Tests antes de implementación (TDD).
-- `sdd/` es la fuente de verdad; no hay `feature_list.yaml` ni carpeta `specs/` fuera de `sdd/`.
-- Todo cambio importante se registra en `sdd/projects/` o en `sdd/decisions/`.
-- Dejar el repo limpio al cerrar: sin archivos temporales ni branches huérfanos.
+- Only one `[Dev]` Issue in `implementing/` or `review/` at a time.
+- `[Dev]` does not advance until `[Design]` is in `design/design-ready/`.
+- `[Design]` does not advance until `[Product]` is in `product/product-ready/`.
+- `[Design]` is considered closed when it reaches `design/design-ready/`.
+- `[Product]` is considered closed when it reaches `product/product-ready/`.
+- Product before design, design before code.
+- Tests before implementation (TDD).
+- `sdd/` is the source of truth; there is no `feature_list.yaml` or `specs/` folder outside `sdd/`.
+- Every important change is recorded in `sdd/projects/` or in `sdd/decisions/`.
+- Leave the repo clean on close: no temporary files or orphan branches.
 
 ---
 
-## 12. Índice de projects activos
+## 12. Active Projects Index
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
-| *(ninguno)* | — | — | — | — |
+| *(none)* | — | — | — | — |
 
-> Este índice se actualiza manualmente.
+> This index is updated manually.

@@ -2,127 +2,127 @@
 
 [![CI](https://github.com/abelcondev/abel-sdd/actions/workflows/ci.yml/badge.svg)](https://github.com/abelcondev/abel-sdd/actions/workflows/ci.yml)
 
-> Framework de trabajo **agnóstico al stack** para diseñar, construir y entregar software con specs, gates humanos, worktrees y TDD.
+> **Stack-agnostic workflow framework** for designing, building, and delivering software with specs, human gates, worktrees, and TDD.
 
-## ¿Qué es?
+## What is it?
 
-**abel-sdd** es un flujo de trabajo basado en Markdown + Git para gobernar el desarrollo de features sin depender de un ticket system externo.
+**abel-sdd** is a Markdown + Git based workflow for governing feature development without depending on an external ticket system.
 
-- **Markdown** como fuente de verdad de specs e issues.
-- **Git** como historial de estados.
-- **Worktrees** como aislamiento por feature.
-- **Gates humanos** como puntos de control obligatorios.
-- **TDD** como forma de construir con tests.
+- **Markdown** as the source of truth for specs and issues.
+- **Git** as the history of states.
+- **Worktrees** as isolation per feature.
+- **Human gates** as mandatory checkpoints.
+- **TDD** as a way to build with tests.
 
-No impone lenguaje, framework, base de datos, package manager ni herramienta de diseño. Cada proyecto completa sus propias decisiones en `sdd/architecture.md` y `sdd/conventions.md`.
+It does not impose language, framework, database, package manager, or design tool. Each project completes its own decisions in `sdd/architecture.md` and `sdd/conventions.md`.
 
-## Instalación
+## Installation
 
-Descargá el framework y ejecutá el instalador:
+Download the framework and run the installer:
 
 ```bash
-git clone <url-del-repo> /tmp/abel-sdd
+git clone <repo-url> /tmp/abel-sdd
 cd /tmp/abel-sdd
-./install.sh /ruta/a/tu-proyecto
+./install.sh /path/to/your-project
 ```
 
-O, si ya tenés el repo local:
+Or, if you already have the repo locally:
 
 ```bash
-cd /ruta/a/abel-sdd
-./install.sh /ruta/a/tu-proyecto
+cd /path/to/abel-sdd
+./install.sh /path/to/your-project
 ```
 
-> El instalador copia `sdd/`, `scripts/`, `.claude/agents/`, `AGENTS.md`, `CLAUDE.md` e `init.sh` al proyecto destino, sin tocar su código fuente.
+> The installer copies `sdd/`, `scripts/`, `.claude/agents/`, `AGENTS.md`, `CLAUDE.md`, and `init.sh` to the destination project without touching its source code.
 
-Luego, en el proyecto destino:
+Then, in the destination project:
 
-1. Completá `sdd/architecture.md` con el stack del proyecto.
-2. Completá `sdd/conventions.md` con estilo, naming e idioma.
-3. Opcional: creá `scripts/project-checks.sh` para agregar validaciones de tests/lint/build.
-4. Corré `./init.sh` para verificar el harness.
+1. Fill out `sdd/architecture.md` with the project stack.
+2. Fill out `sdd/conventions.md` with style, naming, and language.
+3. Optional: create `scripts/project-checks.sh` to add test/lint/build validations.
+4. Run `./init.sh` to verify the harness.
 
-## Uso rápido
+## Quick start
 
-### Crear una feature
+### Create a feature
 
 ```bash
 ./scripts/sdd-worktree.sh create login-y-dashboard-layout
 ```
 
-Esto crea:
+This creates:
 
-- Rama `feature/login-y-dashboard-layout`.
-- Worktree `mi-proyecto-login-y-dashboard-layout/` junto al repo principal.
-- Estructura vacía en `sdd/projects/login-y-dashboard-layout/`.
+- Branch `feature/login-y-dashboard-layout`.
+- Worktree `my-project-login-y-dashboard-layout/` next to the main repo.
+- Empty structure in `sdd/projects/login-y-dashboard-layout/`.
 
-### Mover issues entre estados
+### Move issues between states
 
 ```bash
 ./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
 ./scripts/sdd-move.sh login-y-dashboard-layout login dev/implementing dev/review
 ```
 
-Esto ejecuta `git mv` y genera el commit de estado:
+This runs `git mv` and generates the state commit:
 
 ```text
 chore(sdd): login [Design] spec-needed → designing
 ```
 
-### Verificar el harness
+### Verify the harness
 
 ```bash
 ./init.sh
 ```
 
-Debe imprimir `[OK] Harness SDD listo` antes de declarar una sesión como cerrada.
+It must print `[OK] SDD harness ready` before declaring a session closed.
 
-## Estructura
+## Structure
 
 ```text
 .
-├── AGENTS.md              # Mapa de agentes
-├── CLAUDE.md              # Prompt de orchestrator
-├── init.sh                # Verifica el harness SDD
-├── install.sh             # Instala el framework en un proyecto destino
+├── AGENTS.md              # Agent map
+├── CLAUDE.md              # Orchestrator prompt
+├── init.sh                # Verifies the SDD harness
+├── install.sh             # Installs the framework into a destination project
 ├── LICENSE
-├── CONTRIBUTING.md        # Guía para contribuidores
-├── CHANGELOG.md           # Historial de cambios
+├── CONTRIBUTING.md        # Contributor guide
+├── CHANGELOG.md           # Change history
 ├── .github/
-│   ├── workflows/ci.yml   # CI con GitHub Actions
+│   ├── workflows/ci.yml   # CI with GitHub Actions
 │   └── PULL_REQUEST_TEMPLATE.md
 ├── sdd/
-│   ├── README.md          # Índice
-│   ├── workflow.md        # Estados y flujo
-│   ├── architecture.md    # Plantilla de stack
-│   ├── conventions.md     # Plantilla de convenciones
+│   ├── README.md          # Index
+│   ├── workflow.md        # States and flow
+│   ├── architecture.md    # Stack template
+│   ├── conventions.md     # Conventions template
 │   ├── quality-gates.md   # C1–C7
-│   ├── testing.md         # TDD y testing
-│   ├── security.md        # Seguridad
+│   ├── testing.md         # TDD and testing
+│   ├── security.md        # Security
 │   ├── delivery.md        # Commits, PRs, merge
-│   ├── troubleshooting.md # Guía de problemas comunes
-│   ├── decisions/         # ADRs del proyecto
-│   ├── templates/         # Templates de issues
-│   └── projects/          # Features activas
+│   ├── troubleshooting.md # Common issues guide
+│   ├── decisions/         # Project ADRs
+│   ├── templates/         # Issue templates
+│   └── projects/          # Active features
 ├── scripts/
-│   ├── sdd-worktree.sh    # Crea/elimina worktrees
-│   └── sdd-move.sh        # Mueve issues entre estados
-└── .claude/agents/        # Definiciones de roles
+│   ├── sdd-worktree.sh    # Creates/removes worktrees
+│   └── sdd-move.sh        # Moves issues between states
+└── .claude/agents/        # Role definitions
 ```
 
 ## Roles
 
-| Rol | Qué hace | Qué NO hace |
+| Role | What it does | What it does NOT do |
 |---|---|---|
-| **Orchestrator** | Orquesta el flujo, mueve estados, cierra sesiones | Nunca edita código de producción |
-| **Specifier** | Escribe specs funcionales y técnicos; entrevista al humano | No implementa código |
-| **Developer** | Escribe código y tests siguiendo TDD | No salta gates ni aprueba su propio trabajo |
-| **Auditor** | Audita código contra los quality gates C1–C7 | No implementa en la misma feature que revisa |
-| **Humano** | Aprueba los 4 gates | No escribe código ni specs (salvo que quiera) |
+| **Orchestrator** | Orchestrates the flow, moves states, closes sessions | Never edits production code |
+| **Specifier** | Writes functional and technical specs; interviews the human | Does not implement code |
+| **Developer** | Writes code and tests following TDD | Does not skip gates or approve their own work |
+| **Auditor** | Audits code against quality gates C1–C7 | Does not implement on the same feature they review |
+| **Human** | Approves the 4 gates | Does not write code or specs (unless they want to) |
 
-## Flujo
+## Flow
 
-Cada feature pasa por tres fases con gates humanos de aprobación entre ellas:
+Each feature goes through three phases with human approval gates between them:
 
 ```text
 ┌──────────┐     ┌──────────┐     ┌──────────┐
@@ -133,15 +133,15 @@ Cada feature pasa por tres fases con gates humanos de aprobación entre ellas:
 └──────────┘     └──────────┘     └──────────┘
      │                 │                 │
      └─────────────────┴─────────────────┘
-              Gate humano obligatorio
+          Mandatory human gate
 ```
 
-1. **Product**: se define el problema, alcance y out-of-scope.
-2. **Design**: se itera el spec funcional/UI hasta obtener aprobación.
-3. **Dev**: se escribe el spec técnico, se implementa con TDD y se audita.
+1. **Product**: define the problem, scope, and out-of-scope.
+2. **Design**: iterate the functional/UI spec until approved.
+3. **Dev**: write the technical spec, implement with TDD, and audit.
 
-Ver `sdd/workflow.md` para el detalle completo de estados y transiciones.
+See `sdd/workflow.md` for the full detail of states and transitions.
 
-## Licencia
+## License
 
 MIT

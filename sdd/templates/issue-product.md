@@ -1,75 +1,91 @@
-# [Product] <Título de la issue>
+# [Product] <Issue title>
 
 Project: `sdd/projects/<feature-slug>/`
-Estado: `<carpeta-actual>`
+State: `<current-folder>`
 
 ## Context
 
-Problema de negocio, oportunidad y contexto de usuario.
+Business problem, opportunity, and user context.
 
-- **Usuario objetivo**: quién se beneficia.
-- **Problema actual**: qué fricción o necesidad resolvemos.
-- **Hipótesis de valor**: qué cambia si la feature sale bien.
+- **Target user**: who benefits.
+- **Current problem**: what friction or need we solve.
+- **Value hypothesis**: what changes if the feature succeeds.
+
+## User Segments & Jobs-to-be-Done
+
+| Segment | Main job | Usage context |
+|---|---|---|
+| Segment A | "I want ... so that ..." | When/where it happens |
 
 ## Product Goals
 
-- Objetivo medible 1.
-- Objetivo medible 2.
+- Measurable objective 1.
+- Measurable objective 2.
+
+## Success Metrics
+
+- **Metric 1**: definition, baseline (if any), target.
+- **Metric 2**: definition, baseline (if any), target.
 
 ## Requirements
 
-### R1: [título corto]
+### R1: [short title]
 
-CUANDO ..., el sistema DEBE ... (notación EARS).
+WHEN ..., the system MUST ... (EARS notation).
 
-### R2: [título corto]
+### R2: [short title]
 
 ...
 
 ## Acceptance Criteria
 
-- [ ] Criterio 1 verificable desde la perspectiva de producto/negocio.
-- [ ] Criterio 2 verificable.
+- [ ] Criterion 1 verifiable from the product/business perspective.
+- [ ] Criterion 2 verifiable.
+
+## Out-of-Scope
+
+- Functionality, scenario, or optimization that is **out** of this iteration.
+- Deliberate decisions not to include to keep the MVP.
 
 ## BDD Scenarios
 
-### Scenario: [nombre descriptivo]
+### Scenario: [descriptive name]
 
 ```gherkin
-Given <contexto inicial>
-When <acción>
-Then <resultado esperado>
+Given <initial context>
+When <action>
+Then <expected result>
 ```
 
-### Scenario: [nombre descriptivo]
+### Scenario: [descriptive name]
 
 ...
 
 ## Risks & Mitigations
 
-| Riesgo | Impacto | Mitigación |
+| Risk | Impact | Mitigation |
 |---|---|---|
-| ... | alto/medio/bajo | ... |
+| ... | high/medium/low | ... |
 
 ## Dependencies
 
 - blockedBy: —
-- Bloquea a: `[Design] <issue-design>`
+- Blocks: `[Design] <issue-design>`
 
 ## Changelog
 
-| Fecha | Autor | Cambio | Motivo |
+| Date | Author | Change | Reason |
 |---|---|---|---|
-| YYYY-MM-DD | Nombre | Breve descripción del cambio | Por qué se hizo |
+| YYYY-MM-DD | Name | Brief description of the change | Why it was made |
 
-> Registrar cambios estructurales o de alcance durante el ciclo de vida de la issue.
+> Record structural or scope changes during the issue lifecycle.
 
 ## Review
 
-### Veredicto: ✅ Aprobado / ❌ Rechazado
+### Verdict: ✅ Approved / ❌ Rejected
 
-### Hallazgos
+### Findings
 1. ...
 
-### Accionables (si fue rechazado)
+### Action items (if rejected)
 1. ...

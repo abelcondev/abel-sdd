@@ -1,104 +1,104 @@
-# Delivery — Commits, PRs, merge y cierre
+# Delivery — Commits, PRs, Merge, and Closure
 
-Este documento define cómo se entrega el trabajo: commits, pull requests, merge y cierre limpio.
+This document defines how work is delivered: commits, pull requests, merge, and clean closure.
 
 ---
 
 ## 1. Commits
 
-### Formato: Conventional Commits
+### Format: Conventional Commits
 
 ```text
-<tipo>(<scope>): <descripción breve> — <project>/<issue>
+<type>(<scope>): <short description> — <project>/<issue>
 ```
 
-Ejemplos:
+Examples:
 
 ```text
-feat(reservas): agregar validación de cliente — login-y-dashboard-layout/reservas
-test(reservas): R2 validar cliente obligatorio — login-y-dashboard-layout/reservas
-fix(auth): corregir redirección post-login — login-y-dashboard-layout/login
-refactor(shell): simplificar layout de admin — login-y-dashboard-layout/dashboard
+feat(reservations): add customer validation — login-and-dashboard-layout/reservations
+test(reservations): R2 validate required customer — login-and-dashboard-layout/reservations
+fix(auth): fix post-login redirect — login-and-dashboard-layout/login
+refactor(shell): simplify admin layout — login-and-dashboard-layout/dashboard
 chore(sdd): login [Design] spec-needed → designing
 ```
 
-### Tipos comunes
+### Common Types
 
-| Tipo | Uso |
+| Type | Use |
 |---|---|
-| `feat` | Nueva funcionalidad |
-| `fix` | Corrección de bug |
-| `test` | Tests (TDD: commit rojo) |
-| `refactor` | Cambio interno sin cambiar comportamiento |
-| `chore` | Tareas de mantenimiento, cambios de estado SDD |
-| `docs` | Documentación |
-| `style` | Formato, sin cambio lógico |
+| `feat` | New functionality |
+| `fix` | Bug fix |
+| `test` | Tests (TDD: red commit) |
+| `refactor` | Internal change without behavior change |
+| `chore` | Maintenance tasks, SDD state changes |
+| `docs` | Documentation |
+| `style` | Formatting, no logical change |
 
-### Commits de estado SDD
+### SDD State Commits
 
-Cuando el `orchestrator` mueve una issue entre carpetas:
+When the `orchestrator` moves an issue between folders:
 
 ```text
 chore(sdd): login [Design] spec-needed → designing
-chore(sdd): reservas [Dev] implementing → review
+chore(sdd): reservations [Dev] implementing → review
 ```
 
-### Commits TDD
+### TDD Commits
 
-En TDD, cada `R<n>` genera al menos dos commits:
+In TDD, each `R<n>` generates at least two commits:
 
 ```text
-test(<scope>): R<n> <comportamiento esperado> — <project>/<issue>
-feat(<scope>): R<n> <implementación mínima> — <project>/<issue>
+test(<scope>): R<n> <expected behavior> — <project>/<issue>
+feat(<scope>): R<n> <minimum implementation> — <project>/<issue>
 ```
 
-Opcionalmente un tercero:
+Optionally a third:
 
 ```text
-refactor(<scope>): R<n> <mejora interna> — <project>/<issue>
+refactor(<scope>): R<n> <internal improvement> — <project>/<issue>
 ```
 
-### Reglas
+### Rules
 
-- Commits pequeños y atómicos.
-- Cada commit debe pasar los checks del proyecto (lint, typecheck, tests rápidos según lo definido en `sdd/architecture.md`).
-- Referenciar siempre el project/issue.
-- No incluir `Co-Authored-By` de asistentes de IA. El usuario es el único autor.
+- Small, atomic commits.
+- Each commit must pass the project's checks (lint, typecheck, fast tests as defined in `sdd/architecture.md`).
+- Always reference the project/issue.
+- Do not include `Co-Authored-By` for AI assistants. The user is the sole author.
 
 ---
 
 ## 2. Pull Requests
 
-### Creación
+### Creation
 
-Cuando el `developer` termina y la Issue `[Dev]` está en `dev/review/`, el `orchestrator` puede crear el PR:
+When the `developer` finishes and the `[Dev]` Issue is in `dev/review/`, the `orchestrator` can create the PR:
 
 ```bash
 cd <repo-principal>-<project>
 gh pr create \
-  --title "<project>/<issue>: título del cambio" \
+  --title "<project>/<issue>: change title" \
   --body "Closes <project>/<issue>" \
   --base main
 ```
 
-> El proyecto puede usar otro forge/host; adaptar el comando.
+> The project may use another forge/host; adapt the command.
 
-### Body sugerido
+### Suggested Body
 
 ```markdown
-## Resumen
-Breve descripción del cambio.
+## Summary
+Brief description of the change.
 
-## Trazabilidad
-| Requisito | Test file | Estado |
+## Traceability
+| Requirement | Test file | Status |
 |-----------|-----------|--------|
 | R1 | tests/integration/... | ✅ |
 | R2 | tests/unit/... | ✅ |
 
 ## Checklist
-- [ ] `init.sh` pasa en el worktree.
-- [ ] Cobertura mínima alcanzada.
-- [ ] No se agregaron dependencias sin justificar.
+- [ ] `init.sh` passes in the worktree.
+- [ ] Minimum coverage reached.
+- [ ] No dependencies added without justification.
 
 Closes <project>/<issue>
 ```
@@ -107,55 +107,55 @@ Closes <project>/<issue>
 
 ## 3. Merge
 
-El merge **NO es automático**. Requiere:
+Merge is **NOT automatic**. It requires:
 
-1. Veredicto ✅ del `auditor`.
-2. Aprobación explícita del humano (gate humano 4).
-3. `init.sh` verde en el worktree.
-4. Audit de dependencias sin vulnerabilidades críticas (para features críticas).
+1. ✅ verdict from the `auditor`.
+2. Explicit human approval (human gate 4).
+3. Green `init.sh` in the worktree.
+4. Dependency audit without critical vulnerabilities (for critical features).
 
-Solo entonces el `orchestrator` mergea el PR y mueve el archivo de la Issue a `dev/done/`.
+Only then does the `orchestrator` merge the PR and move the Issue file to `dev/done/`.
 
 ---
 
-## 4. Cierre de Issue `[Dev]`
+## 4. `[Dev]` Issue Closure
 
-Cuando una Issue `[Dev]` llega a `dev/done/`, el `orchestrator`:
+When a `[Dev]` Issue reaches `dev/done/`, the `orchestrator`:
 
-1. Elimina el worktree:
+1. Removes the worktree:
    ```bash
    ./scripts/sdd-worktree.sh remove <project>
    ```
-2. Actualiza `sdd/README.md` con el estado actual de projects.
-3. Agrega una sección `## Cierre` al final del archivo de la Issue `[Dev]`:
+2. Updates `sdd/README.md` with the current project state.
+3. Adds a `## Closure` section at the end of the `[Dev]` Issue file:
    ```markdown
-   ## Cierre
+   ## Closure
 
-   - **Resultado**: feature mergeada a `main`.
-   - **Decisiones relevantes**: resumen de `D<n>` que impactaron arquitectura.
-   - **Próximos pasos**: issues derivadas o deuda técnica.
+   - **Result**: feature merged to `main`.
+   - **Relevant decisions**: summary of `D<n>` that impacted architecture.
+   - **Next steps**: derived issues or technical debt.
    ```
-4. Documenta cualquier decisión o patrón relevante en `sdd/decisions/`.
+4. Documents any relevant decision or pattern in `sdd/decisions/`.
 
 ---
 
-## 5. Cierre de sesión
+## 5. Session Closure
 
-Antes de declarar una sesión cerrada:
+Before declaring a session closed:
 
-1. Correr `init.sh`. Debe imprimir el mensaje de éxito configurado.
-2. Si se terminó una Issue `[Dev]`, asegurar que su archivo esté en `dev/done/`.
-3. Si se cerró una Issue `[Design]`, asegurar que su archivo esté en `design/design-ready/`.
-4. Actualizar `sdd/README.md` con el estado actual de projects.
-5. Documentar decisiones, convenciones o descubrimientos relevantes.
-6. Asegurar que no haya archivos untracked sospechosos.
+1. Run `init.sh`. It must print the configured success message.
+2. If a `[Dev]` Issue was finished, ensure its file is in `dev/done/`.
+3. If a `[Design]` Issue was closed, ensure its file is in `design/design-ready/`.
+4. Update `sdd/README.md` with the current project state.
+5. Document relevant decisions, conventions, or discoveries.
+6. Ensure there are no suspicious untracked files.
 
 ---
 
-## 6. Anti-patrones de delivery
+## 6. Delivery Anti-Patterns
 
-- Mergear sin aprobación del auditor y del humano.
-- Marcar `done` sin `init.sh` verde.
-- Commits gigantes que mezclan múltiples features.
-- PRs sin descripción ni trazabilidad.
-- Dejar worktrees huérfanos después de mergear.
+- Merging without auditor and human approval.
+- Marking `done` without green `init.sh`.
+- Giant commits mixing multiple features.
+- PRs without description or traceability.
+- Leaving orphan worktrees after merging.

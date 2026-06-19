@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# sdd-move.sh — Mueve una Issue del SDD entre estados y commitea el cambio.
+# sdd-move.sh — Moves an SDD Issue between states and commits the change.
 #
-# Uso:
-#   ./scripts/sdd-move.sh <feature-slug> <issue-name> <estado-origen> <estado-destino>
+# Usage:
+#   ./scripts/sdd-move.sh <feature-slug> <issue-name> <source-state> <target-state>
 #
-# Ejemplo:
+# Example:
 #   ./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
 #   ./scripts/sdd-move.sh login-y-dashboard-layout login dev/implementing dev/review
 
@@ -26,23 +26,23 @@ die() { log_error "$*"; exit 1; }
 
 show_help() {
   cat <<EOF
-Uso: ./scripts/sdd-move.sh <feature-slug> <issue> <estado-origen> <estado-destino>
+Usage: ./scripts/sdd-move.sh <feature-slug> <issue> <source-state> <target-state>
 
-Mueve un archivo de Issue entre carpetas de estado en sdd/projects/ y genera un commit.
+Moves an Issue file between state folders in sdd/projects/ and creates a commit.
 
-Ejemplos:
+Examples:
   ./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
   ./scripts/sdd-move.sh login-y-dashboard-layout login dev/implementing dev/review
 
- Estados válidos para [Product]:
-   product/discovery, product/product-ready
+Valid states for [Product]:
+  product/discovery, product/product-ready
 
- Estados válidos para [Design]:
-   design/spec-needed, design/designing, design/design-ready
+Valid states for [Design]:
+  design/spec-needed, design/designing, design/design-ready
 
- Estados válidos para [Dev]:
-   dev/backlog, dev/spec-needed, dev/spec-ready, dev/implementing,
-   dev/blocked, dev/review, dev/rejected, dev/testing, dev/done, dev/cancelled
+Valid states for [Dev]:
+  dev/backlog, dev/spec-needed, dev/spec-ready, dev/implementing,
+  dev/blocked, dev/review, dev/rejected, dev/testing, dev/done, dev/cancelled
 EOF
 }
 
@@ -81,15 +81,15 @@ validate_state_transition() {
   target_type="$(issue_type_for "${target_state}")"
 
   if [[ -z "${source_type}" ]]; then
-    die "Estado origen inválido: '${source_state}'. Estados válidos: product/<estado>, design/<estado> o dev/<estado>."
+    die "Invalid source state: '${source_state}'. Valid states: product/<state>, design/<state> or dev/<state>."
   fi
 
   if [[ -z "${target_type}" ]]; then
-    die "Estado destino inválido: '${target_state}'. Estados válidos: product/<estado>, design/<estado> o dev/<estado>."
+    die "Invalid target state: '${target_state}'. Valid states: product/<state>, design/<state> or dev/<state>."
   fi
 
   if [[ "${source_type}" != "${target_type}" ]]; then
-    die "No se puede mover ${source_type} a ${target_type}. Mantené el tipo de Issue: product/* → product/*, design/* → design/* o dev/* → dev/*."
+    die "Cannot move ${source_type} to ${target_type}. Keep the Issue type: product/* → product/*, design/* → design/* or dev/* → dev/*."
   fi
 }
 
@@ -111,34 +111,34 @@ main() {
   issue_type="$(issue_type_for "${source_state}")"
 
   if [ ! -f "${source_file}" ]; then
-    die "No existe ${source_file}"
+    die "File does not exist: ${source_file}"
   fi
 
   if [ -f "${target_file}" ]; then
-    die "Ya existe ${target_file}"
+    die "File already exists: ${target_file}"
   fi
 
-  # Advertencias de gates entre fases (no bloqueantes).
+  # Warnings for phase gates (non-blocking).
   case "${target_state}" in
     design/spec-needed|design/designing|design/design-ready)
       if [ ! -f "${project_path}/product/product-ready/${issue}.md" ]; then
-        log_warn "[Product] no está en product-ready/. Asegurate de que la fase [Product] esté aprobada antes de avanzar [Design]."
+        log_warn "[Product] is not in product-ready/. Make sure the [Product] phase is approved before moving [Design] forward."
       fi
       ;;
     dev/backlog|dev/spec-needed|dev/spec-ready|dev/implementing|dev/blocked|dev/review|dev/rejected|dev/testing|dev/done)
       if [ ! -f "${project_path}/design/design-ready/${issue}.md" ]; then
-        log_warn "[Design] no está en design-ready/. Asegurate de que la fase [Design] esté aprobada antes de avanzar [Dev]."
+        log_warn "[Design] is not in design-ready/. Make sure the [Design] phase is approved before moving [Dev] forward."
       fi
       ;;
   esac
 
-  log_info "Moviendo ${issue} ${issue_type}: ${source_state} → ${target_state}"
+  log_info "Moving ${issue} ${issue_type}: ${source_state} → ${target_state}"
 
   source_rel="${source_file#${REPO_ROOT}/}"
   target_rel="${target_file#${REPO_ROOT}/}"
 
-  # git mv solo funciona bien si el archivo ya está committed.
-  # Si es nuevo (solo staged o untracked), hacemos mv manual + git add.
+  # git mv only works well if the file is already committed.
+  # If it is new (only staged or untracked), do a manual mv + git add.
   if git -C "${REPO_ROOT}" cat-file -e "HEAD:${source_rel}" >/dev/null 2>&1; then
     git -C "${REPO_ROOT}" mv "${source_rel}" "${target_rel}"
   else
@@ -148,28 +148,28 @@ main() {
     git -C "${REPO_ROOT}" add "${target_rel}"
   fi
 
-  # Actualizar la línea de Estado dentro del archivo.
-  # Soporta tanto comillas dobles como backticks en los templates.
+  # Update the State line inside the file.
+  # Supports both double quotes and backticks in the templates.
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    sed -i '' "s#^Estado: [\"\`].*[\"\`]#Estado: \"${target_state}\"#" "${target_file}" || true
+    sed -i '' "s#^State: [\"\`].*[\"\`]#State: \"${target_state}\"#" "${target_file}" || true
   else
-    sed -i "s#^Estado: [\"\`].*[\"\`]#Estado: \"${target_state}\"#" "${target_file}" || true
+    sed -i "s#^State: [\"\`].*[\"\`]#State: \"${target_state}\"#" "${target_file}" || true
   fi
 
   git -C "${REPO_ROOT}" add "${target_file}"
 
-  # Commitear solo el cambio de esta issue, no otros archivos staged.
+  # Commit only this issue change, not other staged files.
   commit_msg="chore(sdd): ${issue} ${issue_type} ${source_state} → ${target_state}"
   if git -C "${REPO_ROOT}" diff --cached --quiet -- "${target_file}"; then
-    log_warn "No hay cambios para commitear."
+    log_warn "No changes to commit."
     exit 0
   fi
   git -C "${REPO_ROOT}" commit -m "${commit_msg}" -- "${target_file}" || {
-    log_warn "No se pudo crear el commit automáticamente. Hacelo manualmente."
+    log_warn "Could not create the commit automatically. Do it manually."
     exit 1
   }
 
-  log_info "Commit creado: ${commit_msg}"
+  log_info "Commit created: ${commit_msg}"
 }
 
 validate_args "$@"
