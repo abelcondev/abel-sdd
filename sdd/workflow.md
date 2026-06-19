@@ -104,10 +104,10 @@ backlog → spec-needed → spec-ready → implementing → review → testing �
 | `dev/backlog/` | Issue registrada, bloqueada por `[Design]`. |
 | `dev/spec-needed/` | Falta el spec técnico. |
 | `dev/spec-ready/` | Spec técnico completo. Espera aprobación humana. |
-| `dev/implementing/` | Implementer trabajando en el worktree. |
+| `dev/implementing/` | Developer trabajando en el worktree. |
 | `dev/blocked/` | Issue pausada por bloqueo externo o decisión pendiente. |
-| `dev/review/` | Código listo. Reviewer verificando. |
-| `dev/rejected/` | Reviewer rechazó. Requiere retrabajo antes de volver a `implementing/`. |
+| `dev/review/` | Código listo. Auditor verificando. |
+| `dev/rejected/` | Auditor rechazó. Requiere retrabajo antes de volver a `implementing/`. |
 | `dev/testing/` | Mergeado. Validación final. |
 | `dev/done/` | Feature completada y verificada. |
 | `dev/cancelled/` | Issue descartada. Se conserva por trazabilidad. |
@@ -143,18 +143,18 @@ Cada feature tiene su propio **worktree aislado** desde el inicio. Dentro del wo
 
 ## 5. Workflow
 
-1. **Idea**: el humano describe la feature. El `leader` crea el worktree con `./scripts/sdd-worktree.sh create <feature-slug>`.
-2. **Product Discovery** (dentro del worktree): el `spec_author` entrevista al humano y escribe el spec de producto + escenarios BDD en `product/discovery/`. El `leader` mueve el archivo a `product/product-ready/`.
+1. **Idea**: el humano describe la feature. El `orchestrator` crea el worktree con `./scripts/sdd-worktree.sh create <feature-slug>`.
+2. **Product Discovery** (dentro del worktree): el `specifier` entrevista al humano y escribe el spec de producto + escenarios BDD en `product/discovery/`. El `orchestrator` mueve el archivo a `product/product-ready/`.
 3. **Product review** (gate 0): humano aprueba. La Issue `[Product]` queda en `product/product-ready/` y desbloquea `[Design]`.
-4. **Spec Design** (dentro del worktree): el `spec_author` entrevista al humano y escribe el spec funcional + UI/UX en `design/spec-needed/`, referenciando los escenarios BDD de `[Product]`. El `leader` mueve el archivo a `design/designing/`.
-5. **Spec review** (gate 1): humano aprueba. El `leader` mueve el archivo a `design/design-ready/`.
+4. **Spec Design** (dentro del worktree): el `specifier` entrevista al humano y escribe el spec funcional + UI/UX en `design/spec-needed/`, referenciando los escenarios BDD de `[Product]`. El `orchestrator` mueve el archivo a `design/designing/`.
+5. **Spec review** (gate 1): humano aprueba. El `orchestrator` mueve el archivo a `design/design-ready/`.
 6. **Design iteration**: se itera el diseño visual en la herramienta de diseño del proyecto.
 7. **Design review** (gate 2): humano aprueba diseño. La Issue `[Design]` queda en `design/design-ready/`.
-8. **Spec Dev** (dentro del worktree): el `spec_author` escribe el spec técnico + Test Plan en `dev/spec-needed/`, incluyendo los escenarios BDD como tests de aceptación. El `leader` mueve el archivo a `dev/spec-ready/`.
-9. **Spec technical review** (gate 3): humano aprueba. El `leader` mueve el archivo a `dev/implementing/`.
-10. **Implementation** (dentro del worktree): el `implementer` ejecuta TDD por cada `R<n>` y por cada escenario BDD, escribiendo código en la ubicación que el proyecto defina. Al terminar y pasar `init.sh`, el `leader` mueve el archivo a `dev/review/`.
-11. **Review**: el `reviewer` audita contra `sdd/quality-gates.md` C1–C7. Si aprueba: mueve el archivo a `dev/testing/` y espera validación humana del merge. Si rechaza: mueve el archivo a `dev/rejected/` con accionables.
-12. **Testing** (gate 4): humano valida el merge. El `leader` mergea el worktree a `main`, elimina el worktree y mueve el archivo a `dev/done/`.
+8. **Spec Dev** (dentro del worktree): el `specifier` escribe el spec técnico + Test Plan en `dev/spec-needed/`, incluyendo los escenarios BDD como tests de aceptación. El `orchestrator` mueve el archivo a `dev/spec-ready/`.
+9. **Spec technical review** (gate 3): humano aprueba. El `orchestrator` mueve el archivo a `dev/implementing/`.
+10. **Implementation** (dentro del worktree): el `developer` ejecuta TDD por cada `R<n>` y por cada escenario BDD, escribiendo código en la ubicación que el proyecto defina. Al terminar y pasar `init.sh`, el `orchestrator` mueve el archivo a `dev/review/`.
+11. **Review**: el `auditor` audita contra `sdd/quality-gates.md` C1–C7. Si aprueba: mueve el archivo a `dev/testing/` y espera validación humana del merge. Si rechaza: mueve el archivo a `dev/rejected/` con accionables.
+12. **Testing** (gate 4): humano valida el merge. El `orchestrator` mergea el worktree a `main`, elimina el worktree y mueve el archivo a `dev/done/`.
 
 ---
 
@@ -186,7 +186,7 @@ git mv sdd/projects/login-y-dashboard-layout/design/spec-needed/login.md \
        sdd/projects/login-y-dashboard-layout/design/designing/login.md
 ```
 
-El `leader` commitea el cambio de estado:
+El `orchestrator` commitea el cambio de estado:
 
 ```text
 chore(sdd): login [Design] spec-needed → designing
@@ -225,7 +225,7 @@ El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, P
 - Todo **nuevo** componente o pantalla debe existir primero en la herramienta de diseño del proyecto.
 - El link al artboard se incluye en la sección `UI/UX Design` de la Issue `[Design]`.
 - Los componentes base existentes en código son la **fuente de verdad funcional**; la herramienta de diseño actúa como referencia visual y documentación.
-- El implementer no modifica componentes base existentes sin una issue específica.
+- El developer no modifica componentes base existentes sin una issue específica.
 
 > El proyecto documenta en `sdd/conventions.md` o `sdd/architecture.md` qué herramienta de diseño usa y cómo se sincroniza con el código.
 
@@ -235,7 +235,7 @@ El SDD asume que el proyecto usa una **herramienta de diseño visual** (Figma, P
 
 - **Ediciones menores**: editar el archivo directamente.
 - **Cambios estructurales**: agregar una sección `## Changelog` al final del issue con fecha, qué cambió y por qué.
-- **Cambios durante implementación**: requieren re-aprobación humana. Si `[Design]` cambia mientras `[Dev]` está en `implementing/` o más allá, el `leader` debe mover `[Dev]` a `backlog/` o `spec-needed/`.
+- **Cambios durante implementación**: requieren re-aprobación humana. Si `[Design]` cambia mientras `[Dev]` está en `implementing/` o más allá, el `orchestrator` debe mover `[Dev]` a `backlog/` o `spec-needed/`.
 
 ---
 

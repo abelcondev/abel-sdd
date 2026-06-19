@@ -55,3 +55,7 @@ Implementación del renombre de los 4 agentes del framework SDD.
 ## Dependencies
 
 - blockedBy: [Design] `renombrar-agentes-sdd`
+
+## Notas de progreso
+
+- 2026-06-19: Renombre completado. Archivos `.claude/agents/*.md` renombrados, contenido de prompts actualizado y referencias en docs/scripts migradas. `./init.sh` pasa con `[OK] Harness SDD listo`. Las únicas ocurrencias restantes de los nombres viejos están en el spec de esta misma feature ([Product] y [Dev]), que las conservan como registro del mapeo de renombre.

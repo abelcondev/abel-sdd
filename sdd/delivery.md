@@ -36,7 +36,7 @@ chore(sdd): login [Design] spec-needed → designing
 
 ### Commits de estado SDD
 
-Cuando el `leader` mueve una issue entre carpetas:
+Cuando el `orchestrator` mueve una issue entre carpetas:
 
 ```text
 chore(sdd): login [Design] spec-needed → designing
@@ -71,7 +71,7 @@ refactor(<scope>): R<n> <mejora interna> — <project>/<issue>
 
 ### Creación
 
-Cuando el `implementer` termina y la Issue `[Dev]` está en `dev/review/`, el `leader` puede crear el PR:
+Cuando el `developer` termina y la Issue `[Dev]` está en `dev/review/`, el `orchestrator` puede crear el PR:
 
 ```bash
 cd <repo-principal>-<project>
@@ -109,18 +109,18 @@ Closes <project>/<issue>
 
 El merge **NO es automático**. Requiere:
 
-1. Veredicto ✅ del `reviewer`.
+1. Veredicto ✅ del `auditor`.
 2. Aprobación explícita del humano (gate humano 4).
 3. `init.sh` verde en el worktree.
 4. Audit de dependencias sin vulnerabilidades críticas (para features críticas).
 
-Solo entonces el `leader` mergea el PR y mueve el archivo de la Issue a `dev/done/`.
+Solo entonces el `orchestrator` mergea el PR y mueve el archivo de la Issue a `dev/done/`.
 
 ---
 
 ## 4. Cierre de Issue `[Dev]`
 
-Cuando una Issue `[Dev]` llega a `dev/done/`, el `leader`:
+Cuando una Issue `[Dev]` llega a `dev/done/`, el `orchestrator`:
 
 1. Elimina el worktree:
    ```bash
@@ -154,7 +154,7 @@ Antes de declarar una sesión cerrada:
 
 ## 6. Anti-patrones de delivery
 
-- Mergear sin aprobación del reviewer y del humano.
+- Mergear sin aprobación del auditor y del humano.
 - Marcar `done` sin `init.sh` verde.
 - Commits gigantes que mezclan múltiples features.
 - PRs sin descripción ni trazabilidad.

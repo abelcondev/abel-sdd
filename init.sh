@@ -60,10 +60,10 @@ required_files=(
   "sdd/testing.md"
   "sdd/security.md"
   "sdd/delivery.md"
-  ".claude/agents/leader.md"
-  ".claude/agents/spec_author.md"
-  ".claude/agents/implementer.md"
-  ".claude/agents/reviewer.md"
+  ".claude/agents/orchestrator.md"
+  ".claude/agents/specifier.md"
+  ".claude/agents/developer.md"
+  ".claude/agents/auditor.md"
 )
 
 for f in "${required_files[@]}"; do

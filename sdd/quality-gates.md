@@ -30,7 +30,7 @@ Una Issue `[Dev]` está lista para pasar de `dev/review/` a `dev/testing/` cuand
 - [ ] Trazabilidad `R<n>` → test documentada.
 - [ ] No hay logs de debug ni código muerto.
 - [ ] La UI implementada coincide con el diseño aprobado y `[Design]`.
-- [ ] El `reviewer` emitió veredicto ✅.
+- [ ] El `auditor` emitió veredicto ✅.
 - [ ] El humano aprobó el merge.
 
 ---
@@ -86,12 +86,12 @@ Ejemplo de documentación en la sección `## Review`:
 
 ## 5. Checklist de cierre (C1–C7)
 
-El `reviewer` verifica cada ítem antes de aprobar el paso de una Issue a `done`.
+El `auditor` verifica cada ítem antes de aprobar el paso de una Issue a `done`.
 
 ### C1 — Harness completo
 
 - [ ] `AGENTS.md` existe.
-- [ ] `CLAUDE.md` existe y fuerza el rol leader.
+- [ ] `CLAUDE.md` existe y fuerza el rol orchestrator.
 - [ ] `sdd/README.md` existe.
 - [ ] `sdd/workflow.md` existe.
 - [ ] `sdd/architecture.md` existe y está completado.
@@ -100,7 +100,7 @@ El `reviewer` verifica cada ítem antes de aprobar el paso de una Issue a `done`
 - [ ] `sdd/testing.md` existe.
 - [ ] `sdd/security.md` existe.
 - [ ] `sdd/delivery.md` existe.
-- [ ] `.claude/agents/` tiene `leader.md`, `spec_author.md`, `implementer.md`, `reviewer.md`.
+- [ ] `.claude/agents/` tiene `orchestrator.md`, `specifier.md`, `developer.md`, `auditor.md`.
 - [ ] `init.sh` existe y es ejecutable.
 - [ ] `sdd/projects/` existe y tiene al menos un project.
 
@@ -176,6 +176,6 @@ Si **cualquier** checkbox de C1–C7 queda vacío, el veredicto es **❌ Rechaza
 - Test que solo verifica que no explota.
 - Mocking excesivo del filesystem o de la red.
 - Marcar `done` sin `init.sh` verde.
-- Mergear sin aprobación del reviewer y del humano.
+- Mergear sin aprobación del auditor y del humano.
 - Mover una Issue `[Dev]` a `implementing/` sin que `[Design]` esté en `design/design-ready/`.
 - Modificar componentes base existentes sin aprobación previa.

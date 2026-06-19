@@ -29,7 +29,7 @@ CUANDO ..., el sistema DEBE ... (notación EARS).
   - **Scenario**: [nombre] — `Given ... When ... Then ...`
   - **Scenario**: [nombre] — `Given ... When ... Then ...`
 
-> El diseño UI/UX debe poder ejecutar los escenarios BDD aprobados en [Product]. Si un escenario no es soportable visualmente, documentar la limitación y notificar al leader.
+> El diseño UI/UX debe poder ejecutar los escenarios BDD aprobados en [Product]. Si un escenario no es soportable visualmente, documentar la limitación y notificar al orchestrator.
 
 ## UI/UX Design
 

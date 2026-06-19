@@ -35,7 +35,7 @@ CUANDO un usuario consulta el framework, DEBE encontrar ADRs de decisiones clave
 
 ### R7: Fortalecer la integración con agentes
 
-CUANDO los agentes `spec_author`, `implementer` y `reviewer` operan, sus prompts DEBEN recordar regles clave como evitar `Co-Authored-By` y manejar cambios en `init.sh`.
+CUANDO los agentes `specifier`, `developer` y `auditor` operan, sus prompts DEBEN recordar regles clave como evitar `Co-Authored-By` y manejar cambios en `init.sh`.
 
 ## Acceptance Criteria
 

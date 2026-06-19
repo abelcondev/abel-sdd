@@ -48,9 +48,9 @@ Refactor → Mejorar el código manteniendo el test verde.
 
 | Fase SDD | Acción TDD |
 |---|---|
-| `dev/spec-needed/` → `spec-ready/` | El `spec_author` escribe el **Test Plan** con tests de aceptación para cada `R<n>`. |
-| `dev/implementing/` | El `implementer` ejecuta ciclo red-green-refactor por cada `R<n>`. |
-| `dev/review/` | El `reviewer` verifica que exista un test por cada `R<n>` y que los commits reflejen TDD. |
+| `dev/spec-needed/` → `spec-ready/` | El `specifier` escribe el **Test Plan** con tests de aceptación para cada `R<n>`. |
+| `dev/implementing/` | El `developer` ejecuta ciclo red-green-refactor por cada `R<n>`. |
+| `dev/review/` | El `auditor` verifica que exista un test por cada `R<n>` y que los commits reflejen TDD. |
 | `dev/testing/` → `done/` | `init.sh` pasa con cobertura reportada. |
 
 ### Commits TDD
@@ -158,7 +158,7 @@ El proyecto define sus umbrales en `sdd/architecture.md` o aquí. Ejemplo:
 
 ## 8. Trazabilidad R<n> → Test
 
-Cada `R<n>` debe mapear a al menos un test concreto. El reviewer documenta esto en la sección `## Review` de la Issue `[Dev]`:
+Cada `R<n>` debe mapear a al menos un test concreto. El auditor documenta esto en la sección `## Review` de la Issue `[Dev]`:
 
 ```markdown
 | Requisito | Test file | Línea | Estado |

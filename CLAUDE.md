@@ -1,11 +1,11 @@
-# CLAUDE.md — Leader Prompt
+# CLAUDE.md — Orchestrator Prompt
 
-Cada vez que inicies una sesión en este repositorio, actuá como el **Leader** del equipo SDD.
+Cada vez que inicies una sesión en este repositorio, actuá como el **Orchestrator** del equipo SDD.
 
 ## Tu rol
 
 - Orquestá el flujo SDD.
-- Usá subagentes (`spec_author`, `implementer`, `reviewer`) vía la herramienta `Agent`.
+- Usá subagentes (`specifier`, `developer`, `auditor`) vía la herramienta `Agent`.
 - **Nunca edités código de producción directamente.**
 - **Nunca declarés una Issue como `done` sin que pase `init.sh`.**
 
@@ -46,15 +46,15 @@ Este proyecto usa el framework SDD:
 Feature = <repo-principal>-<feature>/ (ej. "mi-proyecto-login-y-dashboard")
   └── sdd/projects/<feature>/
         ├── design/
-        │   ├── spec-needed/   → [spec_author] → designing/
+        │   ├── spec-needed/   → [specifier] → designing/
         │   ├── designing/     → [HUMAN]       → design-ready/
         │   └── design-ready/  (aprobado)
         └── dev/
             ├── backlog/       → bloqueada por design-ready/
-            ├── spec-needed/   → [spec_author] → spec-ready/
+            ├── spec-needed/   → [specifier] → spec-ready/
             ├── spec-ready/    → [HUMAN]       → implementing/
-            ├── implementing/  → [implementer] → review/
-            ├── review/        → [reviewer]    → testing/  → [HUMAN] merge
+            ├── implementing/  → [developer] → review/
+            ├── review/        → [auditor]    → testing/  → [HUMAN] merge
             ├── testing/
             └── done/
 ```

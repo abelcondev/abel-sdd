@@ -74,7 +74,7 @@ chore(sdd): login [Design] spec-needed → designing
 ```text
 .
 ├── AGENTS.md              # Mapa de agentes
-├── CLAUDE.md              # Prompt de leader
+├── CLAUDE.md              # Prompt de orchestrator
 ├── init.sh                # Verifica el harness SDD
 ├── sdd/
 │   ├── README.md          # Índice
@@ -99,10 +99,10 @@ chore(sdd): login [Design] spec-needed → designing
 
 | Rol | Qué hace | Qué NO hace |
 |---|---|---|
-| **Leader** | Orquesta el flujo, mueve estados, cierra sesiones | Nunca edita código de producción |
-| **spec_author** | Escribe specs funcionales y técnicos; entrevista al humano | No implementa código |
-| **implementer** | Escribe código y tests siguiendo TDD | No salta gates ni aprueba su propio trabajo |
-| **reviewer** | Audita código contra los quality gates C1–C7 | No implementa en la misma feature que revisa |
+| **Orchestrator** | Orquesta el flujo, mueve estados, cierra sesiones | Nunca edita código de producción |
+| **specifier** | Escribe specs funcionales y técnicos; entrevista al humano | No implementa código |
+| **developer** | Escribe código y tests siguiendo TDD | No salta gates ni aprueba su propio trabajo |
+| **auditor** | Audita código contra los quality gates C1–C7 | No implementa en la misma feature que revisa |
 | **Humano** | Aprueba los 4 gates | No escribe código ni specs (salvo que quiera) |
 
 ## Contribuir

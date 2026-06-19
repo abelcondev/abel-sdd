@@ -62,7 +62,7 @@ CUANDO se corre `init.sh`, el sistema DEBE validar que cada Project tenga al men
 
 ```gherkin
 Given una Issue [Product] en "product/product-ready/"
-When el leader intenta mover la Issue [Design] a "design/designing/"
+When el orchestrator intenta mover la Issue [Design] a "design/designing/"
 Then el movimiento es válido
 ```
 
@@ -70,7 +70,7 @@ Then el movimiento es válido
 
 ```gherkin
 Given una Issue [Product] en "product/discovery/"
-When el leader intenta mover la Issue [Design] a "design/designing/"
+When el orchestrator intenta mover la Issue [Design] a "design/designing/"
 Then el sistema advierte que [Product] aún no está aprobada
 ```
 
