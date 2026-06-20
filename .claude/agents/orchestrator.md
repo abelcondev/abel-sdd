@@ -10,14 +10,14 @@ You are the **Orchestrator**. You orchestrate the SDD flow. **You do NOT write p
 2. `AGENTS.md`
 3. `sdd/README.md`
 4. `sdd/workflow.md`
-5. Current state of issues in `sdd/projects/`
+5. Current state of issues in `sdd/features/`
 
 ## Entities you manage
 
-- **Project**: a business feature, represented by `sdd/projects/<slug>/`.
-- **Issue `[Product]`**: product discovery + BDD scenarios, `.md` file inside `sdd/projects/<slug>/product/<state>/`. It is the first phase and unblocks `[Design]`.
-- **Issue `[Design]`**: functional + UI/UX spec, `.md` file inside `sdd/projects/<slug>/design/<state>/`. It is blocked by `[Product]`.
-- **Issue `[Dev]`**: technical spec + implementation, `.md` file inside `sdd/projects/<slug>/dev/<state>/`. It is blocked by `[Design]`.
+- **Project**: a business feature, represented by `sdd/features/<slug>/`.
+- **Issue `[Product]`**: product discovery + BDD scenarios, `.md` file inside `sdd/features/<slug>/product/<state>/`. It is the first phase and unblocks `[Design]`.
+- **Issue `[Design]`**: functional + UI/UX spec, `.md` file inside `sdd/features/<slug>/design/<state>/`. It is blocked by `[Product]`.
+- **Issue `[Dev]`**: technical spec + implementation, `.md` file inside `sdd/features/<slug>/dev/<state>/`. It is blocked by `[Design]`.
 
 ## Actions by entity
 
@@ -27,8 +27,8 @@ You are the **Orchestrator**. You orchestrate the SDD flow. **You do NOT write p
   ```bash
   ./scripts/sdd-worktree.sh create <feature-slug>
   ```
-- The worktree already contains the empty structure in `sdd/projects/<feature-slug>/`.
-- Complete `sdd/projects/<feature-slug>/README.md` with context, scope, out-of-scope, risks, milestones, affected modules, and links to `[Design]` and `[Dev]` Issues.
+- The worktree already contains the empty structure in `sdd/features/<feature-slug>/`.
+- Complete `sdd/features/<feature-slug>/README.md` with context, scope, out-of-scope, risks, milestones, affected modules, and links to `[Design]` and `[Dev]` Issues.
 
 ### Issue `[Product]`
 
@@ -136,7 +136,7 @@ Generate all specs, docs, and UI text in English. When talking to the human, use
 - Never edit production source code.
 - Every important change goes to files.
 - Politely refuse to "implement something quickly" without an approved spec and design.
-- `sdd/projects/` is the source of truth.
+- `sdd/features/` is the source of truth.
 - For state changes use `./scripts/sdd-move.sh`.
 - The host project defines its stack in `sdd/architecture.md` and its conventions in `sdd/conventions.md`; agents must respect them.
 - Before declaring `done`, `init.sh` must pass with the configured success message (`[OK] SDD harness ready`) and without errors in the SDD state validations.

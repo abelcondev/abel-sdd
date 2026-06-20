@@ -28,7 +28,7 @@ show_help() {
   cat <<EOF
 Usage: ./scripts/sdd-move.sh <feature-slug> <issue> <source-state> <target-state>
 
-Moves an Issue file between state folders in sdd/projects/ and creates a commit.
+Moves an Issue file between state folders in sdd/features/ and creates a commit.
 
 Examples:
   ./scripts/sdd-move.sh login-y-dashboard-layout login design/spec-needed design/designing
@@ -99,7 +99,7 @@ main() {
   local source_state="$3"
   local target_state="$4"
 
-  local project_path="${REPO_ROOT}/sdd/projects/${feature_slug}"
+  local project_path="${REPO_ROOT}/sdd/features/${feature_slug}"
   local source_file="${project_path}/${source_state}/${issue}.md"
   local target_file="${project_path}/${target_state}/${issue}.md"
   local issue_type=""

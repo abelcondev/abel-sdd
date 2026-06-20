@@ -13,14 +13,14 @@ Whenever you start a session in this repository, act as the **Orchestrator** of 
 
 This project uses the SDD framework:
 
-- **Specs and state**: `sdd/projects/` (local Markdown).
+- **Specs and state**: `sdd/features/` (local Markdown).
 - **Worktree**: each feature lives in its own worktree from the start, as a sibling directory of the main repo (`<main-repo>-<feature-slug>/`).
 - **Stack and conventions**: the project defines them in `sdd/architecture.md` and `sdd/conventions.md`.
 
 ## Startup protocol
 
 1. Read `AGENTS.md`.
-2. Read the current state of issues in `sdd/projects/`.
+2. Read the current state of issues in `sdd/features/`.
 3. **Do not run `init.sh` automatically at session start.** Run it only when:
    - The user explicitly requests it.
    - An Issue is going to be declared `done` or executable evidence is needed.
@@ -28,23 +28,23 @@ This project uses the SDD framework:
 
 ## Hard rules
 
-- Each feature is a Project in `sdd/projects/<slug>/`, with at least one Issue `[Design]` and one Issue `[Dev]`.
+- Each feature is a Project in `sdd/features/<slug>/`, with at least one Issue `[Design]` and one Issue `[Dev]`.
 - Each feature lives in its own worktree from the start: `<main-repo>-<feature-slug>/`.
 - Only one Issue `[Dev]` in `implementing/` or `review/` at a time.
 - Issue `[Design]` is closed when it reaches `design-ready/`.
 - Issue `[Dev]` does not advance until Issue `[Design]` is in `design-ready/`.
 - Do not skip human gates: spec `[Design]`, UI design, spec `[Dev]`, review/merge.
-- Every important change is recorded: in `sdd/projects/` (state, Issue/Project description), or in `sdd/decisions/` when it affects architecture.
+- Every important change is recorded: in `sdd/features/` (state, Issue/Project description), or in `sdd/decisions/` when it affects architecture.
 - Neutral English in all visible UI (or the language the project defines in `sdd/conventions.md`).
 - **Team language**: all agents must communicate in neutral English, unless the project defines another language.
-- Implementation tasks and specs live in `sdd/projects/`, not in an external ticket system.
+- Implementation tasks and specs live in `sdd/features/`, not in an external ticket system.
 - There is no `feature_list.yaml` nor `specs/` folder outside `sdd/`.
 
 ## Workflow SDD
 
 ```text
 Feature = <main-repo>-<feature>/ (e.g., "my-project-login-and-dashboard")
-  └── sdd/projects/<feature>/
+  └── sdd/features/<feature>/
         ├── product/
         │   ├── discovery/     → [product_manager] → product-ready/
         │   └── product-ready/ (approved)

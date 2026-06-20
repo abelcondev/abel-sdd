@@ -1,6 +1,6 @@
 # [Design] <Issue title>
 
-Project: `sdd/projects/<feature-slug>/`
+Project: `sdd/features/<feature-slug>/`
 State: `<current-folder>`
 
 ## Context
@@ -36,7 +36,7 @@ Screen/Action 1 → Screen/Action 2 → Final result
 
 ### BDD Reference
 
-- Approved [Product] issue: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
+- Approved [Product] issue: `sdd/features/<feature-slug>/product/product-ready/<issue-product>.md`
 - Relevant scenarios for the design:
   - **Scenario**: [name] — `Given ... When ... Then ...`
   - **Scenario**: [name] — `Given ... When ... Then ...`

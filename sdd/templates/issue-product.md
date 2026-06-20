@@ -1,6 +1,6 @@
 # [Product] <Issue title>
 
-Project: `sdd/projects/<feature-slug>/`
+Project: `sdd/features/<feature-slug>/`
 State: `<current-folder>`
 
 ## Context

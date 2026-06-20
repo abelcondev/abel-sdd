@@ -81,10 +81,10 @@ done
 # ─────────────────────────────────────────
 log_section "2. Local SDD configuration"
 
-if [ -d "sdd/projects" ]; then
-  ok "sdd/projects/ exists"
+if [ -d "sdd/features" ]; then
+  ok "sdd/features/ exists"
 else
-  fail "Missing sdd/projects/"
+  fail "Missing sdd/features/"
 fi
 
 if [ -d "sdd/decisions" ]; then
@@ -133,12 +133,12 @@ state_is_valid() {
 }
 
 # 3.1 Concurrency: at most one Issue [Dev] in implementing/ or review/.
-if [ -d "sdd/projects" ]; then
+if [ -d "sdd/features" ]; then
   implementing_count=0
   review_count=0
 
-  implementing_count=$(find sdd/projects -mindepth 3 -maxdepth 3 -type d -name implementing -exec find {} -maxdepth 1 -type f -name '*.md' \; 2>/dev/null | wc -l | tr -d ' ')
-  review_count=$(find sdd/projects -mindepth 3 -maxdepth 3 -type d -name review -exec find {} -maxdepth 1 -type f -name '*.md' \; 2>/dev/null | wc -l | tr -d ' ')
+  implementing_count=$(find sdd/features -mindepth 3 -maxdepth 3 -type d -name implementing -exec find {} -maxdepth 1 -type f -name '*.md' \; 2>/dev/null | wc -l | tr -d ' ')
+  review_count=$(find sdd/features -mindepth 3 -maxdepth 3 -type d -name review -exec find {} -maxdepth 1 -type f -name '*.md' \; 2>/dev/null | wc -l | tr -d ' ')
 
   active_dev_count=$((implementing_count + review_count))
 
@@ -150,15 +150,15 @@ if [ -d "sdd/projects" ]; then
     fail "There are ${active_dev_count} [Dev] Issues in implementing/ or review/. There must be only one."
   fi
 else
-  warn "Cannot validate concurrency: sdd/projects/ is missing"
+  warn "Cannot validate concurrency: sdd/features/ is missing"
 fi
 
 # 3.2 Every project must have at least one Issue [Product], one [Design], and one [Dev].
 # 3.3 State folders must be valid according to sdd/workflow.md.
-if [ -d "sdd/projects" ]; then
+if [ -d "sdd/features" ]; then
   projects_found=0
 
-  for project_dir in sdd/projects/*/; do
+  for project_dir in sdd/features/*/; do
     [[ -d "${project_dir}" ]] || continue
     projects_found=$((projects_found + 1))
 
@@ -237,10 +237,10 @@ if [ -d "sdd/projects" ]; then
   done
 
   if [[ "${projects_found}" -eq 0 ]]; then
-    ok "sdd/projects/ is empty — create a feature with: ./scripts/sdd-worktree.sh create <feature-slug>"
+    ok "sdd/features/ is empty — create a feature with: ./scripts/sdd-worktree.sh create <feature-slug>"
   fi
 else
-  warn "Cannot validate projects: sdd/projects/ is missing"
+  warn "Cannot validate projects: sdd/features/ is missing"
 fi
 
 # ─────────────────────────────────────────

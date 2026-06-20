@@ -8,10 +8,10 @@ For the general SDD index, see `sdd/README.md`.
 
 ## 1. Entities
 
-- **Project**: a business feature, represented by `sdd/projects/<slug>/`.
-- **Issue `[Product]`**: product discovery + BDD scenarios, `.md` file inside `sdd/projects/<slug>/product/<state>/`. It is the first phase and unlocks `[Design]`.
-- **Issue `[Design]`**: functional spec + UI/UX, `.md` file inside `sdd/projects/<slug>/design/<state>/`. Blocked by `[Product]`.
-- **Issue `[Dev]`**: technical spec + implementation, `.md` file inside `sdd/projects/<slug>/dev/<state>/`. Blocked by `[Design]`.
+- **Project**: a business feature, represented by `sdd/features/<slug>/`.
+- **Issue `[Product]`**: product discovery + BDD scenarios, `.md` file inside `sdd/features/<slug>/product/<state>/`. It is the first phase and unlocks `[Design]`.
+- **Issue `[Design]`**: functional spec + UI/UX, `.md` file inside `sdd/features/<slug>/design/<state>/`. Blocked by `[Product]`.
+- **Issue `[Dev]`**: technical spec + implementation, `.md` file inside `sdd/features/<slug>/dev/<state>/`. Blocked by `[Design]`.
 
 ---
 
@@ -69,10 +69,10 @@ sdd/
 
 | Entity | Path | Title inside the file |
 |---|---|---|
-| Project | `sdd/projects/login-y-dashboard-layout/README.md` | `Login and Dashboard Layout` |
-| Issue Product | `sdd/projects/login-y-dashboard-layout/product/discovery/login.md` | `[Product] Login` |
-| Issue Design | `sdd/projects/login-y-dashboard-layout/design/spec-needed/login.md` | `[Design] Login` |
-| Issue Dev | `sdd/projects/login-y-dashboard-layout/dev/backlog/login.md` | `[Dev] Login` |
+| Project | `sdd/features/login-y-dashboard-layout/README.md` | `Login and Dashboard Layout` |
+| Issue Product | `sdd/features/login-y-dashboard-layout/product/discovery/login.md` | `[Product] Login` |
+| Issue Design | `sdd/features/login-y-dashboard-layout/design/spec-needed/login.md` | `[Design] Login` |
+| Issue Dev | `sdd/features/login-y-dashboard-layout/dev/backlog/login.md` | `[Dev] Login` |
 
 Slugs use kebab-case, lowercase, no accents.
 
@@ -144,7 +144,7 @@ Each feature has its own **isolated worktree** from the start. Inside the worktr
    This creates:
    - Branch `feature/<feature-slug>`.
    - Worktree at `<repo-principal>-<feature-slug>/`.
-   - Empty structure at `sdd/projects/<feature-slug>/`.
+   - Empty structure at `sdd/features/<feature-slug>/`.
 2. Open the coding agent inside the worktree.
 3. Complete the project `README.md` and create issues as `.md` files inside state folders. Start with `[Product]`.
 4. Move files physically between folders when they change state.
@@ -195,8 +195,8 @@ chore(sdd): login [Design] spec-needed → designing
 For manual moves:
 
 ```bash
-git mv sdd/projects/login-y-dashboard-layout/design/spec-needed/login.md \
-       sdd/projects/login-y-dashboard-layout/design/designing/login.md
+git mv sdd/features/login-y-dashboard-layout/design/spec-needed/login.md \
+       sdd/features/login-y-dashboard-layout/design/designing/login.md
 ```
 
 The `orchestrator` commits the state change:
@@ -219,7 +219,7 @@ Creates:
 
 - Branch: `feature/login-y-dashboard-layout`
 - Worktree: `<repo-principal>-login-y-dashboard-layout/`
-- Empty structure at `sdd/projects/login-y-dashboard-layout/`
+- Empty structure at `sdd/features/login-y-dashboard-layout/`
 
 > The script does not install dependencies or copy environment files. Each project must prepare its own environment according to its stack.
 
@@ -272,7 +272,7 @@ The SDD assumes the project uses a **visual design tool** (Figma, Pencil, Sketch
 - Product before design, design before code.
 - Tests before implementation (TDD).
 - `sdd/` is the source of truth; there is no `feature_list.yaml` or `specs/` folder outside `sdd/`.
-- Every important change is recorded in `sdd/projects/` or in `sdd/decisions/`.
+- Every important change is recorded in `sdd/features/` or in `sdd/decisions/`.
 - Leave the repo clean on close: no temporary files or orphan branches.
 
 ---

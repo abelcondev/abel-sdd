@@ -76,7 +76,7 @@ cmd_create() {
   ensure_repo_root
 
   worktree_path="$(worktree_path_for "${feature_slug}")"
-  project_path="${worktree_path}/sdd/projects/${feature_slug}"
+  project_path="${worktree_path}/sdd/features/${feature_slug}"
 
   if [[ -d "${worktree_path}" ]]; then
     die "Worktree for '${feature_slug}' already exists at ${worktree_path}"
@@ -93,7 +93,7 @@ cmd_create() {
   log_info "Creating worktree at ${worktree_path}..."
   git worktree add "${worktree_path}" "${branch_name}"
 
-  log_info "Creating empty project structure in sdd/projects/${feature_slug}/..."
+  log_info "Creating empty project structure in sdd/features/${feature_slug}/..."
   mkdir -p "${project_path}/product"/{discovery,product-ready}
   mkdir -p "${project_path}/design"/{spec-needed,designing,design-ready}
   mkdir -p "${project_path}/dev"/{backlog,spec-needed,spec-ready,implementing,blocked,review,rejected,testing,done,cancelled}
@@ -134,14 +134,14 @@ Brief description of the business problem or opportunity.
 
 ## Issues
 
-- Product: \`sdd/projects/${feature_slug}/product/\`
-- Design: \`sdd/projects/${feature_slug}/design/\`
-- Dev: \`sdd/projects/${feature_slug}/dev/\`
+- Product: \`sdd/features/${feature_slug}/product/\`
+- Design: \`sdd/features/${feature_slug}/design/\`
+- Dev: \`sdd/features/${feature_slug}/dev/\`
 EOF
 
   (
     cd "${worktree_path}"
-    git add "sdd/projects/${feature_slug}/"
+    git add "sdd/features/${feature_slug}/"
     git commit -m "chore(sdd): create project ${feature_slug}" || true
   )
 

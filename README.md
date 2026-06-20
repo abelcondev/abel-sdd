@@ -74,7 +74,7 @@ This creates:
 
 - Branch `feature/login-y-dashboard-layout`.
 - Worktree `my-project-login-y-dashboard-layout/` next to the main repo.
-- Empty structure in `sdd/projects/login-y-dashboard-layout/`.
+- Empty structure in `sdd/features/login-y-dashboard-layout/`.
 
 ### Move issues between states
 

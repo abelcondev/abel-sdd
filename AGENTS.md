@@ -12,7 +12,7 @@ In every session, the orchestrator agent MUST:
 
 1. **Read `CLAUDE.md`** — enforces the orchestrator role.
 2. **Read `sdd/README.md`** — understand the SDD flow.
-3. **Check `sdd/projects/`** — current state of features and issues.
+3. **Check `sdd/features/`** — current state of features and issues.
 4. **Run `init.sh` on demand** — when the user asks, before declaring `done`, or when there are changes that justify verifying the environment. Do not run it automatically at the start of every session.
 
 ---
@@ -35,7 +35,7 @@ In every session, the orchestrator agent MUST:
 | `scripts/sdd-worktree.sh` | Worktree manager | When creating a feature |
 | `scripts/sdd-move.sh` | Move issues between states | When changing state |
 | `.claude/agents/` | Role definitions | Never edit directly |
-| `sdd/projects/` | Local projects, issues, and specs | Source of truth for the SDD flow |
+| `sdd/features/` | Local projects, issues, and specs | Source of truth for the SDD flow |
 
 ---
 
@@ -43,7 +43,7 @@ In every session, the orchestrator agent MUST:
 
 Non-negotiable rules:
 
-- **Each feature is a Project in `sdd/projects/<slug>/`**, with at least one Issue `[Design]` and one Issue `[Dev]`.
+- **Each feature is a Project in `sdd/features/<slug>/`**, with at least one Issue `[Design]` and one Issue `[Dev]`.
 - **Each feature lives in its own worktree** from the start: `<main-repo>-<feature-slug>/`.
 - **Only one Issue `[Dev]` in `Implementing` or `Review` at a time**.
 - **Do not declare `done` without a green `init.sh`**.
@@ -56,7 +56,7 @@ Non-negotiable rules:
 - **Issue `[Dev]` does not advance until Issue `[Design]` is in `Design Ready`**.
 - **Tests before implementation (TDD)**. Each `R<n>` generates at least one red test before code.
 - **Do not edit production code directly from the orchestrator**. The orchestrator orchestrates; the developer writes code.
-- **Every important change is recorded**, not only in chat: in `sdd/projects/` (state, Issue/Project description), or in `sdd/decisions/` when it affects architecture.
+- **Every important change is recorded**, not only in chat: in `sdd/features/` (state, Issue/Project description), or in `sdd/decisions/` when it affects architecture.
 - **`sdd/` is the source of truth** for state, specs, and tasks. There is no local `feature_list.yaml` nor `specs/` folder.
 - **No Issue `[Dev]` with UI moves to `Implementing` without an approved design in `[Design]`**.
 - **Leave the repo clean when closing**. No temporary files or orphan branches.
@@ -70,7 +70,7 @@ Non-negotiable rules:
 ### Entities
 
 ```text
-sdd/projects/<feature-slug>/ = Feature (e.g., "login-y-dashboard-layout")
+sdd/features/<feature-slug>/ = Feature (e.g., "login-y-dashboard-layout")
   ├── README.md = context, scope, and out-of-scope of the feature
   ├── design/
   │   ├── spec-needed/   = issues with functional/UI spec pending
@@ -162,5 +162,5 @@ If an agent gets blocked:
 
 1. Re-read the relevant docs.
 2. Move the Issue to `dev/blocked/` with `./scripts/sdd-move.sh`.
-3. Document the blocker as a comment in the corresponding Issue in `sdd/projects/` (`[Design]` or `[Dev]`).
+3. Document the blocker as a comment in the corresponding Issue in `sdd/features/` (`[Design]` or `[Dev]`).
 4. Stop the session. Do not invent workarounds.

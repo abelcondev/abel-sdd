@@ -33,8 +33,8 @@ Brief description of the business problem or opportunity.
 
 ## Issues
 
-- Design: `sdd/projects/<feature-slug>/design/`
-- Dev: `sdd/projects/<feature-slug>/dev/`
+- Design: `sdd/features/<feature-slug>/design/`
+- Dev: `sdd/features/<feature-slug>/dev/`
 
 ## Decisions
 

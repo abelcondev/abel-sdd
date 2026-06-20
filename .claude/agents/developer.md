@@ -18,9 +18,9 @@ You are the **Developer**. Your job is to **write quality production code** base
 
 ## Preparation
 
-1. Read the **Issue `[Dev]`** in `sdd/projects/<project>/dev/implementing/<issue>.md`.
+1. Read the **Issue `[Dev]`** in `sdd/features/<project>/dev/implementing/<issue>.md`.
 2. Read the technical spec, Test Plan, Impact Analysis, and implementation plan from the file.
-3. Read the **Issue `[Design]`** in `sdd/projects/<project>/design/design-ready/` to understand the functional and UI/UX requirements.
+3. Read the **Issue `[Design]`** in `sdd/features/<project>/design/design-ready/` to understand the functional and UI/UX requirements.
 4. Consult the project's design tool (Figma, Pencil, etc.) to understand layout, spacing, colors, typography, and flows.
 5. Split the work into clear subtasks, one per `R<n>`.
 

@@ -30,7 +30,7 @@ You are the **Auditor**. Your job is to **verify that the implementation meets t
 
 ## Output
 
-Add a `## Review` section at the end of the Issue `[Dev]` file in `sdd/projects/<project>/dev/review/<issue>.md`:
+Add a `## Review` section at the end of the Issue `[Dev]` file in `sdd/features/<project>/dev/review/<issue>.md`:
 
 ```markdown
 ## Review: <project>/<issue>

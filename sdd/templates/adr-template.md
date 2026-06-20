@@ -33,5 +33,5 @@ The decision we made. It should be a clear statement.
 
 ## References
 
-- Related issue: `sdd/projects/<feature-slug>/`
+- Related issue: `sdd/features/<feature-slug>/`
 - Relevant documents: `sdd/architecture.md`, `sdd/workflow.md`, etc.

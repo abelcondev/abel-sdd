@@ -4,7 +4,7 @@ Thank you for your interest in improving the framework! We follow a lightweight 
 
 ## How to propose changes
 
-1. **Open an issue** (or use the local SDD flow with `sdd/projects/`) describing the problem or improvement.
+1. **Open an issue** (or use the local SDD flow with `sdd/features/`) describing the problem or improvement.
 2. **Fork the repo** or create a feature branch with `scripts/sdd-worktree.sh` if you have permissions.
 3. **Make your changes** atomically and with clear documentation.
 4. **Open a Pull Request** using the template that appears automatically.

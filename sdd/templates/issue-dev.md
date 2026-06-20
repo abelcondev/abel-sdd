@@ -1,6 +1,6 @@
 # [Dev] <Issue title>
 
-Project: `sdd/projects/<feature-slug>/`
+Project: `sdd/features/<feature-slug>/`
 State: `<current-folder>`
 
 ## Context
@@ -53,7 +53,7 @@ Gherkin scenarios approved in [Product] converted into automated or manual accep
 | [name] | `Given ... When ... Then ...` | integration / e2e / manual | pending |
 | [name] | `Given ... When ... Then ...` | integration / e2e / manual | pending |
 
-- Reference [Product] issue: `sdd/projects/<feature-slug>/product/product-ready/<issue-product>.md`
+- Reference [Product] issue: `sdd/features/<feature-slug>/product/product-ready/<issue-product>.md`
 
 ## Security Considerations
 
@@ -74,7 +74,7 @@ Gherkin scenarios approved in [Product] converted into automated or manual accep
 
 ## UI Reference
 
-- Approved design: `sdd/projects/<feature-slug>/design/design-ready/`
+- Approved design: `sdd/features/<feature-slug>/design/design-ready/`
 - Artboards: `<feature-slug>-<screen>`
 - Screenshots: [links]
 

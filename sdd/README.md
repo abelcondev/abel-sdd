@@ -2,7 +2,7 @@
 
 This directory is the **source of truth** for this project's SDD flow.
 
-- **Specs** live in `sdd/projects/`.
+- **Specs** live in `sdd/features/`.
 - The **state** of each issue is represented by the **folder** where its `.md` file is located.
 - The SDD flow is **stack-agnostic**: it does not impose language, framework, or tooling. Each project completes `sdd/architecture.md` and `sdd/conventions.md` with its own decisions.
 
@@ -24,7 +24,7 @@ This directory is the **source of truth** for this project's SDD flow.
 | `sdd/decisions/` | Project ADRs (Architecture Decision Records). |
 | `sdd/templates/` | Templates for projects and issues. |
 | `sdd/templates/issue-product.md` | Template for the `[Product]` Issue (BDD, product goals, acceptance criteria). |
-| `sdd/projects/` | Active projects and issues. |
+| `sdd/features/` | Active projects and issues. |
 
 ---
 

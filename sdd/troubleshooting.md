@@ -91,17 +91,17 @@ Correct example:
 ./scripts/sdd-move.sh login-and-dashboard-layout login dev/implementing dev/review
 ```
 
-### `sdd/projects/<slug>/<state>/<issue>.md does not exist`
+### `sdd/features/<slug>/<state>/<issue>.md does not exist`
 
 **Cause**: The Issue is not in the indicated source state.
 
 **Solution**: Verify the current state with `git status` or by listing the folder:
 
 ```bash
-ls sdd/projects/<slug>/dev/*/
+ls sdd/features/<slug>/dev/*/
 ```
 
-### `sdd/projects/<slug>/<state>/<issue>.md already exists`
+### `sdd/features/<slug>/<state>/<issue>.md already exists`
 
 **Cause**: A file with the same name already exists in the destination state.
 
@@ -117,8 +117,8 @@ ls sdd/projects/<slug>/dev/*/
 
 **Solution**: Create the corresponding files in:
 
-- `sdd/projects/<slug>/design/spec-needed/<issue>.md`
-- `sdd/projects/<slug>/dev/backlog/<issue>.md`
+- `sdd/features/<slug>/design/spec-needed/<issue>.md`
+- `sdd/features/<slug>/dev/backlog/<issue>.md`
 
 ### `[FAIL] There are N [Dev] Issues in implementing/ or review/`
 
@@ -188,7 +188,7 @@ cp <destination>/CLAUDE.md.backup-<timestamp> <destination>/CLAUDE.md
 **Solution**: Always use `./scripts/sdd-move.sh`, which generates the automatic commit. If already moved manually:
 
 ```bash
-git add sdd/projects/<slug>/
+git add sdd/features/<slug>/
 git commit -m "chore(sdd): <issue> [Dev|Design] <source> → <destination>"
 ```
 

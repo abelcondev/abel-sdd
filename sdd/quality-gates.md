@@ -102,14 +102,14 @@ The `auditor` verifies each item before approving moving an Issue to `done`.
 - [ ] `sdd/delivery.md` exists.
 - [ ] `.claude/agents/` has `orchestrator.md`, `product_manager.md`, `designer.md`, `tech_specifier.md`, `developer.md`, `auditor.md`.
 - [ ] `init.sh` exists and is executable.
-- [ ] `sdd/projects/` exists and has at least one project.
+- [ ] `sdd/features/` exists and has at least one project.
 
 ### C2 — State Coherence
 
 - [ ] At most one `[Dev]` Issue in `implementing/` or `review/`.
 - [ ] The Project contains at least one `[Design]` Issue and one `[Dev]` Issue.
 - [ ] The `[Dev]` Issue is in `dev/backlog/` until `[Design]` is in `design/design-ready/`.
-- [ ] All states in `sdd/projects/` are valid folders per `sdd/workflow.md`.
+- [ ] All states in `sdd/features/` are valid folders per `sdd/workflow.md`.
 - [ ] If a `[Design]` Issue is in `design/designing/` or beyond, its description contains a complete functional + UI/UX spec.
 - [ ] If a `[Design]` Issue is in `design/design-ready/`, its description contains the complete `UI/UX Design` section and design assets.
 - [ ] If a `[Dev]` Issue is in `dev/spec-ready/` or beyond, its description contains a complete technical spec.
