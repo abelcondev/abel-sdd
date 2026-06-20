@@ -34,19 +34,6 @@ log_dim()     { echo -e "${DIM}$*${NC}"; }
 
 die() { log_error "$*"; exit 1; }
 
-print_banner() {
-  echo ""
-  echo -e "${BLUE}        _____   _____   _____ ${NC}"
-  echo -e "${BLUE}       / ____| |  __ \\ |  __ \\ ${NC}"
-  echo -e "${BLUE}      | (___   | |  | || |  | |${NC}"
-  echo -e "${BLUE}       \\___ \\  | |  | || |  | |${NC}"
-  echo -e "${BLUE}       ____) | | |__| || |__| |${NC}"
-  echo -e "${BLUE}      |_____/  |_____/ |_____/ ${NC}"
-  echo ""
-  echo -e "${BOLD}Install the SDD framework into a project${NC}"
-  echo ""
-}
-
 show_help() {
   cat <<EOF
 Usage: ./install.sh [options] [<path-to-destination-project>]
@@ -241,8 +228,6 @@ configure_installation() {
   local install_location
   local package_dir
 
-  print_banner
-
   # 1. Destination project
   log_step "Where should SDD be installed?"
   if ! git_root="$(ensure_git_root "${dest_dir}")"; then
@@ -315,7 +300,6 @@ quick_configure() {
 
   detected_roots="$(detect_monorepo_roots "${git_root}" | tr '\n' ' ' | sed 's/ $//')"
 
-  print_banner
   echo -e "${BOLD}Quick mode${NC}"
   echo -e "  ${BOLD}Destination:${NC} ${INSTALL_LOCATION}"
   echo -e "  ${BOLD}Type:${NC}        $([[ -n ${detected_roots} ]] && echo "Monorepo (${detected_roots})" || echo "Simple repo")"
