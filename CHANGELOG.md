@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `init.sh` now passes cleanly on a fresh install: legacy checks are condensed, an empty `sdd/features/` is reported as OK, and the missing optional `project-checks.sh` is reported as OK with guidance.
 - `README.md` reorganized so the curl-based one-command installer is the primary installation method.
 - Renamed `sdd/projects/` to `sdd/features/` across the framework, scripts, templates, docs, and agent prompts.
+- Polished CLI installer UX: added SDD banner, replaced `[INFO]`/`[WARN]` with `✔`/`▲`/`◆` symbols in `install-cli.sh`, `sdd-cli`, and `install.sh`, and cleaned up prompt formatting.
 - `sdd/decisions/` starts empty. `sdd/decisions/adr-template.md` moved to `sdd/templates/adr-template.md` so consumers copy it only when needed.
 - `sdd/architecture.md` updated to reflect that ADRs are created from the template on demand.
 

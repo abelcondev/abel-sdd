@@ -18,120 +18,53 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+BOLD='\033[1m'
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+DIM='\033[2m'
 NC='\033[0m'
 
-log_info() { echo -e "${GREEN}[INFO]${NC} $*"; }
-log_warn() { echo -e "${YELLOW}[WARN]${NC} $*"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $*" >&2; }
-log_step() { echo -e "${BLUE}▶${NC} $*"; }
+log_success() { echo -e "${GREEN}✔${NC} $*"; }
+log_warn()    { echo -e "${YELLOW}▲${NC} $*"; }
+log_error()   { echo -e "${RED}✖${NC} $*" >&2; }
+log_step()    { echo -e "${BLUE}◆${NC} $*"; }
+log_dim()     { echo -e "${DIM}$*${NC}"; }
 
 die() { log_error "$*"; exit 1; }
 
-# ─────────────────────────────────────────
-# i18n — CLI language (always English)
-# ─────────────────────────────────────────
-
-UI_LANGUAGE="en"
-
-msg() {
-  local key="$1"
-  case "${key}" in
-    help_usage)                echo "Usage: ./install.sh [options] [<path-to-destination-project>]" ;;
-    help_description)          echo "Installs the SDD framework into an existing project." ;;
-    help_step_1)               echo "Copies sdd/, scripts/, .claude/agents/, AGENTS.md, CLAUDE.md, and init.sh." ;;
-    help_step_2)               echo "Does not touch the destination project's source code." ;;
-    help_step_3)               echo "Ensures the destination is a Git repository, initializing one if needed." ;;
-    help_step_4)               echo "Asks for the repo type (simple or monorepo)." ;;
-    help_option_quick)         echo "Do not ask; detect automatically." ;;
-    help_option_update)        echo "Overwrite without interaction and back up AGENTS.md and CLAUDE.md." ;;
-    help_option_help)          echo "Show this help." ;;
-    help_example)              echo "Example" ;;
-    unknown_option)            echo "Unknown option" ;;
-    use_help)                  echo "Use ./install.sh --help" ;;
-    one_destination)           echo "Only one destination directory allowed" ;;
-    dest_not_found)            echo "Destination directory does not exist" ;;
-    dest_same_as_sdd)          echo "Destination directory cannot be the same abel-sdd repo" ;;
-    no_git_repo)               echo "No Git repository found in" ;;
-    sdd_requires_git)          echo "SDD requires a Git repo" ;;
-    yes)                       echo "Y" ;;
-    no)                        echo "N" ;;
-    please_answer_y_n)         echo "Please answer Y or N." ;;
-    invalid_option)            echo "Invalid option. Choose a number between" ;;
-    and)                       echo "and" ;;
-    welcome_title)             echo "SDD installer" ;;
-    step_destination)          echo "1. Destination project" ;;
-    git_repo_detected)         echo "Git repo detected" ;;
-    is_this_correct)           echo "Is this directory correct?" ;;
-    cancelled_by_user)         echo "Installation cancelled by the user" ;;
-    step_repo_type)            echo "2. Repository type" ;;
-    how_organize_sdd)          echo "How do you want to organize the SDD?" ;;
-    repo_simple)               echo "Simple repo — single project at the root" ;;
-    repo_monorepo_root)        echo "Monorepo — SDD at the root, features may cross packages" ;;
-    repo_monorepo_package)     echo "Monorepo — SDD inside a specific package" ;;
-    detected_package_folders)  echo "Detected package folders" ;;
-    are_they_correct)          echo "Are they correct?" ;;
-    enter_package_folders)     echo "Enter the package folders separated by spaces" ;;
-    no_package_folders)        echo "No package folders detected. Enter the folders separated by spaces" ;;
-    which_package)             echo "In which package do you want to install the SDD? (e.g. packages/web)" ;;
-    package_not_found)         echo "Package does not exist in" ;;
-    step_design)               echo "3. Design" ;;
-    pencil_default_1)          echo "SDD uses Pencil as the default design tool." ;;
-    pencil_default_2)          echo "Make sure you have the Pencil MCP enabled in your editor/IDE so the designer agent can interact with the artboards." ;;
-    summary_title)             echo "Installation summary" ;;
-    summary_destination)       echo "📁 Destination" ;;
-    summary_repo_type)         echo "🏗️  Repo type" ;;
-    summary_packages)          echo "📦 Packages" ;;
-    summary_design)            echo "🎨 Design" ;;
-    summary_pencil_mcp)        echo "Pencil (check MCP)" ;;
-    confirm_installation)      echo "Do you confirm the installation?" ;;
-    quick_mode_title)          echo "SDD installer — quick mode" ;;
-    quick_mode_type)           echo "🏗️  Type" ;;
-    installing)                echo "Installing SDD in" ;;
-    backup_created)            echo "Backup created" ;;
-    already_exists)            echo "already exists" ;;
-    overwrite)                 echo "Overwrite?" ;;
-    installation_cancelled)    echo "Installation cancelled" ;;
-    copied)                    echo "Copied" ;;
-    does_not_exist_skipping)   echo "does not exist, skipping" ;;
-    team_language_prefilled)   echo "Team language pre-filled in sdd/conventions.md" ;;
-    conventions_not_found)     echo "sdd/conventions.md not found; cannot pre-fill team language" ;;
-    installation_completed)    echo "Installation completed" ;;
-    next_steps)                echo "Next steps in the destination project" ;;
-    next_step_1)               echo "cd" ;;
-    next_step_2)               echo "Fill out sdd/architecture.md with the project stack." ;;
-    next_step_3)               echo "Fill out sdd/conventions.md with the project style and naming." ;;
-    next_step_4)               echo "Verify that the Pencil MCP is enabled in your editor/IDE." ;;
-    next_step_5)               echo "Run ./init.sh to verify the harness." ;;
-    next_step_6)               echo "Create the first feature" ;;
-    run_init_now)              echo "Do you want to run ./init.sh now?" ;;
-  esac
+print_banner() {
+  echo ""
+  echo -e "${BLUE}   _____ _____ _____ ${NC}"
+  echo -e "${BLUE}  / ____/ ____/ ____|${NC}"
+  echo -e "${BLUE} | (___| |   | |     ${NC}"
+  echo -e "${BLUE}  \\___ \\ |   | |     ${NC}"
+  echo -e "${BLUE}  ____) |___| |____ ${NC}"
+  echo -e "${BLUE} |_____/_____/\\_____|${NC}"
+  echo ""
+  echo -e "${BOLD}Install the SDD framework into a project${NC}"
+  echo ""
 }
-
-# ─────────────────────────────────────────
-# CLI args
-# ─────────────────────────────────────────
 
 show_help() {
   cat <<EOF
-$(msg help_usage)
+Usage: ./install.sh [options] [<path-to-destination-project>]
 
-$(msg help_description)
+Installs the SDD framework into an existing project.
 
-$(msg help_step_1)
-$(msg help_step_2)
-$(msg help_step_3)
-$(msg help_step_4)
+What it does:
+  • Copies sdd/, scripts/, .claude/agents/, AGENTS.md, CLAUDE.md, and init.sh.
+  • Does not touch the destination project's source code.
+  • Ensures the destination is a Git repository, initializing one if needed.
+  • Asks for the repo type (simple or monorepo).
 
 Options:
-  --quick     $(msg help_option_quick)
-  --update    $(msg help_option_update)
-  --help      $(msg help_option_help)
+  --quick     Do not ask; detect automatically.
+  --update    Overwrite without interaction and back up AGENTS.md and CLAUDE.md.
+  --help      Show this help.
 
-$(msg help_example):
+Example:
   ./install.sh
   ./install.sh /path/to/your-project
   ./install.sh --quick /path/to/your-project
@@ -156,11 +89,11 @@ for arg in "$@"; do
       exit 0
       ;;
     -*)
-      die "$(msg unknown_option): ${arg}. $(msg use_help)"
+      die "Unknown option: ${arg}. Use ./install.sh --help"
       ;;
     *)
       if [[ -n "${DEST_ARG}" ]]; then
-        die "$(msg one_destination). $(msg use_help)"
+        die "Only one destination directory allowed. Use ./install.sh --help"
       fi
       DEST_ARG="${arg}"
       ;;
@@ -178,17 +111,17 @@ prompt_confirm() {
 
   while true; do
     if [[ "${default}" == "y" ]]; then
-      read -rp "${message} [$(msg yes | tr '[:lower:]' '[:upper:]')/$(msg no | tr '[:upper:]' '[:lower:]')]: " input
-      input="${input:-$(msg yes | tr '[:lower:]' '[:upper:]')}"
+      read -rp "${message} [Y/n]: " input
+      input="${input:-Y}"
     else
-      read -rp "${message} [$(msg yes | tr '[:upper:]' '[:lower:]')/$(msg no | tr '[:lower:]' '[:upper:]')]: " input
-      input="${input:-$(msg no | tr '[:lower:]' '[:upper:]')}"
+      read -rp "${message} [y/N]: " input
+      input="${input:-N}"
     fi
 
     case "${input}" in
-      [yY]|"yes"|"YES"|"Yes"|[sS]|"si"|"SI"|"Si") return 0 ;;
+      [yY]|"yes"|"YES"|"Yes") return 0 ;;
       [nN]|"no"|"NO"|"No") return 1 ;;
-      *) echo "$(msg please_answer_y_n)" ;;
+      *) echo "Please answer Y or N." ;;
     esac
   done
 }
@@ -216,16 +149,17 @@ prompt_select_index() {
 
   echo "${message}"
   for i in "${!options[@]}"; do
-    echo "  [$((i + 1))] ${options[$i]}"
+    echo "  $((i + 1)). ${options[$i]}"
   done
 
   while true; do
-    read -rp "> " input
+    echo -n "  > "
+    read -r input
     if [[ "${input}" =~ ^[0-9]+$ ]] && [[ "${input}" -ge 1 && "${input}" -le ${#options[@]} ]]; then
       PROMPT_SELECT_RESULT="${input}"
       return 0
     fi
-    echo "$(msg invalid_option) 1 $(msg and) ${#options[@]}."
+    echo "  Invalid option. Choose a number between 1 and ${#options[@]}."
   done
 }
 
@@ -260,7 +194,7 @@ ensure_git_root() {
     fi
   fi
 
-  echo "No Git repository found in ${dir}. Initializing one..." >&2
+  echo -e "${YELLOW}▲${NC} No Git repository found in ${dir}. Initializing one..." >&2
   if git init "${dir}" >/dev/null 2>&1; then
     initialized=true
     git_root="${dir}"
@@ -307,34 +241,31 @@ configure_installation() {
   local install_location
   local package_dir
 
-  echo ""
-  echo "$(msg welcome_title)"
-  echo "============="
-  echo ""
+  print_banner
 
   # 1. Destination project
-  log_step "$(msg step_destination)"
+  log_step "Where should SDD be installed?"
   if ! git_root="$(ensure_git_root "${dest_dir}")"; then
-    die "$(msg no_git_repo) ${dest_dir}. $(msg sdd_requires_git)."
+    die "No Git repository found in ${dest_dir}. SDD requires a Git repo."
   fi
-  echo "   $(msg git_repo_detected): ${git_root}"
+  echo -e "  ${BOLD}Git repo:${NC} ${git_root}"
 
-  if ! prompt_confirm "$(msg is_this_correct)" "y"; then
-    die "$(msg cancelled_by_user)."
+  if ! prompt_confirm "  Is this directory correct?"; then
+    die "Installation cancelled by the user."
   fi
 
   # 2. Repository type
-  log_step "$(msg step_repo_type)"
-  prompt_select_index "$(msg how_organize_sdd)" \
-    "$(msg repo_simple)" \
-    "$(msg repo_monorepo_root)" \
-    "$(msg repo_monorepo_package)"
+  log_step "How do you want to organize the SDD?"
+  prompt_select_index "  Choose a repository type:" \
+    "Simple repo — single project at the root" \
+    "Monorepo — SDD at the root, features may cross packages" \
+    "Monorepo — SDD inside a specific package"
   repo_index="${PROMPT_SELECT_RESULT}"
 
   case "${repo_index}" in
-    1) repo_label="$(msg repo_simple)" ;;
-    2) repo_label="$(msg repo_monorepo_root)" ;;
-    3) repo_label="$(msg repo_monorepo_package)" ;;
+    1) repo_label="Simple repo" ;;
+    2) repo_label="Monorepo at root" ;;
+    3) repo_label="Monorepo inside package" ;;
   esac
 
   install_location="${git_root}"
@@ -343,43 +274,42 @@ configure_installation() {
     detected_roots="$(detect_monorepo_roots "${git_root}" | tr '\n' ' ' | sed 's/ $//')"
 
     if [[ -n "${detected_roots}" ]]; then
-      echo "   $(msg detected_package_folders): ${detected_roots}"
-      if ! prompt_confirm "$(msg are_they_correct)" "y"; then
-        detected_roots="$(prompt_input "$(msg enter_package_folders)" "")"
+      echo -e "  ${BOLD}Detected package folders:${NC} ${detected_roots}"
+      if ! prompt_confirm "  Are they correct?"; then
+        detected_roots="$(prompt_input "  Enter the package folders separated by spaces" "")"
       fi
     else
-      detected_roots="$(prompt_input "$(msg no_package_folders)" "packages")"
+      detected_roots="$(prompt_input "  No package folders detected. Enter the folders separated by spaces" "packages")"
     fi
 
     if [[ "${repo_index}" == "3" ]]; then
-      package_dir="$(prompt_input "$(msg which_package)" "")"
+      package_dir="$(prompt_input "  In which package do you want to install the SDD? (e.g. packages/web)" "")"
       if [[ -z "${package_dir}" || ! -d "${git_root}/${package_dir}" ]]; then
-        die "$(msg package_not_found) ${git_root}."
+        die "Package does not exist in ${git_root}."
       fi
       install_location="${git_root}/${package_dir}"
     fi
   fi
 
   # 3. Design
-  log_step "$(msg step_design)"
-  echo "   $(msg pencil_default_1)"
-  echo "   $(msg pencil_default_2)"
-  echo ""
+  log_step "Design tool"
+  echo "  SDD uses Pencil as the default design tool."
+  echo "  Make sure you have the Pencil MCP enabled in your editor/IDE"
+  echo "  so the designer agent can interact with the artboards."
 
   # 4. Summary
   echo ""
-  echo "$(msg summary_title)"
-  echo "--------------------"
-  echo "  $(msg summary_destination): ${install_location}"
-  echo "  $(msg summary_repo_type): ${repo_label}"
+  echo -e "${BOLD}Installation summary${NC}"
+  echo -e "  ${BOLD}Destination:${NC} ${install_location}"
+  echo -e "  ${BOLD}Repo type:${NC}   ${repo_label}"
   if [[ -n "${detected_roots}" ]]; then
-    echo "  $(msg summary_packages): ${detected_roots}"
+    echo -e "  ${BOLD}Packages:${NC}    ${detected_roots}"
   fi
-  echo "  $(msg summary_design): $(msg summary_pencil_mcp)"
+  echo -e "  ${BOLD}Design:${NC}      Pencil (check MCP)"
   echo ""
 
-  if ! prompt_confirm "$(msg confirm_installation)" "y"; then
-    die "$(msg cancelled_by_user)."
+  if ! prompt_confirm "  Do you confirm the installation?"; then
+    die "Installation cancelled by the user."
   fi
 
   INSTALL_LOCATION="${install_location}"
@@ -390,17 +320,16 @@ quick_configure() {
   local git_root
   local detected_roots
 
-  git_root="$(ensure_git_root "${dest_dir}")" || die "$(msg no_git_repo) ${dest_dir}."
+  git_root="$(ensure_git_root "${dest_dir}")" || die "No Git repository found in ${dest_dir}."
   INSTALL_LOCATION="${git_root}"
 
   detected_roots="$(detect_monorepo_roots "${git_root}" | tr '\n' ' ' | sed 's/ $//')"
 
-  echo ""
-  echo "$(msg quick_mode_title)"
-  echo "=========================="
-  echo "  $(msg summary_destination): ${INSTALL_LOCATION}"
-  echo "  $(msg quick_mode_type): $([[ -n ${detected_roots} ]] && echo "Monorepo (${detected_roots})" || echo "Simple repo")"
-  echo "  $(msg summary_design): $(msg summary_pencil_mcp)"
+  print_banner
+  echo -e "${BOLD}Quick mode${NC}"
+  echo -e "  ${BOLD}Destination:${NC} ${INSTALL_LOCATION}"
+  echo -e "  ${BOLD}Type:${NC}        $([[ -n ${detected_roots} ]] && echo "Monorepo (${detected_roots})" || echo "Simple repo")"
+  echo -e "  ${BOLD}Design:${NC}      Pencil (check MCP)"
   echo ""
 }
 
@@ -411,7 +340,7 @@ quick_configure() {
 perform_install() {
   local dest_dir="$1"
 
-  log_info "$(msg installing) ${dest_dir}..."
+  log_step "Installing SDD in ${dest_dir}..."
 
   CUSTOM_FILES=(
     "AGENTS.md"
@@ -423,20 +352,21 @@ perform_install() {
       if [[ -f "${dest_dir}/${file}" ]]; then
         backup="${dest_dir}/${file}.backup-$(date +%Y%m%d-%H%M%S)"
         cp "${dest_dir}/${file}" "${backup}"
-        log_info "$(msg backup_created): ${backup}"
+        log_success "Backup created: ${backup}"
       fi
     done
   else
     for file in "${CUSTOM_FILES[@]}"; do
       if [[ -f "${dest_dir}/${file}" ]]; then
-        log_warn "${file} $(msg already_exists) ${dest_dir}."
+        log_warn "${file} already exists in ${dest_dir}."
       fi
     done
 
     if [[ -d "${dest_dir}/sdd" ]]; then
-      log_warn "sdd/ $(msg already_exists) ${dest_dir}."
-      if ! prompt_confirm "$(msg overwrite)" "n"; then
-        log_info "$(msg installation_cancelled)."
+      log_warn "sdd/ already exists in ${dest_dir}."
+      if ! prompt_confirm "  Overwrite?" "n"; then
+        echo ""
+        log_warn "Installation cancelled."
         exit 0
       fi
     fi
@@ -456,7 +386,7 @@ perform_install() {
     dst="${dest_dir}/${item}"
 
     if [[ ! -e "${src}" ]]; then
-      log_warn "${src} $(msg does_not_exist_skipping)."
+      log_warn "${src} does not exist, skipping."
       continue
     fi
 
@@ -465,7 +395,7 @@ perform_install() {
     fi
 
     cp -R "${src}" "${dst}"
-    log_info "$(msg copied) ${item}"
+    log_success "Copied ${item}"
   done
 
   chmod +x "${dest_dir}/init.sh"
@@ -483,17 +413,16 @@ else
 fi
 
 if [[ ! -d "${DEST_DIR}" ]]; then
-  die "$(msg dest_not_found): ${DEST_DIR}"
+  die "Destination directory does not exist: ${DEST_DIR}"
 fi
 
 DEST_DIR="$(cd "${DEST_DIR}" && pwd)"
 
 if [[ "${DEST_DIR}" == "${SCRIPT_DIR}" ]]; then
-  die "$(msg dest_same_as_sdd)."
+  die "Destination directory cannot be the same abel-sdd repo."
 fi
 
 if [[ "${QUICK_MODE}" == true ]]; then
-  UI_LANGUAGE="en"
   quick_configure "${DEST_DIR}"
 else
   configure_installation "${DEST_DIR}"
@@ -501,18 +430,19 @@ fi
 
 perform_install "${INSTALL_LOCATION}"
 
-log_info "$(msg installation_completed)."
 echo ""
-echo "$(msg next_steps):"
-echo "  1. $(msg next_step_1) ${INSTALL_LOCATION}"
-echo "  2. $(msg next_step_2)"
-echo "  3. $(msg next_step_3)"
-echo "  4. $(msg next_step_4)"
-echo "  5. $(msg next_step_5)"
-echo "  6. $(msg next_step_6): ./scripts/sdd-worktree.sh create <feature-slug>"
+log_success "Installation completed."
+echo ""
+echo -e "${BOLD}Next steps in the destination project:${NC}"
+echo "  1. cd ${INSTALL_LOCATION}"
+echo "  2. Fill out sdd/architecture.md with the project stack."
+echo "  3. Fill out sdd/conventions.md with the project style and naming."
+echo "  4. Verify that the Pencil MCP is enabled in your editor/IDE."
+echo "  5. Run ./init.sh to verify the harness."
+echo "  6. Create the first feature: ./scripts/sdd-worktree.sh create <feature-slug>"
 echo ""
 
-if prompt_confirm "$(msg run_init_now)" "y"; then
+if prompt_confirm "  Do you want to run ./init.sh now?"; then
   (
     cd "${INSTALL_LOCATION}"
     ./init.sh
