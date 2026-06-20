@@ -111,7 +111,14 @@ main() {
   echo ""
 
   if prompt_confirm_tty "Run 'sdd init' now in the current directory?"; then
-    sdd init
+    if [[ -e /dev/tty ]]; then
+      sdd init < /dev/tty
+    else
+      echo ""
+      log_warn "Cannot run interactive installer in this environment."
+      echo -e "Run ${BOLD}sdd init${NC} manually in your project folder."
+      echo ""
+    fi
   else
     echo ""
     echo -e "Run ${BOLD}sdd init${NC} whenever you're ready to install the SDD framework."
