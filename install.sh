@@ -251,6 +251,7 @@ detect_git_root() {
 ensure_git_root() {
   local dir="$1"
   local git_root
+  local initialized=false
 
   if git_root="$(detect_git_root "${dir}")"; then
     if [[ "${git_root}" == "${dir}" ]]; then
@@ -261,11 +262,21 @@ ensure_git_root() {
 
   echo "No Git repository found in ${dir}. Initializing one..." >&2
   if git init "${dir}" >/dev/null 2>&1; then
-    echo "${dir}"
-    return 0
+    initialized=true
+    git_root="${dir}"
+  else
+    return 1
   fi
 
-  return 1
+  # Ensure a fresh repository has a 'main' branch with at least one commit,
+  # so that feature worktrees can branch from it without errors.
+  if [[ "${initialized}" == true ]] && ! git -C "${git_root}" rev-parse --verify HEAD >/dev/null 2>&1; then
+    git -C "${git_root}" checkout -b main 2>/dev/null || true
+    git -C "${git_root}" commit --allow-empty -m "chore: initial commit" >/dev/null 2>&1 || true
+  fi
+
+  echo "${git_root}"
+  return 0
 }
 
 detect_monorepo_roots() {
