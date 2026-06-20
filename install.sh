@@ -258,19 +258,17 @@ configure_installation() {
   log_step "How do you want to organize the SDD?"
   prompt_select_index "  Choose a repository type:" \
     "Simple repo — single project at the root" \
-    "Monorepo — SDD at the root, features may cross packages" \
-    "Monorepo — SDD inside a specific package"
+    "Monorepo — SDD at the root, features may cross packages"
   repo_index="${PROMPT_SELECT_RESULT}"
 
   case "${repo_index}" in
     1) repo_label="Simple repo" ;;
     2) repo_label="Monorepo at root" ;;
-    3) repo_label="Monorepo inside package" ;;
   esac
 
   install_location="${git_root}"
 
-  if [[ "${repo_index}" == "2" || "${repo_index}" == "3" ]]; then
+  if [[ "${repo_index}" == "2" ]]; then
     detected_roots="$(detect_monorepo_roots "${git_root}" | tr '\n' ' ' | sed 's/ $//')"
 
     if [[ -n "${detected_roots}" ]]; then
@@ -280,14 +278,6 @@ configure_installation() {
       fi
     else
       detected_roots="$(prompt_input "  No package folders detected. Enter the folders separated by spaces" "packages")"
-    fi
-
-    if [[ "${repo_index}" == "3" ]]; then
-      package_dir="$(prompt_input "  In which package do you want to install the SDD? (e.g. packages/web)" "")"
-      if [[ -z "${package_dir}" || ! -d "${git_root}/${package_dir}" ]]; then
-        die "Package does not exist in ${git_root}."
-      fi
-      install_location="${git_root}/${package_dir}"
     fi
   fi
 

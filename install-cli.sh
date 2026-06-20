@@ -85,10 +85,9 @@ main() {
   echo -e "  ${BOLD}sdd init${NC}"
   echo ""
 
-  if prompt_confirm "Run it now in the current directory?"; then
+  if [[ -t 0 ]] && prompt_confirm "Run it now in the current directory?"; then
     sdd init
   else
-    echo ""
     echo -e "Run ${BOLD}sdd init${NC} whenever you're ready."
     echo ""
   fi
