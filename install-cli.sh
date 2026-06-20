@@ -54,6 +54,32 @@ prompt_confirm() {
   done
 }
 
+prompt_confirm_tty() {
+  local message="$1"
+  local default="${2:-y}"
+  local input
+
+  if [[ ! -e /dev/tty ]]; then
+    return 1
+  fi
+
+  while true; do
+    if [[ "${default}" == "y" ]]; then
+      { read -rp "${message} [Y/n]: " input < /dev/tty; } 2>/dev/null || return 1
+      input="${input:-Y}"
+    else
+      { read -rp "${message} [y/N]: " input < /dev/tty; } 2>/dev/null || return 1
+      input="${input:-N}"
+    fi
+
+    case "${input}" in
+      [yY]|"yes"|"YES"|"Yes") return 0 ;;
+      [nN]|"no"|"NO"|"No") return 1 ;;
+      *) echo "Please answer Y or N." ;;
+    esac
+  done
+}
+
 main() {
   print_banner
 
@@ -81,14 +107,12 @@ main() {
   echo ""
   echo -e "${BOLD}Step 2 of 2 — Install the SDD framework${NC}"
   echo ""
-  echo "Run this command in your project folder:"
-  echo -e "  ${BOLD}sdd init${NC}"
-  echo ""
 
-  if [[ -t 0 ]] && prompt_confirm "Run it now in the current directory?"; then
+  if prompt_confirm_tty "Run 'sdd init' now in the current directory?"; then
     sdd init
   else
-    echo -e "Run ${BOLD}sdd init${NC} whenever you're ready."
+    echo ""
+    echo -e "Run ${BOLD}sdd init${NC} whenever you're ready to install the SDD framework."
     echo ""
   fi
 }
