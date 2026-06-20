@@ -79,16 +79,17 @@ main() {
   fi
 
   echo ""
-  echo -e "${BOLD}Step 2 of 2 — Install the SDD framework:${NC}"
+  echo -e "${BOLD}Step 2 of 2 — Install the SDD framework${NC}"
   echo ""
-  echo "  sdd init"
+  echo "Run this command in your project folder:"
+  echo -e "  ${BOLD}sdd init${NC}"
   echo ""
 
-  if prompt_confirm "Run 'sdd init' now in the current directory?"; then
+  if prompt_confirm "Run it now in the current directory?"; then
     sdd init
   else
     echo ""
-    echo -e "Run ${BOLD}sdd init${NC} whenever you're ready to install the SDD framework."
+    echo -e "Run ${BOLD}sdd init${NC} whenever you're ready."
     echo ""
   fi
 }

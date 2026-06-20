@@ -31,7 +31,7 @@ NC='\033[0m'
 log_success() { echo -e "${GREEN}✔${NC} $*"; }
 log_warn()    { echo -e "${YELLOW}▲${NC} $*"; }
 log_error()   { echo -e "${RED}✖${NC} $*" >&2; }
-log_step()    { echo -e "${BLUE}◆${NC} $*"; }
+log_step()    { echo -e "${BLUE}◆${NC} $*" >&2; }
 
 die() { log_error "$*"; exit 1; }
 
@@ -91,7 +91,6 @@ download_and_extract() {
 cmd_init() {
   local extract_dir=""
 
-  print_banner
   extract_dir="$(download_and_extract)"
 
   log_step "Running installer..."
@@ -101,7 +100,6 @@ cmd_init() {
 cmd_update() {
   local extract_dir=""
 
-  print_banner
   extract_dir="$(download_and_extract)"
 
   log_step "Running updater..."
