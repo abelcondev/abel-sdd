@@ -8,7 +8,7 @@ For the general SDD index, see `sdd/README.md`.
 
 ## 1. Entities
 
-- **Project**: a business feature, represented by `sdd/features/<slug>/`.
+- **Feature**: a business feature, represented by `sdd/features/<slug>/`.
 - **Issue `[Product]`**: product discovery + BDD scenarios, `.md` file inside `sdd/features/<slug>/product/<state>/`. It is the first phase and unlocks `[Design]`.
 - **Issue `[Design]`**: functional spec + UI/UX, `.md` file inside `sdd/features/<slug>/design/<state>/`. Blocked by `[Product]`.
 - **Issue `[Dev]`**: technical spec + implementation, `.md` file inside `sdd/features/<slug>/dev/<state>/`. Blocked by `[Design]`.
@@ -41,8 +41,8 @@ sdd/
 ├── security.md               # Security and compliance
 ├── delivery.md               # Commits, PRs, merge, and closure
 ├── decisions/                # ADRs per feature or global
-├── templates/                # Templates for projects and issues
-└── projects/
+├── templates/                # Templates for features and issues
+└── features/
     └── <feature-slug>/
         ├── README.md
         ├── product/
@@ -69,7 +69,7 @@ sdd/
 
 | Entity | Path | Title inside the file |
 |---|---|---|
-| Project | `sdd/features/login-y-dashboard-layout/README.md` | `Login and Dashboard Layout` |
+| Feature | `sdd/features/login-y-dashboard-layout/README.md` | `Login and Dashboard Layout` |
 | Issue Product | `sdd/features/login-y-dashboard-layout/product/discovery/login.md` | `[Product] Login` |
 | Issue Design | `sdd/features/login-y-dashboard-layout/design/spec-needed/login.md` | `[Design] Login` |
 | Issue Dev | `sdd/features/login-y-dashboard-layout/dev/backlog/login.md` | `[Dev] Login` |
@@ -277,7 +277,7 @@ The SDD assumes the project uses a **visual design tool** (Figma, Pencil, Sketch
 
 ---
 
-## 12. Active Projects Index
+## 12. Active Features Index
 
 | Feature | Product | Design | Dev | Worktree |
 |---|---|---|---|---|
