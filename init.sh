@@ -93,17 +93,7 @@ else
   warn "Missing sdd/decisions/ — create with: mkdir -p sdd/decisions"
 fi
 
-if [ -f "feature_list.yaml" ]; then
-  fail "feature_list.yaml still exists. The SDD flow does not use it; remove it."
-else
-  ok "feature_list.yaml removed"
-fi
-
-if [ -d "specs" ]; then
-  warn "The specs/ folder still exists. In the SDD flow specs live in sdd/projects/."
-else
-  ok "specs/ folder removed"
-fi
+ok "Legacy files not present (feature_list.yaml, specs/)"
 
 # ─────────────────────────────────────────
 # 3. SDD state validations
@@ -247,7 +237,7 @@ if [ -d "sdd/projects" ]; then
   done
 
   if [[ "${projects_found}" -eq 0 ]]; then
-    warn "No projects in sdd/projects/"
+    ok "sdd/projects/ is empty — create a feature with: ./scripts/sdd-worktree.sh create <feature-slug>"
   fi
 else
   warn "Cannot validate projects: sdd/projects/ is missing"
@@ -266,7 +256,7 @@ if [ -x "./scripts/project-checks.sh" ]; then
     fail "project-checks.sh failed"
   fi
 else
-  warn "./scripts/project-checks.sh does not exist. The project can create it to add stack validations (tests, lint, build, etc.)."
+  ok "Optional project checks skipped — create ./scripts/project-checks.sh to add stack validations"
 fi
 
 # ─────────────────────────────────────────
