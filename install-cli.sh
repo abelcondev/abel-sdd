@@ -65,10 +65,12 @@ prompt_confirm_tty() {
 
   while true; do
     if [[ "${default}" == "y" ]]; then
-      { read -rp "${message} [Y/n]: " input < /dev/tty; } 2>/dev/null || return 1
+      printf "%b" "${message} [Y/n]: " >&2
+      { read -r input < /dev/tty; } 2>/dev/null || return 1
       input="${input:-Y}"
     else
-      { read -rp "${message} [y/N]: " input < /dev/tty; } 2>/dev/null || return 1
+      printf "%b" "${message} [y/N]: " >&2
+      { read -r input < /dev/tty; } 2>/dev/null || return 1
       input="${input:-N}"
     fi
 
