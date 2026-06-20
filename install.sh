@@ -36,12 +36,12 @@ die() { log_error "$*"; exit 1; }
 
 print_banner() {
   echo ""
-  echo -e "${BLUE}   _____ _____ _____ ${NC}"
-  echo -e "${BLUE}  / ____/ ____/ ____|${NC}"
-  echo -e "${BLUE} | (___| |   | |     ${NC}"
-  echo -e "${BLUE}  \\___ \\ |   | |     ${NC}"
-  echo -e "${BLUE}  ____) |___| |____ ${NC}"
-  echo -e "${BLUE} |_____/_____/\\_____|${NC}"
+  echo -e "${BLUE}   _____   _____   _____ ${NC}"
+  echo -e "${BLUE}  / ____| |  __ \\ |  __ \\ ${NC}"
+  echo -e "${BLUE} | (___   | |  | || |  | |${NC}"
+  echo -e "${BLUE}  \\___ \\  | |  | || |  | |${NC}"
+  echo -e "${BLUE}  ____) | | |__| || |__| |${NC}"
+  echo -e "${BLUE} |_____/  |_____/ |_____/ ${NC}"
   echo ""
   echo -e "${BOLD}Install the SDD framework into a project${NC}"
   echo ""

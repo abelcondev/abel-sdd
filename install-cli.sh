@@ -18,12 +18,12 @@ NC='\033[0m'
 
 print_banner() {
   echo ""
-  echo -e "${BLUE}   _____ _____ _____ ${NC}"
-  echo -e "${BLUE}  / ____/ ____/ ____|${NC}"
-  echo -e "${BLUE} | (___| |   | |     ${NC}"
-  echo -e "${BLUE}  \\___ \\ |   | |     ${NC}"
-  echo -e "${BLUE}  ____) |___| |____ ${NC}"
-  echo -e "${BLUE} |_____/_____/\\_____|${NC}"
+  echo -e "${BLUE}   _____   _____   _____ ${NC}"
+  echo -e "${BLUE}  / ____| |  __ \\ |  __ \\ ${NC}"
+  echo -e "${BLUE} | (___   | |  | || |  | |${NC}"
+  echo -e "${BLUE}  \\___ \\  | |  | || |  | |${NC}"
+  echo -e "${BLUE}  ____) | | |__| || |__| |${NC}"
+  echo -e "${BLUE} |_____/  |_____/ |_____/ ${NC}"
   echo ""
   echo -e "${BOLD}One-command installer for abel-sdd${NC}"
   echo ""
