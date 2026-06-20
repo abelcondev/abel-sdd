@@ -27,7 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - All SDD docs, templates, agent prompts, scripts, and the PR template translated to English.
-- `install.sh` is now a bilingual CLI. It no longer asks for spec language (always English); it only asks for the language used to talk to the AI.
+- `install.sh` no longer asks for the language used to talk to the AI; the CLI is now English-only.
+- `install.sh` now auto-initializes a Git repository in the destination directory when none exists, instead of walking up to a parent repo.
 - `sdd/decisions/` starts empty. `sdd/decisions/adr-template.md` moved to `sdd/templates/adr-template.md` so consumers copy it only when needed.
 - `sdd/architecture.md` updated to reflect that ADRs are created from the template on demand.
 
