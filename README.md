@@ -18,7 +18,36 @@ It does not impose language, framework, database, package manager, or design too
 
 ## Installation
 
-Download the framework and run the installer:
+Install `sdd-cli` once with `curl` and run it from any local Git repository:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/abelcondev/abel-sdd/main/install-cli.sh | bash
+```
+
+Make sure `~/.local/bin` is in your `PATH`.
+
+Then, from any project:
+
+```bash
+cd /path/to/your-project
+sdd init     # Install the latest SDD
+sdd update   # Update an existing SDD
+sdd status   # Run ./init.sh
+sdd worktree create login-y-dashboard-layout
+```
+
+> The installer copies `sdd/`, `scripts/`, `.claude/agents/`, `AGENTS.md`, `CLAUDE.md`, and `init.sh` to the destination project without touching its source code.
+
+After installing SDD, in the destination project:
+
+1. Fill out `sdd/architecture.md` with the project stack.
+2. Fill out `sdd/conventions.md` with style, naming, and language.
+3. Optional: create `scripts/project-checks.sh` to add test/lint/build validations.
+4. Run `./init.sh` to verify the harness.
+
+### Manual installation
+
+If you prefer not to use the CLI, clone the framework and run the installer directly:
 
 ```bash
 git clone <repo-url> /tmp/abel-sdd
@@ -31,42 +60,6 @@ Or, if you already have the repo locally:
 ```bash
 cd /path/to/abel-sdd
 ./install.sh /path/to/your-project
-```
-
-> The installer copies `sdd/`, `scripts/`, `.claude/agents/`, `AGENTS.md`, `CLAUDE.md`, and `init.sh` to the destination project without touching its source code.
-
-Then, in the destination project:
-
-1. Fill out `sdd/architecture.md` with the project stack.
-2. Fill out `sdd/conventions.md` with style, naming, and language.
-3. Optional: create `scripts/project-checks.sh` to add test/lint/build validations.
-4. Run `./init.sh` to verify the harness.
-
-## One-command installer
-
-Install `sdd-cli` once and run it from any local Git repository:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/abelcondev/abel-sdd/main/sdd-cli > ~/.local/bin/sdd
-chmod +x ~/.local/bin/sdd
-```
-
-Make sure `~/.local/bin` is in your `PATH`.
-
-Or use the installer script:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/abelcondev/abel-sdd/main/install-cli.sh | bash
-```
-
-Then, from any project:
-
-```bash
-cd /path/to/your-project
-sdd init     # Install the latest SDD
-sdd update   # Update an existing SDD
-sdd status   # Run ./init.sh
-sdd worktree create login-y-dashboard-layout
 ```
 
 ## Quick start
